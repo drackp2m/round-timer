@@ -1,0 +1,92 @@
+$breakpoint: (
+	sm: 480px,
+	md: 768px,
+	lg: 1024px,
+	xl: 1280px,
+) !default;
+
+$font-size: (
+	sm: 0.8rem,
+	md: 1rem,
+	lg: 1.25rem,
+	xl: 1.5rem,
+	xxl: 2rem,
+	xxxl: 2.75rem,
+) !default;
+
+$font-weight: (
+	sm: 300,
+	md: 400,
+	lg: 500,
+	xl: 600,
+	xxl: 700,
+	xxxl: 900,
+) !default;
+
+$font-oblique: (
+	none: 0,
+	sm: 5,
+	md: 10,
+	lg: 15,
+) !default;
+
+$font-monospace: (
+	none: 0,
+	sm: 0.2,
+	md: 0.4,
+	lg: 0.6,
+	xl: 0.8,
+	xxl: 1,
+) !default;
+
+$font-casual: (
+	none: 0,
+	sm: 0.2,
+	md: 0.4,
+	lg: 0.6,
+	xl: 0.8,
+	xxl: 1,
+) !default;
+
+$color: (
+	primary: #FFFCF2,
+	primary-mid: #CCC5B9,
+	contrast: #252422,
+	contrast-mid: #403D39,
+	accent: #EB5E28,
+) !default;
+
+$dark-color: (
+	primary: #252422,
+	primary-mid: #403D39,
+	contrast: #FFFCF2,
+	contrast-mid: #CCC5B9,
+	accent: #EB5E28,
+) !default;
+
+$spacing: (
+	none: 0,
+	xs: 0.25rem,
+	sm: 0.5rem,
+	md: 1rem,
+	lg: 2rem,
+	xl: 3rem,
+	xxl: 4rem,
+	xxxl: 6rem,
+) !default;
+
+$borders-radius: (
+	none: 0,
+	sm: 0.25rem,
+	md: 0.5rem,
+	lg: 1rem,
+) !default;
+
+$shadow: (
+	none: none,
+	sm: 0 4px 8px 2px rgb(0 0 0 / 5%),
+	md: 0 6px 12px 1px rgb(0 0 0 / 10%),
+	lg: 0 8px 16px -1px rgb(0 0 0 / 15%),
+	xl: 0 10px 20px -3px rgb(0 0 0 / 20%),
+	xxl: 0 12px 24px -4px rgb(0 0 0 / 25%),
+) !default;

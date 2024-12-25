@@ -1,0 +1,95 @@
+{
+	"name": "Round Timer",
+	"service": "round-timer-node",
+	"dockerComposeFile": ["../docker-compose.yml", "docker-compose.yml"],
+	"workspaceFolder": "/usr/src/app",
+	"forwardPorts": [3000, 4200, 9229],
+	"overrideCommand": false,
+	"customizations": {
+		"vscode": {
+			"settings": {
+				"editor.rulers": [100],
+				"clipboard-manager.maxClips": 1000,
+				"editor.linkedEditing": true,
+				"problems.showCurrentInStatus": true,
+				"javascript.updateImportsOnFileMove.enabled": "always",
+				"javascript.preferences.importModuleSpecifier": "project-relative",
+				"typescript.updateImportsOnFileMove.enabled": "always",
+				"typescript.preferences.importModuleSpecifier": "project-relative",
+				"terminal.integrated.defaultProfile.linux": "zsh",
+				"eslint.validate": ["javascript", "typescript", "html"],
+				"eslint.probe": ["json"],
+				"eslint.format.enable": true,
+				"eslint.useESLintClass": true,
+				"eslint.lintTask.enable": true,
+				"stylelint.reportDescriptionlessDisables": true,
+				"stylelint.reportInvalidScopeDisables": true,
+				"stylelint.reportNeedlessDisables": true,
+				"stylelint.snippet": ["css", "scss"],
+				"stylelint.validate": ["css", "scss"],
+				"prettier.prettierPath": "/usr/src/app/node_modules/prettier",
+				"editor.defaultFormatter": "esbenp.prettier-vscode",
+				"[html]": {
+					"editor.defaultFormatter": "dbaeumer.vscode-eslint"
+				},
+				"[javascript]": {
+					"editor.defaultFormatter": "dbaeumer.vscode-eslint"
+				},
+				"[typescript]": {
+					"editor.defaultFormatter": "dbaeumer.vscode-eslint"
+				},
+				"[css]": {
+					"editor.defaultFormatter": "stylelint.vscode-stylelint"
+				},
+				"[scss]": {
+					"editor.defaultFormatter": "stylelint.vscode-stylelint"
+				},
+				"todo-tree.regex.regexCaseSensitive": false,
+				"todo-tree.general.statusBar": "tags",
+				"todo-tree.general.tags": ["ToDo", "FixMe"],
+				"todo-tree.highlights.customHighlight": {
+					"ToDo": {
+						"icon": "code",
+						"iconColour": "#7582D1",
+						"type": "tag",
+						"foreground": "#ffffff",
+						"background": "#4280dd",
+						"opacity": 100
+					},
+					"FixMe": {
+						"icon": "tools",
+						"iconColour": "#e34c26",
+						"type": "text",
+						"foreground": "#ffffff",
+						"background": "#dd4242",
+						"opacity": 100
+					}
+				}
+			},
+			"extensions": [
+				"GitHub.copilot",
+				"GitHub.copilot-chat",
+				"nrwl.angular-console",
+				"editorconfig.editorconfig",
+				"mrmlnc.vscode-scss",
+				"esbenp.prettier-vscode",
+				"dbaeumer.vscode-eslint",
+				"stylelint.vscode-stylelint",
+				"angular.ng-template",
+				"gruntfuggly.todo-tree",
+				"cyrilletuzi.angular-schematics",
+				"firsttris.vscode-jest-runner",
+				"ryanluker.vscode-coverage-gutters",
+				"GraphQL.vscode-graphql",
+				"orsenkucher.vscode-graphql",
+				"eamodio.gitlens",
+				"usernamehw.errorlens",
+				"streetsidesoftware.code-spell-checker",
+				"tomoki1207.selectline-statusbar",
+				"chamboug.js-auto-backticks",
+				"firefox-devtools.vscode-firefox-debug",
+				"christian-kohler.path-intellisense"
+			]
+		}
+	}
+}

@@ -1,0 +1,73 @@
+{
+	"path": "node_modules/cz-emoji",
+	"config": {
+		"cz-emoji": {
+			"types": [
+				{
+					"name": "feat",
+					"description": "Introducing new features.",
+					"emoji": "✨"
+				},
+				{
+					"name": "style",
+					"description": "Add missing tests or correcting existing failing test.",
+					"emoji": "🎨"
+				},
+				{
+					"name": "test",
+					"description": "Add missing tests or correcting existing failing test.",
+					"emoji": "🧪"
+				},
+				{
+					"name": "refactor",
+					"description": "A code change that neither fixes a bug nor adds a feature.",
+					"emoji": "♻️ "
+				},
+				{
+					"name": "fix",
+					"description": "A bug fix.",
+					"emoji": "🐛"
+				},
+				{
+					"name": "docs",
+					"description": "Add or update documentation.",
+					"emoji": "📚"
+				},
+				{
+					"name": "perf",
+					"description": "A code change that improves performance.",
+					"emoji": "🚀"
+				},
+				{
+					"name": "build",
+					"description": "Changes that affect the build system or external dependencies.",
+					"emoji": "🏗️ "
+				},
+				{
+					"name": "ci",
+					"description": "Changes to our CI configuration files and scripts.",
+					"emoji": "💻"
+				},
+				{
+					"name": "chore",
+					"description": "Other changes that don't modify src or test files.",
+					"emoji": "🎒"
+				},
+				{
+					"name": "revert",
+					"description": "Reverts a previous commit.",
+					"emoji": "⏪"
+				}
+			],
+			"skipQuestions": [
+				"scope",
+				"body",
+				"breaking",
+				"issues"
+			],
+			"format": "{emoji} {type}: {subject}",
+      "subjectMaxLength": 60,
+			"symbol": true
+		}
+	}
+}

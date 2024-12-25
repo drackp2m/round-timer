@@ -1,0 +1,22 @@
+services:
+  round-timer-node:
+    container_name: round-timer-node
+    hostname: round-timer-node
+    working_dir: /usr/src/app
+    image: round-timer-node:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: serve
+    ports:
+      - ${APP_PORT}:4200
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    environment:
+      NG_HMR_TEMPLATES: 1
+      PATH: $PATH:/usr/src/app/node_modules/.bin
+      TZ: UTC
+    restart: unless-stopped
+    stdin_open: true
+    tty: true

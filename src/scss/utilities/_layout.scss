@@ -1,0 +1,132 @@
+@use 'sass:map';
+@use 'sass:meta';
+
+@use '../abstracts/variables' as var;
+@use '../abstracts/mixins' as mix;
+
+.content-fixed {
+	width: 100%;
+	margin: 0 auto;
+	padding: 0 var(--layout-padding);
+
+	@each $size in map.values(var.$breakpoint) {
+		@media screen and (width >= $size) {
+			width: $size;
+		}
+	}
+}
+
+.content-fluid {
+	width: 100%;
+	padding: 0 var(--layout-padding);
+}
+
+:root {
+	--layout-padding: var(--spacing-md);
+
+	@include mix.sm {
+		--layout-padding: var(--spacing-lg);
+	}
+
+	@include mix.lg {
+		--layout-padding: var(--spacing-xxl);
+	}
+}
+
+$rules: (
+	flex-col: (
+		display: flex,
+		flex-direction: column,
+	),
+	flex-row: (
+		display: flex,
+		flex-direction: row,
+	),
+	flex-wrap: (
+		flex-wrap: wrap,
+	),
+	align-start: (
+		align-items: flex-start,
+	),
+	align-self-start: (
+		align-self: flex-start,
+	),
+	align-center: (
+		align-items: center,
+	),
+	align-self-center: (
+		align-self: center,
+	),
+	align-end: (
+		align-items: flex-end,
+	),
+	align-self-end: (
+		align-self: flex-end,
+	),
+	justify-start: (
+		justify-content: flex-start,
+	),
+	justify-self-start: (
+		justify-self: flex-start,
+	),
+	justify-center: (
+		justify-content: center,
+	),
+	justify-self-center: (
+		justify-self: center,
+	),
+	justify-end: (
+		justify-content: flex-end,
+	),
+	justify-self-end: (
+		justify-self: flex-end,
+	),
+	justify-between: (
+		justify-content: space-between,
+	),
+	justify--self-between: (
+		justify-self: space-between,
+	),
+	justify-around: (
+		justify-content: space-around,
+	),
+	justify-self-around: (
+		justify-self-content: space-around,
+	),
+	justify-evenly: (
+		justify-content: space-evenly,
+	),
+	justify-self-evenly: (
+		justify-self: space-evenly,
+	),
+);
+
+@include mix.generate-responsive($rules);
+
+$gap-rules: (
+	gap: grid-gap,
+	gapx: grid-column-gap,
+	gapy: grid-row-gap,
+);
+
+@function get-list() {
+	$list: ();
+
+	@each $rule, $property in $gap-rules {
+		$list: map.merge($list, get-rules($rule, $property));
+	}
+
+	@return $list;
+}
+
+@function get-rules($rule, $property) {
+	$rules: ();
+
+	@each $spacing in map.keys(var.$spacing) {
+		$rules: map.merge($rules, (#{$rule}-#{$spacing}: (#{$property}: var(--spacing-#{$spacing}))));
+	}
+
+	@return $rules;
+}
+
+@include mix.generate-responsive(get-list());

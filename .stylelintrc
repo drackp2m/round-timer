@@ -1,0 +1,11 @@
+{
+	"files": ["*.css", "**/*.css"],
+	"extends": ["stylelint-config-standard-scss", "stylelint-config-clean-order"],
+	"plugins": ["stylelint-prettier"],
+	"defaultSeverity": "warning",
+	"rules": {
+    "prettier/prettier": true,
+		"color-hex-length": "short",
+		"scss/dollar-variable-empty-line-before": null
+	}
+}
