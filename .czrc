@@ -2,6 +2,9 @@
 	"path": "node_modules/cz-emoji",
 	"config": {
 		"cz-emoji": {
+			"format": "{emoji} {type}: {subject}",
+			"subjectMaxLength": 75,
+			"symbol": true,
 			"types": [
 				{
 					"name": "feat",
@@ -64,10 +67,7 @@
 				"body",
 				"breaking",
 				"issues"
-			],
-			"format": "{emoji} {type}: {subject}",
-      "subjectMaxLength": 60,
-			"symbol": true
+			]
 		}
 	}
 }
