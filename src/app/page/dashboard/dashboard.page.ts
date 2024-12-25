@@ -1,7 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { ButtonComponent } from '../../component/button/button.component';
+import { ButtonComponent } from '../../component/button.component';
 
 @Component({
 	templateUrl: './dashboard.page.html',

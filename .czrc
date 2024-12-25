@@ -3,6 +3,12 @@
 	"config": {
 		"cz-emoji": {
 			"format": "{emoji} {type}: {subject}",
+			"skipQuestions": [
+				"scope",
+				"body",
+				"breaking",
+				"issues"
+			],
 			"subjectMaxLength": 75,
 			"symbol": true,
 			"types": [
@@ -61,12 +67,6 @@
 					"description": "Reverts a previous commit.",
 					"emoji": "⏪"
 				}
-			],
-			"skipQuestions": [
-				"scope",
-				"body",
-				"breaking",
-				"issues"
 			]
 		}
 	}

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
-import { HeaderComponent } from './component/header/header.component';
+import { HeaderComponent } from './component/header.component';
 
 @Component({
 	templateUrl: './main.layout.html',
