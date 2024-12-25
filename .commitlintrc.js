@@ -28,11 +28,8 @@ module.exports = {
 						/^(✨|🎨|🧪|♻️\s|🐛|📚|🚀|🏗️\s|💻|🎒|⏪)\s(feat|style|test|refactor|fix|docs|perf|build|ci|chore|revert):/,
 					);
 
-					if (!match) {
-						return [
-							false,
-							`${header}` + 'Commit message must start with an emoji followed by type: message',
-						];
+					if (null === match) {
+						return [false, 'Commit message must start with an emoji followed by type: message'];
 					}
 
 					const emoji = match[1];

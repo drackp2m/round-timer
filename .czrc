@@ -1,5 +1,5 @@
 {
-	"path": "node_modules/cz-emoji",
+	"path": "cz-emoji",
 	"config": {
 		"cz-emoji": {
 			"format": "{emoji} {type}: {subject}",
@@ -10,62 +10,72 @@
 				"issues"
 			],
 			"subjectMaxLength": 75,
-			"symbol": true,
 			"types": [
 				{
 					"name": "feat",
 					"description": "Introducing new features.",
-					"emoji": "✨"
+					"emoji": "✨",
+					"code": "✨"
 				},
 				{
 					"name": "style",
 					"description": "Add missing tests or correcting existing failing test.",
-					"emoji": "🎨"
+					"emoji": "🎨",
+					"code": "🎨"
 				},
 				{
 					"name": "test",
 					"description": "Add missing tests or correcting existing failing test.",
-					"emoji": "🧪"
+					"emoji": "🧪",
+					"code": "🧪"
 				},
 				{
 					"name": "refactor",
 					"description": "A code change that neither fixes a bug nor adds a feature.",
-					"emoji": "♻️ "
+					"emoji": "♻️ ",
+					"code": "♻️ "
 				},
 				{
 					"name": "fix",
 					"description": "A bug fix.",
-					"emoji": "🐛"
+					"emoji": "🐛",
+					"code": "🐛"
 				},
 				{
 					"name": "docs",
 					"description": "Add or update documentation.",
-					"emoji": "📚"
+					"emoji": "📚",
+					"code": "📚"
 				},
 				{
 					"name": "perf",
 					"description": "A code change that improves performance.",
-					"emoji": "🚀"
+					"emoji": "🚀",
+					"code": "🚀"
 				},
 				{
 					"name": "build",
 					"description": "Changes that affect the build system or external dependencies.",
-					"emoji": "🏗️ "
+					"emoji": "🏗️ ",
+					"code": "🏗️ "
 				},
 				{
 					"name": "ci",
 					"description": "Changes to our CI configuration files and scripts.",
-					"emoji": "💻"
+					"emoji": "💻",
+					"code": "💻"
 				},
 				{
 					"name": "chore",
 					"description": "Other changes that don't modify src or test files.",
-					"emoji": "🎒"
+					"emoji": "🎒",
+					"code": "🎒"
 				},
 				{
 					"name": "revert",
 					"description": "Reverts a previous commit.",
-					"emoji": "⏪"
+					"emoji": "⏪",
+					"code": "⏪"
 				}
 			]
 		}
