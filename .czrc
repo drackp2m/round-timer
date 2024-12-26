@@ -10,6 +10,7 @@
 				"issues"
 			],
 			"subjectMaxLength": 75,
+			"symbol": false,
 			"types": [
 				{
 					"name": "feat",

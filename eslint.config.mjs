@@ -129,7 +129,7 @@ const eslintConfig = tseslint.config(
 					},
 					pathGroups: [
 						{
-							pattern: '@playsetonline/**',
+							pattern: '@round-timer/**',
 							group: 'external',
 							position: 'after',
 						},

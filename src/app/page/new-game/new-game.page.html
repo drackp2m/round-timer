@@ -1,4 +1,29 @@
-<section>
-	<h4>Participants</h4>
-	<p>No participants</p>
+<section class="flex-col gap-sm">
+	<div>
+		<h4>Participants</h4>
+
+		<ul>
+			@for (participant of participants(); track participant.uuid) {
+				<li>
+					{{ participant.name }}
+				</li>
+			} @empty {
+				<li>{{ participantsLoading() ? 'Loading...' : 'No participants' }}</li>
+			}
+		</ul>
+	</div>
+
+	<div class="flex-col gap-sm align-start">
+		<app-button (click)="addParticipant()" color="contrast-mid">
+			<div class="flex-row gap-sm align-center text-sm">
+				<app-svg icon="user-plus" [size]="12" color="surface-primary" />Add participant
+			</div>
+		</app-button>
+
+		<app-button (click)="closeModal()" color="contrast-mid">
+			<div class="flex-row gap-sm align-center text-sm">
+				<app-svg icon="cross" [size]="12" color="surface-primary" />Close modal
+			</div>
+		</app-button>
+	</div>
 </section>
