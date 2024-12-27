@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
-import { ModalOutletComponent } from '../../component/modal-outlet.component';
+import { ModalOutletComponent } from '../../component/modal-outlet/modal-outlet.component';
 
 import { HeaderComponent } from './component/header.component';
 

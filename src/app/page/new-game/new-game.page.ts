@@ -1,9 +1,9 @@
 import { Component, inject } from '@angular/core';
 
 import { ButtonComponent } from '../../component/button.component';
-import { ParticipantStore } from '../../store/participant.store';
 import { SvgComponent } from '../../component/svg.component';
-import { ModalService } from '../../service/modal/modal.service';
+import { ModalStore } from '../../store/modal.store';
+import { ParticipantStore } from '../../store/participant.store';
 import { DashboardPage } from '../dashboard/dashboard.page';
 
 @Component({
@@ -13,16 +13,16 @@ import { DashboardPage } from '../dashboard/dashboard.page';
 })
 export class NewGamePage {
 	private readonly participantStore = inject(ParticipantStore);
-	private readonly modalService = inject(ModalService);
+	private readonly modalStore = inject(ModalStore);
 
 	readonly participants = this.participantStore.participants;
 	readonly participantsLoading = this.participantStore.isLoading;
 
 	addParticipant(): void {
-		this.modalService.show(DashboardPage);
+		this.modalStore.open(DashboardPage);
 	}
 
 	closeModal(): void {
-		this.modalService.clear();
+		this.modalStore.open(NewGamePage);
 	}
 }

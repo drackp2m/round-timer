@@ -5,7 +5,6 @@ import { ButtonComponent } from '../../component/button.component';
 
 @Component({
 	templateUrl: './dashboard.page.html',
-	styleUrl: './dashboard.page.scss',
 	imports: [ButtonComponent, RouterLink],
 })
 export class DashboardPage {

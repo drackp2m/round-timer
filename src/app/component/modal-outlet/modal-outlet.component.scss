@@ -1,0 +1,27 @@
+#modal-outlet {
+	position: absolute;
+	top: 0;
+	width: 100vw;
+	height: 100vh;
+
+	.overlay {
+		width: 100%;
+		height: 100%;
+	}
+
+	&.hidden {
+		visibility: hidden;
+	}
+
+	.container {
+		position: absolute;
+		bottom: 0;
+		transform: translateY(0);
+
+		width: 100%;
+
+		background-color: var(--color-primary);
+		border-radius: calc(var(--spacing-sm) + var(--spacing-md))
+			calc(var(--spacing-sm) + var(--spacing-md)) 0 0;
+	}
+}

@@ -1,3 +1,5 @@
+@use './functions' as func;
+
 $breakpoint: (
 	sm: 480px,
 	md: 768px,
@@ -82,11 +84,40 @@ $borders-radius: (
 	lg: 1rem,
 ) !default;
 
-$shadow: (
+$shadow-size: (
 	none: none,
-	sm: 0 4px 8px 2px rgb(0 0 0 / 5%),
-	md: 0 6px 12px 1px rgb(0 0 0 / 10%),
-	lg: 0 8px 16px -1px rgb(0 0 0 / 15%),
-	xl: 0 10px 20px -3px rgb(0 0 0 / 20%),
-	xxl: 0 12px 24px -4px rgb(0 0 0 / 25%),
+	sm: 8px 2px rgb(0 0 0 / 5%),
+	md: 12px 1px rgb(0 0 0 / 10%),
+	lg: 16px -1px rgb(0 0 0 / 15%),
+	xl: 20px -3px rgb(0 0 0 / 20%),
+	xxl: 24px -4px rgb(0 0 0 / 25%),
 ) !default;
+
+$shadow-separation: (
+	sm: 2px,
+	md: 3px,
+	lg: 4px,
+	xl: 5px,
+	xxl: 6px,
+) !default;
+
+$shadow-direction: (
+	top: (
+		0,
+		-1,
+	),
+	right: (
+		1,
+		0,
+	),
+	bottom: (
+		0,
+		1,
+	),
+	left: (
+		-1,
+		0,
+	),
+) !default;
+
+$shadow: func.generate-shadow-map($shadow-size, $shadow-separation, $shadow-direction) !default;

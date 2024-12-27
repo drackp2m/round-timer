@@ -1,4 +1,5 @@
 @use '../abstracts/variables' as var;
+@use '../abstracts/functions' as func;
 
 :root {
 	@each $size, $value in var.$spacing {
@@ -34,6 +35,8 @@
 	}
 
 	@each $name, $value in var.$shadow {
+		@debug $name $value;
+
 		--shadow-#{$name}: #{$value};
 	}
 }
