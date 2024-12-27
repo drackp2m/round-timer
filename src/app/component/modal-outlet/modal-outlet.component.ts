@@ -21,15 +21,17 @@ import { ButtonComponent } from '../button.component';
 	styleUrl: './modal-outlet.component.scss',
 	imports: [ButtonComponent],
 	animations: [
+		trigger('slideAnimation', [
+			state('visible', style({ transform: 'translateY(-{{distance}}px)' }), {
+				params: { distance: 0 },
+			}),
+			state('hidden', style({ transform: 'translateY(0)' })),
+			transition('hidden <=> visible', animate('{{duration}}ms {{easing}}')),
+		]),
 		trigger('fadeAnimation', [
 			state('visible', style({ 'background-color': '#0006' })),
 			state('hidden', style({ 'background-color': '#0000' })),
-			transition('hidden <=> visible', animate('{{duration}}ms ease-out')),
-		]),
-		trigger('slideAnimation', [
-			state('visible', style({ transform: 'translateY(0)' })),
-			state('hidden', style({ transform: 'translateY({{height}}px)' }), { params: { height: 0 } }),
-			transition('hidden <=> visible', animate('{{duration}}ms ease-out')),
+			transition('* <=> *', animate('{{duration}}ms {{easing}}')),
 		]),
 	],
 })
@@ -39,17 +41,20 @@ export class ModalOutletComponent implements AfterViewInit {
 
 	private readonly modalStore = inject(ModalStore);
 
-	readonly ANIMATION_DURATION_MS = 300;
+	private readonly ANIMATION_DURATION_MS = 400;
+	private readonly ANIMATION_EASING = 'cubic-bezier(0.4, 0.0, 0.2, 1)';
 
 	activeComponentRef: ComponentRef<unknown> | null = null;
 
 	readonly modalState = signal<'hidden' | 'visible' | 'transitioning'>('hidden');
-	readonly height = signal(10_000);
+	readonly height = signal(0);
 	readonly title = signal('');
 	readonly isInTransition = signal(false);
-	readonly animationParams = computed(() => {
-		return { duration: this.ANIMATION_DURATION_MS, height: this.height() };
-	});
+	readonly animationParams = computed(() => ({
+		duration: this.ANIMATION_DURATION_MS,
+		easing: this.ANIMATION_EASING,
+		distance: this.height(),
+	}));
 
 	ngAfterViewInit() {
 		this.modalStore.setContainer(this);
