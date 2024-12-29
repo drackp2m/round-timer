@@ -41,13 +41,13 @@ export class SelectDirective implements OnInit {
 		const nextSibling = selectElement.nextSibling;
 		const parentElement = selectElement.parentNode;
 
-		const icon = this.createIcon();
+		const iconElement = this.createIcon();
 
 		this.renderer2.addClass(selectElement, 'round-2');
 
 		this.renderer2.removeChild(parentElement, selectElement);
 		this.renderer2.appendChild(this.wrapperElement, selectElement);
-		this.renderer2.appendChild(this.borderBox, icon.location.nativeElement);
+		this.renderer2.appendChild(this.borderBox, iconElement.location.nativeElement);
 		this.renderer2.appendChild(this.wrapperElement, this.borderBox);
 
 		if (null !== nextSibling) {

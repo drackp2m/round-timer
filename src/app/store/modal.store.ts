@@ -59,7 +59,7 @@ export class ModalStore extends signalStore({ protectedState: false }, withState
 			return Promise.reject(new Error('Modal container has not been initialized'));
 		}
 
-		return this.modalOutletComponent.open('Create new participant', component);
+		return this.modalOutletComponent.open('Create new player', component);
 	}
 
 	async close() {

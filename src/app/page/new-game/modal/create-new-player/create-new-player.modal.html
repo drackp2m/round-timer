@@ -1,4 +1,4 @@
-<section class="flex-col p-4 gap-4">
+<section class="flex-col p-4 pb-8 gap-4">
 	<!-- <ul>
 		@for (colorValue of colorValues; track $index) {
 			<li [attr.style]="'background-color: ' + colorValue + ';'">&nbsp;</li>
@@ -7,21 +7,27 @@
 
 	<!-- <app-player-badge /> -->
 
-	<input appInput type="text" label="Name" placeholder="John Doe" />
+	<form [formGroup]="playerForm" (ngSubmit)="onSubmit()" class="flex-col gap-4">
+		<input appInput formControlName="name" label="Name" placeholder="John Doe" />
 
-	<input appInput type="text" label="Nickname" placeholder="JohnKiller69" />
+		<input appInput formControlName="nick" label="Nickname" placeholder="JohnKiller69" />
 
-	<select appSelect>
-		<option value="">Color</option>
-		@for (color of colors; track $index) {
-			<option [attr.value]="color">{{ color }}</option>
-		}
-	</select>
+		<select appSelect formControlName="color">
+			<option value="">Color</option>
+			@for (color of colors; track $index) {
+				<option [attr.value]="color.value">{{ color.name }}</option>
+			}
+		</select>
 
-	<select appSelect>
-		<option value="">Icon</option>
-		@for (icon of icons; track $index) {
-			<option [attr.value]="icon">{{ icon }}</option>
-		}
-	</select>
+		<select appSelect formControlName="icon">
+			<option value="">Icon</option>
+			@for (icon of icons; track $index) {
+				<option [attr.value]="icon.value">{{ icon.name }}</option>
+			}
+		</select>
+
+		<button appButton type="submit" [disabled]="playerForm.invalid" color="contrast">
+			<span class="flex-row justify-center"> Create</span>
+		</button>
+	</form>
 </section>

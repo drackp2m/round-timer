@@ -12,14 +12,14 @@ import {
 	viewChild,
 } from '@angular/core';
 
-import { ButtonComponent } from '@app/component/button.component';
+import { ButtonDirective } from '@app/directive/button.directive';
 import { ModalStore } from '@app/store/modal.store';
 
 @Component({
 	selector: 'app-modal-outlet',
 	templateUrl: './modal-outlet.component.html',
 	styleUrl: './modal-outlet.component.scss',
-	imports: [ButtonComponent],
+	imports: [ButtonDirective],
 	animations: [
 		trigger('slideAnimation', [
 			state('visible', style({ transform: 'translateY(-{{distance}}px)' }), {

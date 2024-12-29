@@ -7,4 +7,4 @@ import { GenericRepository } from './generic.repository';
 @Injectable({
 	providedIn: 'root',
 })
-export class ParticipantRepository extends GenericRepository<PlayerSchema> {}
+export class PlayerRepository extends GenericRepository<PlayerSchema> {}

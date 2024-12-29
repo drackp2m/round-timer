@@ -17,10 +17,10 @@ import {
 	},
 })
 export class InputDirective implements OnInit, AfterViewInit {
+	// FixMe => input are not filled when write text on type number
 	readonly type = input('text');
 	readonly label = input('');
 	readonly placeholder = input('');
-	readonly icon = input<string>();
 
 	private readonly elementRef: ElementRef<HTMLInputElement> = inject(ElementRef);
 	private readonly renderer2 = inject(Renderer2);
@@ -31,7 +31,6 @@ export class InputDirective implements OnInit, AfterViewInit {
 	private readonly borderBox: HTMLDivElement = this.createBorderBox();
 	private readonly labelBox: HTMLDivElement = this.creteLabelBox();
 	private readonly placeholderElement: HTMLSpanElement = this.createPlaceholder();
-	private readonly iconElement?: HTMLSpanElement;
 
 	constructor() {
 		effect(() => this.fillLabel(this.label()));
@@ -155,11 +154,4 @@ export class InputDirective implements OnInit, AfterViewInit {
 	private fillPlaceholder(value: string): void {
 		this.renderer2.setProperty(this.placeholderElement, 'textContent', value);
 	}
-
-	// private addIcon(value: string): void {
-	// 	this.iconElement = this.renderer2.createElement('span');
-	// 	this.renderer2.addClass(this.iconElement, 'icon');
-	// 	this.renderer2.setProperty(this.iconElement, 'textContent', value);
-	// 	this.renderer2.appendChild(this.wrapperElement!, this.iconElement);
-	// }
 }
