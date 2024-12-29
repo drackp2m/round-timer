@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -120,6 +121,17 @@ const eslintConfig = tseslint.config(
 					],
 				},
 			],
+			'no-restricted-imports': [
+				'warn',
+				{
+					patterns: [
+						{
+							group: ['../*'],
+							message: 'Use path aliases instead of relative imports',
+						},
+					],
+				},
+			],
 			'import/order': [
 				'warn',
 				{
@@ -129,7 +141,7 @@ const eslintConfig = tseslint.config(
 					},
 					pathGroups: [
 						{
-							pattern: '@round-timer/**',
+							pattern: '@app/**',
 							group: 'external',
 							position: 'after',
 						},

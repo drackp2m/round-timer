@@ -1,20 +1,20 @@
 <section class="flex-col gap-2">
 	<div>
-		<h4>Participants</h4>
+		<h4>Players</h4>
 
 		<ul>
-			@for (participant of participants(); track participant.uuid) {
+			@for (player of players(); track player.uuid) {
 				<li>
-					{{ participant.name }}
+					{{ player.name }}
 				</li>
 			} @empty {
-				<li>{{ participantsLoading() ? 'Loading...' : 'No participants' }}</li>
+				<li>{{ playerStoreIsLoading() ? 'Loading...' : 'No players' }}</li>
 			}
 		</ul>
 	</div>
 
 	<div class="flex-col gap-2 align-start">
-		<app-button (click)="addParticipant()" color="contrast-mid">
+		<app-button (click)="addPlayer()" color="contrast-mid">
 			<div class="flex-row gap-2 align-center text-sm">
 				<app-svg icon="user-plus" [size]="12" color="surface-primary" />Add participant
 			</div>

@@ -1,4 +1,4 @@
-export enum participantColor {
+export enum PlayerColor {
 	DIM_GRAY = '#696969',
 	FIRE_BRICK = '#b22222',
 	LIGHT_CORAL = '#f08080',

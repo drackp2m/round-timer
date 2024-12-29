@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { IDBPDatabase, IDBPTransaction, StoreNames, deleteDB } from 'idb';
 
-import { ParticipantSchema } from '../definition/participant/participant.schema';
+import { PlayerSchema } from '@app/definition/player/player.schema';
 
-export type IDBPDatabaseSchemas = ParticipantSchema;
+export type IDBPDatabaseSchemas = PlayerSchema;
 
 interface Migration<T> {
 	version: number;
@@ -25,14 +25,14 @@ export class MigrationHandler<T> {
 		{
 			version: 1,
 			apply: ({ database }) => {
-				database.createObjectStore('participant');
+				database.createObjectStore('player');
 			},
 		},
 		{
 			version: 2,
 			apply: ({ oldVersion, transaction }) => {
 				if (2 > oldVersion) {
-					const offlineGameStore = transaction.objectStore('participant');
+					const offlineGameStore = transaction.objectStore('player');
 					offlineGameStore.createIndex('nick', 'nick', { unique: true });
 				}
 			},

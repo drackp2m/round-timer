@@ -70,8 +70,9 @@
               "buildTarget": "round-timer:build:development",
               "port": 4200,
               "host": "0.0.0.0",
-              "disableHostCheck": true,
-              "liveReload": false,
+							"hmr": true,
+              "disableHostCheck": false,
+              "liveReload": true,
               "ssl": true
             }
           },

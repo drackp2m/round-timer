@@ -12,8 +12,8 @@ import {
 	viewChild,
 } from '@angular/core';
 
-import { ModalStore } from '../../store/modal.store';
-import { ButtonComponent } from '../button.component';
+import { ButtonComponent } from '@app/component/button.component';
+import { ModalStore } from '@app/store/modal.store';
 
 @Component({
 	selector: 'app-modal-outlet',
@@ -36,6 +36,8 @@ import { ButtonComponent } from '../button.component';
 	],
 })
 export class ModalOutletComponent implements AfterViewInit {
+	// Fixme => solve error when modal content change his height
+	// Fixme => create class to ensure add title on modals and require it on open method
 	private readonly modalContainer = viewChild.required('modalContainer', { read: ElementRef });
 	private readonly modalContent = viewChild.required('modalContent', { read: ViewContainerRef });
 

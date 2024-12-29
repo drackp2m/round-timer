@@ -1,11 +1,11 @@
 import { Component, inject } from '@angular/core';
 
-import { ButtonComponent } from '../../component/button.component';
-import { SvgComponent } from '../../component/svg.component';
-import { ModalStore } from '../../store/modal.store';
-import { ParticipantStore } from '../../store/participant.store';
+import { ButtonComponent } from '@app/component/button.component';
+import { SvgComponent } from '@app/component/svg.component';
+import { ModalStore } from '@app/store/modal.store';
+import { PlayerStore } from '@app/store/player.store';
 
-import { CreateNewParticipantModal } from './modal/create-new-participant/create-new-participant.modal';
+import { CreateNewPlayerModal } from './modal/create-new-player/create-new-player.modal';
 
 @Component({
 	templateUrl: './new-game.page.html',
@@ -13,13 +13,13 @@ import { CreateNewParticipantModal } from './modal/create-new-participant/create
 	imports: [ButtonComponent, SvgComponent],
 })
 export class NewGamePage {
-	private readonly participantStore = inject(ParticipantStore);
+	private readonly playerStore = inject(PlayerStore);
 	private readonly modalStore = inject(ModalStore);
 
-	readonly participants = this.participantStore.participants;
-	readonly participantsLoading = this.participantStore.isLoading;
+	readonly players = this.playerStore.player;
+	readonly playerStoreIsLoading = this.playerStore.isLoading;
 
-	addParticipant(): void {
-		this.modalStore.open(CreateNewParticipantModal);
+	addPlayer(): void {
+		this.modalStore.open(CreateNewPlayerModal);
 	}
 }

@@ -2,7 +2,7 @@ import { ComponentRef, Injectable, Type } from '@angular/core';
 import { signalStore, withState } from '@ngrx/signals';
 import { firstValueFrom, timer } from 'rxjs';
 
-import { ModalOutletComponent } from '../component/modal-outlet/modal-outlet.component';
+import { ModalOutletComponent } from '@app/component/modal-outlet/modal-outlet.component';
 
 interface ModalStoreProps {
 	isOpen: boolean;
@@ -23,9 +23,11 @@ export class ModalStore extends signalStore({ protectedState: false }, withState
 	private initializeError = false;
 	private readonly timeoutPromise = firstValueFrom(timer(1000)).then(
 		(): Promise<undefined> | void => {
-			this.initializeError = null === this.modalOutletComponent;
+			if (null === this.modalOutletComponent) {
+				this.initializeError = true;
 
-			return Promise.reject(new Error('Modal container initialization timeout'));
+				return Promise.reject(new Error('Modal container initialization timeout'));
+			}
 		},
 	);
 

@@ -9,7 +9,7 @@ import {
 	inject,
 } from '@angular/core';
 
-import { SvgComponent } from '../component/svg.component';
+import { SvgComponent } from '@app/component/svg.component';
 
 @Directive({
 	selector: 'select[appSelect]',

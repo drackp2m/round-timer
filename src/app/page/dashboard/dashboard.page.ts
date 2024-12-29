@@ -1,11 +1,11 @@
 import { Component, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { ButtonComponent } from '../../component/button.component';
+import { ButtonComponent } from '@app/component/button.component';
 
 @Component({
 	templateUrl: './dashboard.page.html',
-	imports: [ButtonComponent, RouterLink],
+	imports: [RouterLink, ButtonComponent],
 })
 export class DashboardPage {
 	number = signal(22);

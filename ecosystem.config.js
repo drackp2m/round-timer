@@ -2,7 +2,7 @@ module.exports = {
 	apps: [
 		{
 			name: 'app',
-			script: 'node --run start',
+			script: 'node --run start:hmr',
 			exec_mode: 'fork',
 			instances: 1,
 			kill_timeout: 1000,

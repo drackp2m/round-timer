@@ -1,4 +1,4 @@
-export interface Participant {
+export interface Player {
 	uuid: string;
 	name: string;
 	nick: string;

@@ -1,4 +1,4 @@
-export enum ParticipantIcon {
+export enum PlayerIcon {
 	STAFF = 'staff',
 	SWORDS = 'swords',
 	GHOST = 'ghost',
