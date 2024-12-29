@@ -1,4 +1,4 @@
-import { EnumSelectOptions } from '@app/definition/enum-select-options';
+import { EnumSelectOptions } from '@app/definition/enum-select-options.type';
 import { ChangeTextCase } from '@app/util/change-text-case';
 
 export class Enum {

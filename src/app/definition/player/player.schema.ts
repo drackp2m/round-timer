@@ -1,6 +1,6 @@
 import { DBSchema } from 'idb';
 
-import { Player } from './player.model';
+import { Player } from '../../model/player.model';
 
 export interface PlayerSchema extends DBSchema {
 	player: {

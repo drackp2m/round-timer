@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
+import { Player } from '@app/model/player.model';
 import { patchState, signalStore, withState } from '@ngrx/signals';
 
-import { Player } from '@app/definition/player/player.model';
 import { PlayerRepository } from '@app/repository/player.repository';
 
 interface PlayerStoreProps {

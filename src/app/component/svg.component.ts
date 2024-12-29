@@ -6,12 +6,14 @@ import { Component, input } from '@angular/core';
 		[attr.class]="color()"
 		[style.height]="size()"
 		[style.aspect-ratio]="aspectRatio()"
-		[style.-webkit-mask]="icon()"
+		[style.mask]="icon()"
+		[style.background-color]="hexColor()"
 	></div>`,
 })
 export class SvgComponent {
 	readonly icon = input.required<string, string>({ transform: this.getIcon });
 	readonly color = input<string>('surface-contrast');
+	readonly hexColor = input<string>('--var(--color-contrast)');
 	readonly size = input<string, number>('24px', { transform: (size: number) => `${size}px` });
 
 	getIcon(value: string): string {

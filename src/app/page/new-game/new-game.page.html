@@ -1,19 +1,18 @@
 <section class="flex-col gap-2">
-	<div>
+	<div class="flex-col gap-2">
 		<h4>Players</h4>
 
-		<ul>
+		<ul class="flex-col gap-2 mb-4">
 			@for (player of players(); track player.uuid) {
-				<li>
+				<li class="flex-row gap-2 align-center">
+					<app-svg [icon]="player.iconValue" [hexColor]="player.colorValue" [size]="20" />
 					{{ player.name }}
 				</li>
 			} @empty {
 				<li>{{ playerStoreIsLoading() ? 'Loading...' : 'No players' }}</li>
 			}
 		</ul>
-	</div>
 
-	<div class="flex-col gap-2 align-start">
 		<button appButton (click)="addPlayer()" color="contrast-mid">
 			<div class="flex-row gap-2 align-center text-sm">
 				<app-svg icon="user-plus" [size]="12" color="surface-primary" />Add player

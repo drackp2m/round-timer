@@ -5,7 +5,7 @@
 		}
 	</ul> -->
 
-	<!-- <app-player-badge /> -->
+	<app-player-badge [player]="partialPlayer()" />
 
 	<form [formGroup]="playerForm" (ngSubmit)="onSubmit()" class="flex-col gap-4">
 		<input appInput formControlName="name" label="Name" placeholder="John Doe" />
@@ -14,6 +14,7 @@
 
 		<select appSelect formControlName="color">
 			<option value="">Color</option>
+
 			@for (color of colors; track $index) {
 				<option [attr.value]="color.value">{{ color.name }}</option>
 			}
@@ -21,6 +22,7 @@
 
 		<select appSelect formControlName="icon">
 			<option value="">Icon</option>
+
 			@for (icon of icons; track $index) {
 				<option [attr.value]="icon.value">{{ icon.name }}</option>
 			}
