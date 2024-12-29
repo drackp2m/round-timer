@@ -1,16 +1,18 @@
 @use 'sass:meta';
 @use 'sass:map';
 
-@use '../abstracts/mixins' as mix;
-@use '../abstracts/variables' as var;
+@use '../abstract/mixin' as mix;
+@use '../abstract/variable' as var;
 
 @font-face {
 	font-family: Recursive;
+	font-style: normal;
 	src: url('../../../public/font/recursive/latin_basic.woff2') format('woff2-variations');
 }
 
 @font-face {
 	font-family: 'Helvetica Now';
+	font-style: normal;
 	src: url('../../../public/font/helvetica-now/regular.woff2') format('woff2');
 }
 
@@ -68,13 +70,8 @@ $text-align: (
 }
 
 @include mix.generate-responsive($text-align);
-
 @include mix.generate-responsive(get-list(var.$font-size));
-
 @include mix.generate-responsive(get-list(var.$font-weight, get-weight-rules));
-
 @include mix.generate-responsive(get-list(var.$font-oblique, get-oblique-rules));
-
 @include mix.generate-responsive(get-list(var.$font-monospace, get-mono-space-rules));
-
 @include mix.generate-responsive(get-list(var.$font-casual, get-casual-rules));

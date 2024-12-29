@@ -23,8 +23,7 @@
 			width: 100%;
 
 			background-color: var(--color-primary);
-			border-radius: calc(var(--spacing-sm) + var(--spacing-md))
-				calc(var(--spacing-sm) + var(--spacing-md)) 0 0;
+			border-radius: var(--spacing-6) var(--spacing-6) 0 0;
 		}
 	}
 }

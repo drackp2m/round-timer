@@ -1,68 +1,27 @@
 /* You can add global styles to this file, and also import other style files */
 @use 'the-new-css-reset/css/reset';
 
+@use './scss/abstract/generate-variable';
+@use './scss/utility/layout';
+@use './scss/utility/visibility';
+@use './scss/utility/spacing';
+@use './scss/utility/rounded';
+@use './scss/utility/color';
+@use './scss/utility/typography';
+@use './scss/utility/shadow';
+
 @use './scss/main';
 
-html {
-	cursor: default;
+@use './scss/directive/input';
+@use './scss/directive/select';
 
-	overscroll-behavior: none;
-
-	font-family: 'Helvetica Now', sans-serif;
-	font-size: 16px;
-	font-weight: var(--font-weight-md);
-
-	body {
-		overflow: hidden;
-		height: 100vh;
-
-		main {
-			ng-component {
-				> section {
-					padding: var(--spacing-md);
-				}
-			}
-		}
-	}
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-	font-weight: var(--font-weight-xxl);
-}
-
-h1 {
-	font-size: var(--font-size-xxxl);
-}
-
-h2 {
-	font-size: var(--font-size-xxl);
-}
-
-h3 {
-	font-size: var(--font-size-xl);
-}
-
-h4 {
-	font-size: var(--font-size-lg);
-}
-
-h5 {
-	font-size: var(--font-size-md);
-}
-
-h6 {
-	font-size: var(--font-size-sm);
-}
-
-button,
-.btn,
-a {
-	&:hover {
-		opacity: 0.8;
-	}
-}
+// $DIM_GRAY: #696969;
+// $FIRE_BRICK: #b22222;
+// $LIGHT_CORAL: #f08080;
+// $HOT_PINK: #ff69b4;
+// $ANTIQUE_WHITE: #faebd7;
+// $KHAKI: #f0e68c;
+// $GOLD: #ffd700;
+// $LAWN_GREEN: #7cfc00;
+// $LIME_GREEN: #32cd32;
+// $DEEP_SKY_BLUE: #00bfff;

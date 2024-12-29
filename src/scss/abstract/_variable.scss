@@ -1,4 +1,7 @@
-@use './functions' as func;
+@use './function' as func;
+
+$base-spacing: 0.25rem !default;
+$hover-opacity: 0.7 !default;
 
 $breakpoint: (
 	sm: 480px,
@@ -67,30 +70,70 @@ $dark-color: (
 ) !default;
 
 $spacing: (
-	none: 0,
-	xs: 0.25rem,
-	sm: 0.5rem,
-	md: 1rem,
-	lg: 2rem,
-	xl: 3rem,
-	xxl: 4rem,
-	xxxl: 6rem,
+	// 0.25rem (xs)
+	1: $base-spacing * 1,
+	// 0.5rem (sm)
+	2: $base-spacing * 2,
+	// 0.75rem
+	3: $base-spacing * 3,
+	// 1rem (md)
+	4: $base-spacing * 4,
+	// 1.5rem
+	6: $base-spacing * 6,
+	// 2rem (lg)
+	8: $base-spacing * 8,
+	// 2.5rem (lg)
+	10: $base-spacing * 10,
+	// 3rem (xl)
+	12: $base-spacing * 12,
+	// 4rem (xxl)
+	16: $base-spacing * 16,
+	// 5rem
+	20: $base-spacing * 20,
+	// 6rem (xxxl)
+	24: $base-spacing * 24,
+	// 8rem
+	32: $base-spacing * 32,
+	// 10rem
+	40: $base-spacing * 40,
+	// 12rem
+	48: $base-spacing * 48,
+	// 14rem
+	56: $base-spacing * 56,
+	// 16rem
+	64: $base-spacing * 64,
+	// xs: 0.25rem,
+	// sm: 0.5rem,
+	// xs_sm: 0.75rem,
+	// md: 1rem,
+	// sm_md: 1.5rem,
+	// lg: 2.25rem,
+	// md_lg: 3.25rem,
+	// xl: 4.75rem,
+	// xxl: 7rem,
+	// xxxl: 10.25rem,
+	0: 0
 ) !default;
 
 $borders-radius: (
-	none: 0,
-	sm: 0.25rem,
-	md: 0.5rem,
-	lg: 1rem,
+	// 0.25rem (sm)
+	1: $base-spacing * 1,
+	// 0.5rem (md)
+	2: $base-spacing * 2,
+	// 0.75rem
+	3: $base-spacing * 3,
+	// 1rem (lg)
+	4: $base-spacing * 4,
+	0: 0
 ) !default;
 
 $shadow-size: (
-	none: none,
 	sm: 8px 2px rgb(0 0 0 / 5%),
 	md: 12px 1px rgb(0 0 0 / 10%),
 	lg: 16px -1px rgb(0 0 0 / 15%),
 	xl: 20px -3px rgb(0 0 0 / 20%),
 	xxl: 24px -4px rgb(0 0 0 / 25%),
+	none: none,
 ) !default;
 
 $shadow-separation: (

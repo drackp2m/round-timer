@@ -1,8 +1,8 @@
 @use 'sass:map';
 @use 'sass:meta';
 
-@use '../abstracts/variables' as var;
-@use '../abstracts/mixins' as mix;
+@use '../abstract/variable' as var;
+@use '../abstract/mixin' as mix;
 
 .content-fixed {
 	width: 100%;
@@ -22,14 +22,14 @@
 }
 
 :root {
-	--layout-padding: var(--spacing-md);
+	--layout-padding: var(--spacing-4);
 
 	@include mix.sm {
-		--layout-padding: var(--spacing-lg);
+		--layout-padding: var(--spacing-8);
 	}
 
 	@include mix.lg {
-		--layout-padding: var(--spacing-xxl);
+		--layout-padding: var(--spacing-16);
 	}
 }
 

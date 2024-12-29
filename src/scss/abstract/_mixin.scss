@@ -1,7 +1,7 @@
 @use 'sass:map';
 @use 'sass:string';
 
-@use 'variables' as var;
+@use 'variable' as var;
 
 @mixin sm {
 	@media screen and (map.get(var.$breakpoint, sm) <= width) {

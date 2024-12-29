@@ -1,7 +1,7 @@
 @use 'sass:map';
 
-@use '../abstracts/variables' as var;
-@use '../abstracts/mixins' as mix;
+@use '../abstract/variable' as var;
+@use '../abstract/mixin' as mix;
 
 $rules: (
 	m: (

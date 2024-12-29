@@ -1,0 +1,25 @@
+<section class="flex-col p-4 gap-4">
+	<!-- <ul>
+		@for (colorValue of colorValues; track $index) {
+			<li [attr.style]="'background-colorValue: ' + colorValue + ';'">&nbsp;</li>
+		}
+	</ul> -->
+
+	<input appInput type="text" label="Name" placeholder="John Doe" />
+
+	<input appInput type="text" label="Nickname" placeholder="JohnKiller69" />
+
+	<select appSelect>
+		<option value="">Color</option>
+		@for (color of colors; track $index) {
+			<option [attr.value]="color">{{ color }}</option>
+		}
+	</select>
+
+	<select appSelect>
+		<option value="">Icon</option>
+		@for (icon of icons; track $index) {
+			<option [attr.value]="icon">{{ icon }}</option>
+		}
+	</select>
+</section>

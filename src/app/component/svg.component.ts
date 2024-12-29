@@ -30,8 +30,12 @@ export class SvgComponent {
 			case 'backward-step':
 			case 'forward-step':
 			case 'pause':
+			case 'chevron-left':
+			case 'chevron-right':
 				return '320 / 512';
+			case 'ghost':
 			case 'stop':
+			case 'xmark':
 				return '384 / 512';
 			case 'trash':
 				return '448 / 512';

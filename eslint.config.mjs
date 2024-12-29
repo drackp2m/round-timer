@@ -86,7 +86,7 @@ const eslintConfig = tseslint.config(
 			'@angular-eslint/component-class-suffix': [
 				'warn',
 				{
-					suffixes: ['Component', 'Page', 'Layout'],
+					suffixes: ['Layout', 'Page', 'Modal', 'Component'],
 				},
 			],
 			'sonarjs/no-unused-vars': 'off',

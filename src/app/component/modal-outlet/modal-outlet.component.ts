@@ -57,7 +57,7 @@ export class ModalOutletComponent implements AfterViewInit {
 	}));
 
 	ngAfterViewInit() {
-		this.modalStore.setContainer(this);
+		this.modalStore.initializeContainer(this);
 	}
 
 	getModalContent(): ViewContainerRef {

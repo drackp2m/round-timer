@@ -1,5 +1,5 @@
-@use '../abstracts/mixins' as mix;
-@use '../abstracts/variables' as var;
+@use '../abstract/mixin' as mix;
+@use '../abstract/variable' as var;
 
 $rules: (
 	hide: (
@@ -8,5 +8,4 @@ $rules: (
 );
 
 @include mix.generate-responsive($rules);
-
 @include mix.generate-except-responsive($rules);

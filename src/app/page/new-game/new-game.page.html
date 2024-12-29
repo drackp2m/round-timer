@@ -1,4 +1,4 @@
-<section class="flex-col gap-sm">
+<section class="flex-col gap-2">
 	<div>
 		<h4>Participants</h4>
 
@@ -13,16 +13,10 @@
 		</ul>
 	</div>
 
-	<div class="flex-col gap-sm align-start">
+	<div class="flex-col gap-2 align-start">
 		<app-button (click)="addParticipant()" color="contrast-mid">
-			<div class="flex-row gap-sm align-center text-sm">
+			<div class="flex-row gap-2 align-center text-sm">
 				<app-svg icon="user-plus" [size]="12" color="surface-primary" />Add participant
-			</div>
-		</app-button>
-
-		<app-button (click)="closeModal()" color="contrast-mid">
-			<div class="flex-row gap-sm align-center text-sm">
-				<app-svg icon="big-xmark" [size]="12" color="surface-primary" />Create new new Game
 			</div>
 		</app-button>
 	</div>

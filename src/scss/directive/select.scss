@@ -1,0 +1,45 @@
+@use '../abstract/variable' as var;
+
+.app-select {
+	$input-horizontal-padding: var(--spacing-3);
+	$input-vertical-padding: var(--spacing-2);
+	$border-width: 1.5px;
+
+	position: relative;
+
+	select {
+		position: relative;
+		z-index: 1;
+
+		width: 100%;
+		padding: $input-vertical-padding $input-horizontal-padding;
+
+		border-radius: var(--border-radius-3);
+	}
+
+	.border-box {
+		position: absolute;
+		inset: 0;
+		overflow: hidden;
+		padding: $input-vertical-padding $input-horizontal-padding;
+
+		&::before {
+			content: '';
+
+			position: absolute;
+			inset: 0;
+
+			border: solid $border-width var(--color-contrast-mid);
+			border-radius: var(--border-radius-3);
+		}
+	}
+
+	&:hover,
+	&.focused {
+		.border-box {
+			&::before {
+				border-color: var(--color-accent);
+			}
+		}
+	}
+}

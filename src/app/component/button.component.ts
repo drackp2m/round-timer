@@ -17,15 +17,6 @@ import { SvgComponent } from './svg.component';
 			:host {
 				display: contents;
 			}
-
-			button {
-				padding: var(--spacing-xs) calc(var(--spacing-xs) + var(--spacing-sm));
-				border-radious: var(--round-md);
-
-				&.icon {
-					padding: var(--spacing-xs);
-				}
-			}
 		`,
 	],
 	imports: [SvgComponent],
@@ -42,7 +33,7 @@ export class ButtonComponent {
 		const color = this.color();
 		const icon = this.icon();
 
-		const paddingClass = icon === undefined ? 'p-xs px-md round-md' : 'icon';
+		const paddingClass = icon === undefined ? 'p-1 px-3 round-2' : 'p-1';
 		const colorClass = icon === undefined ? this.getColor(color) : '';
 
 		return `${paddingClass} ${colorClass}`;
