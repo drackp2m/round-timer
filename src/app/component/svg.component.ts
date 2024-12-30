@@ -1,28 +1,59 @@
-import { Component, input } from '@angular/core';
+import { Component, ElementRef, OnInit, Renderer2, computed, inject, input } from '@angular/core';
 
 @Component({
 	selector: 'app-svg',
 	template: `<div
 		[attr.class]="color()"
-		[style.height]="size()"
 		[style.aspect-ratio]="aspectRatio()"
 		[style.mask]="icon()"
 		[style.background-color]="hexColor()"
 	></div>`,
+	styles: [
+		`
+			:host {
+				display: flex;
+				justify-content: center;
+
+				&.squared {
+					aspect-ratio: 1 / 1;
+				}
+
+				div {
+					height: 100%;
+				}
+			}
+		`,
+	],
+	host: {
+		'[attr.class]': 'squared() ? "squared" : ""',
+		'[style.height]': 'size()',
+	},
 })
-export class SvgComponent {
+export class SvgComponent implements OnInit {
 	readonly icon = input.required<string, string>({ transform: this.getIcon });
 	readonly color = input<string>('surface-contrast');
 	readonly hexColor = input<string>('--var(--color-contrast)');
-	readonly size = input<string, number>('24px', { transform: (size: number) => `${size}px` });
+	readonly squared = input<boolean, string | boolean>(false, { transform: this.convertToBoolean });
+	readonly size = input<string, number>('24px', { transform: (size) => `${size}px` });
+
+	readonly aspectRatio = computed(() => this.getAspectRatio());
+
+	private readonly elementRef: ElementRef<SvgComponent> = inject(ElementRef);
+	private readonly renderer2 = inject(Renderer2);
+
+	ngOnInit(): void {
+		console.log('init svg');
+	}
 
 	getIcon(value: string): string {
 		return `url(/svg/${value}-solid.svg) no-repeat center`;
 	}
 
-	aspectRatio(): string {
+	private getAspectRatio(): string {
 		const icon = this.icon();
 		const iconNameRegex = /\/svg\/(.+)-solid.svg/;
+
+		console.log(`calculating aspect-ratio from ${icon}...`);
 
 		const match = iconNameRegex.exec(icon);
 
@@ -46,5 +77,9 @@ export class SvgComponent {
 			default:
 				return '1 / 1';
 		}
+	}
+
+	private convertToBoolean(value: boolean | string): boolean {
+		return 'string' === typeof value ? 'false' !== value : value;
 	}
 }

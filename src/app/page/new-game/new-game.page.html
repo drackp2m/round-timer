@@ -5,7 +5,7 @@
 		<ul class="flex-col gap-2 mb-4">
 			@for (player of players(); track player.uuid) {
 				<li class="flex-row gap-2 align-center">
-					<app-svg [icon]="player.iconValue" [hexColor]="player.colorValue" [size]="20" />
+					<app-svg [icon]="player.iconValue" [hexColor]="player.colorValue" [size]="20" squared />
 					{{ player.name }}
 				</li>
 			} @empty {

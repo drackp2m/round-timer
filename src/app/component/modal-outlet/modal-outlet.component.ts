@@ -14,6 +14,7 @@ import {
 
 import { ButtonDirective } from '@app/directive/button.directive';
 import { ModalStore } from '@app/store/modal.store';
+import { Async } from '@app/util/async';
 
 @Component({
 	selector: 'app-modal-outlet',
@@ -26,12 +27,12 @@ import { ModalStore } from '@app/store/modal.store';
 				params: { distance: 0 },
 			}),
 			state('hidden', style({ transform: 'translateY(0)' })),
-			transition('hidden <=> visible', animate('{{duration}}ms {{easing}}')),
+			transition('* <=> visible', animate('{{duration}}ms {{easing}}')),
 		]),
 		trigger('fadeAnimation', [
 			state('visible', style({ 'background-color': '#0006' })),
 			state('hidden', style({ 'background-color': '#0000' })),
-			transition('* <=> *', animate('{{duration}}ms {{easing}}')),
+			transition('* <=> visible', animate('{{duration}}ms {{easing}}')),
 		]),
 	],
 })
@@ -48,7 +49,7 @@ export class ModalOutletComponent implements AfterViewInit {
 
 	activeComponentRef: ComponentRef<unknown> | null = null;
 
-	readonly modalState = signal<'hidden' | 'visible' | 'transitioning'>('hidden');
+	readonly modalState = signal<'hidden' | 'transitioning' | 'visible'>('hidden');
 	readonly height = signal(0);
 	readonly title = signal('');
 	readonly isInTransition = signal(false);
@@ -67,6 +68,10 @@ export class ModalOutletComponent implements AfterViewInit {
 	}
 
 	async open<T>(title: string, component: Type<T>): Promise<ComponentRef<T>> {
+		this.modalState.set('transitioning');
+
+		await Async.waitForFrames();
+
 		const modalContent = this.modalContent();
 		const modalContainer = this.modalContainer();
 		const animationInProgress = this.isInTransition();
@@ -85,13 +90,7 @@ export class ModalOutletComponent implements AfterViewInit {
 		const componentRef = modalContent.createComponent(component);
 		this.activeComponentRef = componentRef;
 
-		await new Promise<void>((resolve) => {
-			requestAnimationFrame(() => {
-				requestAnimationFrame(() => {
-					resolve();
-				});
-			});
-		});
+		await Async.waitForFrames(2);
 
 		this.height.set(modalContainer.nativeElement.offsetHeight);
 

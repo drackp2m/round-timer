@@ -4,21 +4,23 @@
 	<!-- <h1 style="position: absolute; top: 200px">{{ top() }} {{ modalState() }}</h1> -->
 
 	<div class="wrapper">
-		<div
-			#modalContainer
-			class="container shadow-top-lg"
-			[@slideAnimation]="{ value: modalState(), params: animationParams() }"
-			(@slideAnimation.done)="onAnimationDone($event)"
-		>
-			<div class="header flex-row justify-between align-center p-4 pb-0">
-				<h4 class="color-contrast-mid">{{ title() }}</h4>
+		@if (modalState() !== 'hidden') {
+			<div
+				#modalContainer
+				class="container shadow-top-lg"
+				[@slideAnimation]="{ value: modalState(), params: animationParams() }"
+				(@slideAnimation.done)="onAnimationDone($event)"
+			>
+				<div class="header flex-row justify-between align-center p-4 pb-0">
+					<h4 class="color-contrast-mid">{{ title() }}</h4>
 
-				<button appButton icon="xmark" [iconSize]="22" color="contrast-mid" (click)="close()">
-					<!---->
-				</button>
+					<button appButton icon="xmark" [iconSize]="22" color="contrast-mid" (click)="close()">
+						<!---->
+					</button>
+				</div>
+
+				<ng-container #modalContent />
 			</div>
-
-			<ng-container #modalContent />
-		</div>
+		}
 	</div>
 </div>
