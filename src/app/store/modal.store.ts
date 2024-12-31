@@ -3,6 +3,7 @@ import { signalStore, withState } from '@ngrx/signals';
 import { firstValueFrom, timer } from 'rxjs';
 
 import { ModalOutletComponent } from '@app/component/modal-outlet/modal-outlet.component';
+import { Modal } from '@app/model/modal.model';
 
 interface ModalStoreProps {
 	isOpen: boolean;
@@ -44,7 +45,7 @@ export class ModalStore extends signalStore({ protectedState: false }, withState
 		this.containerInitResolve();
 	}
 
-	async open<T>(component: Type<T>): Promise<ComponentRef<T>> {
+	async open<T extends Modal>(component: Type<T>): Promise<ComponentRef<T>> {
 		if (this.initializeError) {
 			return Promise.reject(
 				new Error(
@@ -59,7 +60,7 @@ export class ModalStore extends signalStore({ protectedState: false }, withState
 			return Promise.reject(new Error('Modal container has not been initialized'));
 		}
 
-		return this.modalOutletComponent.open('Create new player', component);
+		return this.modalOutletComponent.open(component);
 	}
 
 	async close() {

@@ -1,21 +1,20 @@
 import { Component, Signal, computed, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Player } from '@app/model/player.model';
 
 import { PlayerBadgeComponent } from '@app/component/player-badge.component';
-import { EnumSelectOptions } from '@app/definition/enum-select-options.type';
-import { PlayerColor } from '@app/definition/player/player-color.enum';
-import { PlayerIcon } from '@app/definition/player/player-icon.enum';
+import { PlayerColor, PlayerColorKey } from '@app/definition/player/player-color.enum';
+import { PlayerIcon, PlayerIconKey } from '@app/definition/player/player-icon.enum';
 import { ButtonDirective } from '@app/directive/button.directive';
 import { InputDirective } from '@app/directive/input.directive';
 import { SelectDirective } from '@app/directive/select.directive';
+import { Modal } from '@app/model/modal.model';
+import { Player } from '@app/model/player.model';
 import { PlayerStore } from '@app/store/player.store';
 import { Enum } from '@app/util/enum';
 
 @Component({
-	templateUrl: './create-new-player.modal.html',
-	styleUrl: './create-new-player.modal.scss',
+	templateUrl: './add-player.modal.html',
 	imports: [
 		InputDirective,
 		SelectDirective,
@@ -24,14 +23,18 @@ import { Enum } from '@app/util/enum';
 		PlayerBadgeComponent,
 	],
 })
-export class CreateNewPlayerModal {
+export class AddPlayerModal extends Modal {
+	readonly TITLE = 'Add Player';
+
 	private readonly playerStore = inject(PlayerStore);
 
-	readonly colorValues = Object.values(PlayerColor);
-	readonly colors = this.getColorNames();
-	readonly icons = this.getIconNames();
+	readonly colors = Enum.toSelectOptions(PlayerColor);
+	readonly icons = Enum.toSelectOptions(PlayerIcon);
 
-	readonly playerForm = new FormGroup({
+	// ToDo => remove this when stop tests
+	readonly colorValues = Object.values(PlayerColor);
+
+	readonly form = new FormGroup({
 		name: new FormControl<string>('', {
 			nonNullable: true,
 			validators: [Validators.required, Validators.minLength(3)],
@@ -40,17 +43,17 @@ export class CreateNewPlayerModal {
 			nonNullable: true,
 			validators: [Validators.required, Validators.minLength(4), Validators.maxLength(20)],
 		}),
-		color: new FormControl<keyof typeof PlayerColor | ''>('', {
+		color: new FormControl<PlayerColorKey | ''>('', {
 			nonNullable: true,
 			validators: [Validators.required],
 		}),
-		icon: new FormControl<keyof typeof PlayerIcon | ''>('', {
+		icon: new FormControl<PlayerIconKey | ''>('', {
 			nonNullable: true,
 			validators: [Validators.required],
 		}),
 	});
 
-	private readonly formChange = toSignal(this.playerForm.valueChanges);
+	private readonly formChange = toSignal(this.form.valueChanges);
 
 	partialPlayer: Signal<Partial<Player>> = computed(() => {
 		this.formChange();
@@ -67,23 +70,15 @@ export class CreateNewPlayerModal {
 	onSubmit(): void {
 		const player = this.player();
 
-		if (this.playerForm.invalid || null === player) {
+		if (this.form.invalid || null === player) {
 			return;
 		}
 
 		this.playerStore.addPlayer(player);
 	}
 
-	private getColorNames(): EnumSelectOptions<typeof PlayerColor> {
-		return Enum.toSelectOptions(PlayerColor);
-	}
-
-	private getIconNames(): EnumSelectOptions<typeof PlayerIcon> {
-		return Enum.toSelectOptions(PlayerIcon);
-	}
-
 	private playerFromForm(): Player | null {
-		const { name, nick, color, icon } = this.playerForm.controls;
+		const { name, nick, color, icon } = this.form.controls;
 
 		if ('' === color.value || '' === icon.value) {
 			return null;
@@ -93,7 +88,7 @@ export class CreateNewPlayerModal {
 	}
 
 	private partialPlayerFromForm(): Partial<Player> {
-		const { name, nick, color, icon } = this.playerForm.controls;
+		const { name, nick, color, icon } = this.form.controls;
 
 		return {
 			name: name.value,

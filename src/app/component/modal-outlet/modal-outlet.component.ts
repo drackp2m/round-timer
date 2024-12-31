@@ -13,6 +13,7 @@ import {
 } from '@angular/core';
 
 import { ButtonDirective } from '@app/directive/button.directive';
+import { Modal } from '@app/model/modal.model';
 import { ModalStore } from '@app/store/modal.store';
 import { Async } from '@app/util/async';
 
@@ -67,7 +68,7 @@ export class ModalOutletComponent implements AfterViewInit {
 		return this.modalContent();
 	}
 
-	async open<T>(title: string, component: Type<T>): Promise<ComponentRef<T>> {
+	async open<T extends Modal>(component: Type<T>): Promise<ComponentRef<T>> {
 		this.modalState.set('transitioning');
 
 		await Async.waitForFrames();
@@ -81,14 +82,14 @@ export class ModalOutletComponent implements AfterViewInit {
 			return Promise.reject('Modal is already open');
 		}
 
-		this.title.set(title);
-
 		this.isInTransition.set(true);
 
 		this.cleanupModal();
 
 		const componentRef = modalContent.createComponent(component);
 		this.activeComponentRef = componentRef;
+
+		this.title.set(componentRef.instance.TITLE);
 
 		await Async.waitForFrames(2);
 

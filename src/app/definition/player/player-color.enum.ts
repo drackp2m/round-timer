@@ -10,3 +10,5 @@ export enum PlayerColor {
 	LIME_GREEN = '#32cd32',
 	DEEP_SKY_BLUE = '#00bfff',
 }
+
+export type PlayerColorKey = keyof typeof PlayerColor;

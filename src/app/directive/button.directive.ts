@@ -37,11 +37,12 @@ export class ButtonDirective implements OnInit {
 		const icon = this.icon();
 
 		this.renderer2.addClass(buttonElement, 'app-button');
-		this.renderer2.addClass(buttonElement, 'p-2');
 
 		if (icon === undefined) {
 			this.addClassForTextButton(buttonElement);
+			this.renderer2.addClass(buttonElement, 'p-2');
 		} else {
+			this.renderer2.addClass(buttonElement, 'p-1');
 			const iconElement = this.createIcon(icon);
 			this.renderer2.appendChild(buttonElement, iconElement.location.nativeElement);
 		}

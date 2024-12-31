@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, Renderer2, computed, inject, input } from '@angular/core';
+import { Component, computed, input } from '@angular/core';
 
 @Component({
 	selector: 'app-svg',
@@ -29,7 +29,7 @@ import { Component, ElementRef, OnInit, Renderer2, computed, inject, input } fro
 		'[style.height]': 'size()',
 	},
 })
-export class SvgComponent implements OnInit {
+export class SvgComponent {
 	readonly icon = input.required<string, string>({ transform: this.getIcon });
 	readonly color = input<string>('surface-contrast');
 	readonly hexColor = input<string>('--var(--color-contrast)');
@@ -38,13 +38,6 @@ export class SvgComponent implements OnInit {
 
 	readonly aspectRatio = computed(() => this.getAspectRatio());
 
-	private readonly elementRef: ElementRef<SvgComponent> = inject(ElementRef);
-	private readonly renderer2 = inject(Renderer2);
-
-	ngOnInit(): void {
-		console.log('init svg');
-	}
-
 	getIcon(value: string): string {
 		return `url(/svg/${value}-solid.svg) no-repeat center`;
 	}
@@ -52,8 +45,6 @@ export class SvgComponent implements OnInit {
 	private getAspectRatio(): string {
 		const icon = this.icon();
 		const iconNameRegex = /\/svg\/(.+)-solid.svg/;
-
-		console.log(`calculating aspect-ratio from ${icon}...`);
 
 		const match = iconNameRegex.exec(icon);
 

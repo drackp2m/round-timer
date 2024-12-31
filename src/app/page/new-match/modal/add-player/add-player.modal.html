@@ -7,7 +7,7 @@
 
 	<app-player-badge [player]="partialPlayer()" />
 
-	<form [formGroup]="playerForm" (ngSubmit)="onSubmit()" class="flex-col gap-4">
+	<form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex-col gap-4">
 		<input appInput formControlName="name" label="Name" placeholder="John Doe" />
 
 		<input appInput formControlName="nick" label="Nickname" placeholder="JohnKiller69" />
@@ -28,7 +28,7 @@
 			}
 		</select>
 
-		<button appButton type="submit" [disabled]="playerForm.invalid" color="contrast">
+		<button appButton type="submit" [disabled]="form.invalid" color="contrast">
 			<span class="flex-row justify-center"> Create</span>
 		</button>
 	</form>

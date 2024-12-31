@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { IDBPDatabase, IDBPTransaction, StoreNames, deleteDB } from 'idb';
 
-import { PlayerSchema } from '@app/definition/player/player.schema';
+import { PlayerSchema } from '@app/definition/player/player-schema.interface';
 
 export type IDBPDatabaseSchemas = PlayerSchema;
 

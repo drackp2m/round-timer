@@ -9,8 +9,8 @@
 	position: relative;
 
 	input,
-	.border-box,
-	.label-box {
+	.border-container,
+	.label-container {
 		padding: $input-vertical-padding $input-horizontal-padding;
 	}
 
@@ -32,13 +32,13 @@
 		}
 	}
 
-	.border-box,
-	.label-box {
+	.border-container,
+	.label-container {
 		position: absolute;
 		inset: 0;
 	}
 
-	.border-box {
+	.border-container {
 		overflow: hidden;
 
 		&::before {
@@ -83,7 +83,7 @@
 
 	&.focused,
 	&.filled {
-		.border-box {
+		.border-container {
 			&::before {
 				$clip-gap: 2px;
 
@@ -101,7 +101,7 @@
 		}
 
 		.label {
-			bottom: calc(var(--input-height) / 2 + $border-width);
+			bottom: calc(var(--input-height) / 2 - $border-width);
 			font-size: var(--font-size-sm);
 		}
 
@@ -114,7 +114,7 @@
 
 	&:hover,
 	&.focused {
-		.border-box {
+		.border-container {
 			&::before {
 				border-color: var(--color-accent);
 			}

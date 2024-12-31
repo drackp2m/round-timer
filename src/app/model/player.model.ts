@@ -1,31 +1,25 @@
-import { PlayerColor } from '@app/definition/player/player-color.enum';
-import { PlayerIcon } from '@app/definition/player/player-icon.enum';
+import { PlayerColor, PlayerColorKey } from '@app/definition/player/player-color.enum';
+import { PlayerIcon, PlayerIconKey } from '@app/definition/player/player-icon.enum';
 
 export class Player {
-	readonly uuid: string;
+	private readonly NOW = new Date();
+
+	readonly uuid: string = crypto.randomUUID();
 	readonly name: string;
 	readonly nick: string;
-	readonly color: keyof typeof PlayerColor;
+	readonly color: PlayerColorKey;
 	readonly colorValue: string;
-	readonly icon: keyof typeof PlayerIcon;
+	readonly icon: PlayerIconKey;
 	readonly iconValue: string;
-	readonly createdAt: Date;
-	readonly updateAt: Date;
+	readonly createdAt: Date = this.NOW;
+	readonly updateAt: Date = this.NOW;
 
-	constructor(
-		name: string,
-		nick: string,
-		color: keyof typeof PlayerColor,
-		icon: keyof typeof PlayerIcon,
-	) {
-		this.uuid = crypto.randomUUID();
+	constructor(name: string, nick: string, color: PlayerColorKey, icon: PlayerIconKey) {
 		this.name = name;
 		this.nick = nick;
 		this.color = color;
 		this.colorValue = PlayerColor[color];
 		this.icon = icon;
 		this.iconValue = PlayerIcon[icon];
-		this.createdAt = new Date();
-		this.updateAt = new Date();
 	}
 }

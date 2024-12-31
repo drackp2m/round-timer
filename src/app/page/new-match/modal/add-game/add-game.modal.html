@@ -1,0 +1,33 @@
+<section class="flex-col p-4 pb-8 gap-4">
+	<form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex-col gap-4">
+		<input appInput formControlName="name" label="Name" [placeholder]="randomGameName" />
+
+		<input
+			appInput
+			formControlName="maxPlayers"
+			label="Maximum number of players"
+			placeholder="Number between 2 and 20"
+			type="number"
+		/>
+
+		<select appSelect formControlName="turnType">
+			<option value="">Turn type</option>
+
+			@for (turnType of turnTypes; track $index) {
+				<option [attr.value]="turnType.value">{{ turnType.name }}</option>
+			}
+		</select>
+
+		<select appSelect formControlName="turnOrder">
+			<option value="">Icon</option>
+
+			@for (turnOrder of turnOrders; track $index) {
+				<option [attr.value]="turnOrder.value">{{ turnOrder.name }}</option>
+			}
+		</select>
+
+		<button appButton type="submit" [disabled]="form.invalid" color="contrast">
+			<span class="flex-row justify-center"> Create</span>
+		</button>
+	</form>
+</section>

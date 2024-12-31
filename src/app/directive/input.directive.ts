@@ -25,12 +25,12 @@ export class InputDirective implements OnInit, AfterViewInit {
 	private readonly elementRef: ElementRef<HTMLInputElement> = inject(ElementRef);
 	private readonly renderer2 = inject(Renderer2);
 
-	private readonly wrapperElement: HTMLDivElement = this.createContainer();
+	private readonly wrapperElement: HTMLDivElement = this.createWrapper();
 	private readonly labelElement: HTMLLabelElement = this.createLabel();
 	private readonly fakeLabelElement: HTMLSpanElement = this.createFakeLabel();
-	private readonly borderBox: HTMLDivElement = this.createBorderBox();
-	private readonly labelBox: HTMLDivElement = this.creteLabelBox();
-	private readonly placeholderElement: HTMLSpanElement = this.createPlaceholder();
+	private readonly borderContainerElement: HTMLDivElement = this.createBorderContainer();
+	private readonly labelContainerElement: HTMLDivElement = this.creteLabelContainer();
+	private readonly placeholderElement: HTMLSpanElement = this.createPlaceholderSpan();
 
 	constructor() {
 		effect(() => this.fillLabel(this.label()));
@@ -60,7 +60,7 @@ export class InputDirective implements OnInit, AfterViewInit {
 	}
 
 	ngOnInit() {
-		this.createWrapper();
+		this.prepareWrapper();
 	}
 
 	ngAfterViewInit() {
@@ -69,13 +69,15 @@ export class InputDirective implements OnInit, AfterViewInit {
 
 		this.setCSSVariable('--label-width', `${labelWidth}px`);
 		this.setCSSVariable('--input-height', `${inputHeight}px`);
+
+		this.onInput();
 	}
 
 	private setCSSVariable(name: string, value: string) {
 		this.wrapperElement?.style.setProperty(name, value);
 	}
 
-	private createWrapper() {
+	private prepareWrapper() {
 		const inputElement = this.elementRef.nativeElement;
 		const nextSibling = inputElement.nextSibling;
 		const parentElement = inputElement.parentNode;
@@ -85,10 +87,10 @@ export class InputDirective implements OnInit, AfterViewInit {
 		this.renderer2.removeChild(parentElement, inputElement);
 		this.renderer2.appendChild(this.labelElement, inputElement);
 		this.renderer2.appendChild(this.wrapperElement, this.labelElement);
-		this.renderer2.appendChild(this.labelBox, this.fakeLabelElement);
-		this.renderer2.appendChild(this.borderBox, this.placeholderElement);
-		this.renderer2.appendChild(this.wrapperElement, this.borderBox);
-		this.renderer2.appendChild(this.wrapperElement, this.labelBox);
+		this.renderer2.appendChild(this.labelContainerElement, this.fakeLabelElement);
+		this.renderer2.appendChild(this.borderContainerElement, this.placeholderElement);
+		this.renderer2.appendChild(this.wrapperElement, this.borderContainerElement);
+		this.renderer2.appendChild(this.wrapperElement, this.labelContainerElement);
 
 		if (null !== nextSibling) {
 			this.renderer2.insertBefore(parentElement, this.wrapperElement, nextSibling);
@@ -97,7 +99,7 @@ export class InputDirective implements OnInit, AfterViewInit {
 		}
 	}
 
-	private createContainer(): HTMLDivElement {
+	private createWrapper(): HTMLDivElement {
 		const container = this.renderer2.createElement('div');
 
 		this.renderer2.addClass(container, 'app-input');
@@ -115,35 +117,35 @@ export class InputDirective implements OnInit, AfterViewInit {
 	}
 
 	private createFakeLabel(): HTMLSpanElement {
-		const fakeLabel = this.renderer2.createElement('span');
+		const fakeLabel = this.renderer2.createElement('p');
 
 		this.renderer2.addClass(fakeLabel, 'label');
 
 		return fakeLabel;
 	}
 
-	private createBorderBox(): HTMLDivElement {
-		const boderBox = this.renderer2.createElement('div');
+	private createBorderContainer(): HTMLDivElement {
+		const element = this.renderer2.createElement('div');
 
-		this.renderer2.addClass(boderBox, 'border-box');
+		this.renderer2.addClass(element, 'border-container');
 
-		return boderBox;
+		return element;
 	}
 
-	private creteLabelBox(): HTMLDivElement {
-		const box = this.renderer2.createElement('div');
+	private creteLabelContainer(): HTMLDivElement {
+		const element = this.renderer2.createElement('div');
 
-		this.renderer2.addClass(box, 'label-box');
+		this.renderer2.addClass(element, 'label-container');
 
-		return box;
+		return element;
 	}
 
-	private createPlaceholder(): HTMLSpanElement {
-		const placeholder = this.renderer2.createElement('span');
+	private createPlaceholderSpan(): HTMLSpanElement {
+		const element = this.renderer2.createElement('span');
 
-		this.renderer2.addClass(placeholder, 'placeholder');
+		this.renderer2.addClass(element, 'placeholder');
 
-		return placeholder;
+		return element;
 	}
 
 	private fillLabel(value: string): void {

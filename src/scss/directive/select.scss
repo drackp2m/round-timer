@@ -4,42 +4,106 @@
 	$input-horizontal-padding: var(--spacing-3);
 	$input-vertical-padding: var(--spacing-2);
 	$border-width: 1.5px;
+	$transition-duration: 0.25s;
 
 	position: relative;
 
-	select {
-		position: relative;
-		z-index: 1;
-
-		width: 100%;
+	select,
+	.border-container,
+	.label-container {
 		padding: $input-vertical-padding $input-horizontal-padding;
-
-		border-radius: var(--border-radius-3);
 	}
 
-	.border-box {
+	label {
+		span {
+			position: absolute;
+			font-size: var(--font-size-sm);
+			visibility: hidden;
+		}
+
+		select {
+			position: relative;
+			z-index: 1;
+			width: 100%;
+			border-radius: var(--border-radius-3);
+		}
+	}
+
+	.border-container,
+	.label-container {
 		position: absolute;
 		inset: 0;
-		overflow: hidden;
-		padding: $input-vertical-padding $input-horizontal-padding;
+	}
 
+	.border-container {
 		&::before {
 			content: '';
 
 			position: absolute;
 			inset: 0;
 
+			clip-path: polygon(
+				0 0,
+				calc($input-horizontal-padding + var(--label-width) / 2) 0,
+				calc($input-horizontal-padding + var(--label-width) / 2) 2px,
+				calc($input-horizontal-padding + var(--label-width) / 2) 2px,
+				calc($input-horizontal-padding + var(--label-width) / 2) 0,
+				100% 0,
+				100% 100%,
+				0 100%
+			);
 			border: solid $border-width var(--color-contrast-mid);
 			border-radius: var(--border-radius-3);
+
+			transition: clip-path $transition-duration ease-in-out;
+		}
+	}
+
+	.label {
+		position: relative;
+		bottom: 0;
+		transition:
+			bottom $transition-duration ease-in-out,
+			font-size $transition-duration ease-in-out;
+	}
+
+	&.focused,
+	&.filled {
+		.border-container {
+			&::before {
+				$clip-gap: 2px;
+
+				clip-path: polygon(
+					0 0,
+					calc($input-horizontal-padding - $clip-gap) 0,
+					calc($input-horizontal-padding - $clip-gap) 2px,
+					calc($input-horizontal-padding + var(--label-width) + $clip-gap) 2px,
+					calc($input-horizontal-padding + var(--label-width) + $clip-gap) 0,
+					100% 0,
+					100% 100%,
+					0 100%
+				);
+			}
+		}
+
+		.label {
+			bottom: calc(var(--input-height) / 2 - $border-width);
+			font-size: var(--font-size-sm);
 		}
 	}
 
 	&:hover,
 	&.focused {
-		.border-box {
+		.border-container {
 			&::before {
 				border-color: var(--color-accent);
 			}
+		}
+	}
+
+	&:not(.filled) {
+		select {
+			color: transparent;
 		}
 	}
 }

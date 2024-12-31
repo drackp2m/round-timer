@@ -1,8 +1,8 @@
 import { Component, computed, input } from '@angular/core';
-import { Player } from '@app/model/player.model';
 
 import { PlayerColor } from '@app/definition/player/player-color.enum';
 import { PlayerIcon } from '@app/definition/player/player-icon.enum';
+import { Player } from '@app/model/player.model';
 
 import { SvgComponent } from './svg.component';
 
@@ -36,7 +36,7 @@ export class PlayerBadgeComponent {
 			return undefined;
 		}
 
-		const color = player.color as unknown as keyof typeof PlayerColor;
+		const color = player.color;
 
 		return PlayerColor[color];
 	});

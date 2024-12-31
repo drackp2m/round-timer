@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Player } from '@app/model/player.model';
 
-import { PlayerSchema } from '@app/definition/player/player.schema';
+import { PlayerSchema } from '@app/definition/player/player-schema.interface';
 
 import { GenericRepository } from './generic.repository';
 

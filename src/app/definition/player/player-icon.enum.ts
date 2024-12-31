@@ -3,3 +3,5 @@ export enum PlayerIcon {
 	SWORDS = 'swords',
 	GHOST = 'ghost',
 }
+
+export type PlayerIconKey = keyof typeof PlayerIcon;

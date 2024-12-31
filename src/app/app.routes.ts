@@ -14,7 +14,7 @@ export const APP_ROUTES: Routes = [
 			{
 				path: 'new-game',
 				loadComponent: () =>
-					import('./page/new-game/new-game.page').then(({ NewGamePage }) => NewGamePage),
+					import('./page/new-match/new-match.page').then(({ NewMatchPage }) => NewMatchPage),
 			},
 		],
 	},
