@@ -82,7 +82,7 @@ export class InputDirective implements OnInit, AfterViewInit {
 		const nextSibling = inputElement.nextSibling;
 		const parentElement = inputElement.parentNode;
 
-		this.renderer2.addClass(inputElement, 'round-2');
+		this.renderer2.addClass(inputElement, 'br-2');
 
 		this.renderer2.removeChild(parentElement, inputElement);
 		this.renderer2.appendChild(this.labelElement, inputElement);

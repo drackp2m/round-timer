@@ -52,7 +52,7 @@ export class ButtonDirective implements OnInit {
 		const color = this.color();
 
 		this.renderer2.addClass(buttonElement, 'px-3');
-		this.renderer2.addClass(buttonElement, 'round-2');
+		this.renderer2.addClass(buttonElement, 'br-2');
 		this.renderer2.addClass(buttonElement, `surface-${color}`);
 		this.renderer2.addClass(buttonElement, this.getContrastColor(color));
 		this.renderer2.addClass(buttonElement, 'color-primary');

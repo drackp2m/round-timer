@@ -1,4 +1,12 @@
-import { Component, Signal, inject, signal } from '@angular/core';
+import {
+	Component,
+	ElementRef,
+	Signal,
+	inject,
+	linkedSignal,
+	signal,
+	viewChildren,
+} from '@angular/core';
 
 import { SvgComponent } from '@app/component/svg.component';
 import { ButtonDirective } from '@app/directive/button.directive';
@@ -22,8 +30,10 @@ export class NewMatchPage {
 	readonly games: Signal<Game[]> = signal([]);
 	readonly gamesStoreIsLoading = signal(false);
 
-	readonly players = this.playerStore.items;
+	readonly players = linkedSignal(this.playerStore.items);
 	readonly playerStoreIsLoading = this.playerStore.isLoading;
+
+	readonly inputs = viewChildren<ElementRef<HTMLInputElement>>('input');
 
 	addGame(): void {
 		this.modalStore.open(AddGameModal);
@@ -31,5 +41,32 @@ export class NewMatchPage {
 
 	addPlayer(): void {
 		this.modalStore.open(AddPlayerModal);
+	}
+
+	sortPlayers(event: Event): void {
+		const target = event.target as HTMLInputElement;
+		const playerUuid = target.value;
+		const checked = target.checked;
+
+		const checkedElements = this.inputs().filter((input) => input.nativeElement.checked).length;
+
+		this.players.update((originalPlayers) => {
+			const players = [...(originalPlayers ?? [])];
+
+			const playerIndex = players.findIndex((player) => player.uuid === playerUuid);
+			const [removePlayer] = players.splice(playerIndex, 1);
+
+			if (removePlayer === undefined) {
+				return null;
+			}
+
+			if (checked) {
+				players.splice(checkedElements - 1, 0, removePlayer);
+			} else {
+				players.splice(checkedElements, 0, removePlayer);
+			}
+
+			return players;
+		});
 	}
 }

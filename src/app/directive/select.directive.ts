@@ -71,7 +71,7 @@ export class SelectDirective implements OnInit, AfterViewInit {
 
 		const iconElement = this.createIcon();
 
-		this.renderer2.addClass(selectElement, 'round-2');
+		this.renderer2.addClass(selectElement, 'br-2');
 
 		this.renderer2.removeChild(parentElement, selectElement);
 		this.renderer2.appendChild(this.labelElement, selectElement);

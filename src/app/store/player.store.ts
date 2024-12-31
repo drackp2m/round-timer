@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
-import { Player } from '@app/model/player.model';
 import { patchState, signalStore, withState } from '@ngrx/signals';
 
+import { Player } from '@app/model/player.model';
 import { PlayerRepository } from '@app/repository/player.repository';
 
 interface PlayerStoreProps {
@@ -27,6 +27,7 @@ export class PlayerStore extends signalStore({ protectedState: false }, withStat
 	}
 
 	addPlayer(player: Player): void {
+		// FixMe => sort elements according to checkboxes
 		this.playerRepository.set('player', player.uuid, player).then((player) => {
 			const currentItems = this.items();
 			console.log('Player added', player);

@@ -26,11 +26,18 @@
 			@for (player of players(); track player.uuid) {
 				<li class="flex-row gap-2 align-center">
 					<input
+						#input
+						[name]="player.uuid"
 						formControlName="players"
 						type="checkbox"
-						value="22"
-						id="{{ player.nick }}"
-						style="width: 15px; aspect-ratio: 1; background-color: black"
+						[value]="player.uuid"
+						class="br-1"
+						style="width: 15px; aspect-ratio: 1; border: solid 1.5px"
+						[style.border-color]="
+							input.checked ? 'var(--color-contrast)' : 'var(--color-contrast-mid)'
+						"
+						[style.background-color]="input.checked ? 'var(--color-primary-mid)' : ''"
+						(change)="sortPlayers($event)"
 					/>
 					<app-svg [icon]="player.iconValue" [hexColor]="player.colorValue" [size]="20" squared />
 					{{ player.nick }} - {{ player.name }}
