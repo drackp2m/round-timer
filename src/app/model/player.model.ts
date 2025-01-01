@@ -14,6 +14,7 @@ export class Player {
 	readonly createdAt: Date = this.NOW;
 	readonly updateAt: Date = this.NOW;
 
+	// FixMe => can need pass `uuid`, `createdAt`, and `updatedAt` properties (every auto-generated)
 	constructor(model: Omit<Player, 'uuid' | 'createdAt' | 'updateAt'>) {
 		this.name = model.name;
 		this.nick = model.nick;

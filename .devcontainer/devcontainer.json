@@ -46,22 +46,22 @@
 				},
 				"todo-tree.regex.regexCaseSensitive": false,
 				"todo-tree.general.statusBar": "tags",
-				"todo-tree.general.tags": ["ToDo", "FixMe"],
+				"todo-tree.general.tags": [" ToDo ", " FixMe "],
 				"todo-tree.highlights.customHighlight": {
-					"ToDo": {
-						"icon": "code",
-						"iconColour": "#7582D1",
-						"type": "tag",
-						"foreground": "#ffffff",
-						"background": "#4280dd",
+					" ToDo ": {
+						"icon": "pin",
+						"iconColour": "#dddb42",
+						"type": "text",
+						"foreground": "#222",
+						"background": "#dddb42",
 						"opacity": 100
 					},
-					"FixMe": {
+					" FixMe ": {
 						"icon": "tools",
-						"iconColour": "#e34c26",
+						"iconColour": "#ff4242",
 						"type": "text",
-						"foreground": "#ffffff",
-						"background": "#dd4242",
+						"foreground": "#eee",
+						"background": "#ff4242",
 						"opacity": 100
 					}
 				}
