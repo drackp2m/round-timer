@@ -2,7 +2,7 @@ module.exports = {
 	parserPreset: {
 		parserOpts: {
 			headerPattern:
-				/^(✨|🎨|🧪|♻️\s|🐛|📚|🚀|🏗️\s|💻|🎒|⏪)\s(feat|style|test|refactor|fix|docs|perf|build|ci|chore|revert):\s(.*)$/,
+				/^(✨|🎨|🧪|♻️|🐛|📚|🚀|🏗️|💻|🎒|⏪)\s(feat|style|test|refactor|fix|docs|perf|build|ci|chore|revert):\s(.*)$/,
 			headerCorrespondence: ['emoji', 'type', 'subject'],
 		},
 	},
@@ -18,7 +18,7 @@ module.exports = {
 						'🐛': 'fix',
 						'📚': 'docs',
 						'🚀': 'perf',
-						'🏗️ ': 'build',
+						'🏗️': 'build',
 						'💻': 'ci',
 						'🎒': 'chore',
 						'⏪': 'revert',
@@ -27,7 +27,7 @@ module.exports = {
 					console.log({ header })
 
 					const match = header.match(
-						/^(✨|🎨|🧪|♻️|🐛|📚|🚀|🏗️\s|💻|🎒|⏪)\s(feat|style|test|refactor|fix|docs|perf|build|ci|chore|revert):/,
+						/^(✨|🎨|🧪|♻️|🐛|📚|🚀|🏗️|💻|🎒|⏪)\s(feat|style|test|refactor|fix|docs|perf|build|ci|chore|revert):/,
 					);
 
 					if (null === match) {
