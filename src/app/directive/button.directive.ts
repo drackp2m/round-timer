@@ -20,7 +20,7 @@ import { SvgComponent } from '@app/component/svg.component';
 export class ButtonDirective implements OnInit {
 	// Fixme => when create empty button @angular/eslint error occurs
 	readonly type = input('button');
-	readonly color = input('accent');
+	readonly color = input('contrast-mid');
 	readonly icon = input<string>();
 	readonly iconSize = input<number>(24);
 

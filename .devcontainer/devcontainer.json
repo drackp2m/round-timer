@@ -69,26 +69,21 @@
 			"extensions": [
 				"GitHub.copilot",
 				"GitHub.copilot-chat",
-				"nrwl.angular-console",
 				"editorconfig.editorconfig",
-				"mrmlnc.vscode-scss",
 				"esbenp.prettier-vscode",
 				"dbaeumer.vscode-eslint",
 				"stylelint.vscode-stylelint",
-				"angular.ng-template",
-				"gruntfuggly.todo-tree",
+				"mrmlnc.vscode-scss",
+				"christian-kohler.path-intellisense",
 				"cyrilletuzi.angular-schematics",
-				"firsttris.vscode-jest-runner",
-				"ryanluker.vscode-coverage-gutters",
-				"GraphQL.vscode-graphql",
-				"orsenkucher.vscode-graphql",
-				"eamodio.gitlens",
+				"angular.ng-template",
+				"chamboug.js-auto-backticks",
 				"usernamehw.errorlens",
+				"gruntfuggly.todo-tree",
+				"eamodio.gitlens",
 				"streetsidesoftware.code-spell-checker",
 				"tomoki1207.selectline-statusbar",
-				"chamboug.js-auto-backticks",
-				"firefox-devtools.vscode-firefox-debug",
-				"christian-kohler.path-intellisense"
+				"firefox-devtools.vscode-firefox-debug"
 			]
 		}
 	}

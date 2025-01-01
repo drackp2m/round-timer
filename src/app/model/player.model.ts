@@ -14,12 +14,12 @@ export class Player {
 	readonly createdAt: Date = this.NOW;
 	readonly updateAt: Date = this.NOW;
 
-	constructor(name: string, nick: string, color: PlayerColorKey, icon: PlayerIconKey) {
-		this.name = name;
-		this.nick = nick;
-		this.color = color;
-		this.colorValue = PlayerColor[color];
-		this.icon = icon;
-		this.iconValue = PlayerIcon[icon];
+	constructor(model: Omit<Player, 'uuid' | 'createdAt' | 'updateAt'>) {
+		this.name = model.name;
+		this.nick = model.nick;
+		this.color = model.color;
+		this.colorValue = PlayerColor[model.color];
+		this.icon = model.icon;
+		this.iconValue = PlayerIcon[model.icon];
 	}
 }

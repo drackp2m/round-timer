@@ -120,7 +120,7 @@ export class ModalOutletComponent implements AfterViewInit {
 	private cleanupModal(): void {
 		const modalContent = this.modalContent();
 
-		if (this.activeComponentRef) {
+		if (null !== this.activeComponentRef) {
 			this.activeComponentRef?.destroy();
 			this.activeComponentRef = null;
 		}

@@ -56,7 +56,7 @@ export class ModalStore extends signalStore({ protectedState: false }, withState
 
 		await Promise.race([this.containerInitPromise, this.timeoutPromise]);
 
-		if (!this.modalOutletComponent) {
+		if (null === this.modalOutletComponent) {
 			return Promise.reject(new Error('Modal container has not been initialized'));
 		}
 

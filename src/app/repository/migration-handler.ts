@@ -1,19 +1,14 @@
 import { Injectable } from '@angular/core';
 import { IDBPDatabase, IDBPTransaction, StoreNames, deleteDB } from 'idb';
 
-import { PlayerSchema } from '@app/definition/player/player.schema';
+import { GameSchema } from '@app/repository/definition/game-schema.interface';
+import { Migration } from '@app/repository/definition/migration.interface';
+import { PlayerSchema } from '@app/repository/definition/player-schema.interface';
+import { createPlayerStoreMigration } from '@app/repository/migration/v1_create-player-store.migration';
+import { createPlayerNickIndexMigration } from '@app/repository/migration/v2_create-player-nick-index.migration';
+import { createGameStoreMigration } from '@app/repository/migration/v3_create-game-store.migration copy 2';
 
-export type IDBPDatabaseSchemas = PlayerSchema;
-
-interface Migration<T> {
-	version: number;
-	apply: (props: {
-		database: IDBPDatabase<T>;
-		oldVersion: number;
-		newVersion: number | null;
-		transaction: IDBPTransaction<T, StoreNames<T>[], 'versionchange'>;
-	}) => void;
-}
+export type IDBPDatabaseSchemas = PlayerSchema | GameSchema;
 
 @Injectable({
 	providedIn: 'root',
@@ -22,25 +17,30 @@ export class MigrationHandler<T> {
 	private readonly deprecatedDatabaseNames: string[] = [];
 
 	private migrations: Migration<IDBPDatabaseSchemas>[] = [
-		{
-			version: 1,
-			apply: ({ database }) => {
-				database.createObjectStore('player');
-			},
-		},
-		{
-			version: 2,
-			apply: ({ oldVersion, transaction }) => {
-				if (2 > oldVersion) {
-					const offlineGameStore = transaction.objectStore('player');
-					offlineGameStore.createIndex('nick', 'nick', { unique: true });
-				}
-			},
-		},
+		createPlayerStoreMigration,
+		createPlayerNickIndexMigration,
+		createGameStoreMigration,
 	];
 
 	getLatestVersion(): number {
-		return this.migrations.length;
+		if (0 === this.migrations.length) {
+			throw new Error('No migrations found');
+		}
+
+		const versions = this.migrations.map((migration) => migration.version);
+		const maxVersion =
+			Math.max(...versions) > versions.length ? Math.max(...versions) : versions.length;
+		const expectedVersions = Array.from({ length: maxVersion }, (_element, index) => index + 1);
+
+		const missingVersions = expectedVersions.filter((version) => !versions.includes(version));
+
+		if (0 < missingVersions.length) {
+			throw new Error(
+				`Missing migrations for versions [${missingVersions.join(', ')}]. Please make sure that all versions are covered.`,
+			);
+		}
+
+		return maxVersion;
 	}
 
 	applyMigrations(
@@ -51,8 +51,12 @@ export class MigrationHandler<T> {
 	): void {
 		const migrations = this.migrations as unknown as Migration<T>[];
 
+		console.log('Applying IndexedDB migrations:');
+
 		for (const migration of migrations) {
 			if (migration.version > oldVersion) {
+				console.log(`Updating to version ${migration.version}: ${migration.description}...`);
+
 				migration.apply({ database, oldVersion, newVersion, transaction });
 			}
 		}

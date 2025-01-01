@@ -1,0 +1,28 @@
+@let iconValue = icon();
+
+@if (iconValue !== null) {
+	<div #badge class="badge flex-col align-center gap-2 p-8" [style.border-color]="color()">
+		<app-svg [icon]="iconValue" [hexColor]="color()" [size]="size() / 2" squared />
+
+		<svg [attr.width]="svgSize()" [attr.height]="svgSize()" [attr.viewBox]="viewBox()" class="nick">
+			<defs><path id="x" [attr.d]="createCircle()" /></defs>
+
+			<text [attr.font-size]="fontSize() - 1">
+				<textPath href="#x" [attr.fill]="color()" startOffset="50%" text-anchor="middle">
+					{{ player().nick }}
+				</textPath>
+			</text>
+		</svg>
+
+		@if (debug()) {
+			<svg
+				[attr.width]="svgSize()"
+				[attr.height]="svgSize()"
+				[attr.viewBox]="viewBox()"
+				class="debug"
+			>
+				<path [attr.d]="createCircle()" fill="none" stroke-width="1" />
+			</svg>
+		}
+	</div>
+}

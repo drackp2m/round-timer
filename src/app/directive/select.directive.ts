@@ -15,6 +15,7 @@ import { SvgComponent } from '@app/component/svg.component';
 @Directive({
 	selector: 'select[appSelect]',
 })
+// ToDo => add default label as "Select an option"
 export class SelectDirective implements OnInit, AfterViewInit {
 	private readonly elementRef: ElementRef<HTMLSelectElement> = inject(ElementRef);
 	private readonly renderer2 = inject(Renderer2);

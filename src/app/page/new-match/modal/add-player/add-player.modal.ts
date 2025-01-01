@@ -2,7 +2,7 @@ import { Component, Signal, computed, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
-import { PlayerBadgeComponent } from '@app/component/player-badge.component';
+import { PlayerBadgeComponent } from '@app/component/player-badge/player-badge.component';
 import { PlayerColor, PlayerColorKey } from '@app/definition/player/player-color.enum';
 import { PlayerIcon, PlayerIconKey } from '@app/definition/player/player-icon.enum';
 import { ButtonDirective } from '@app/directive/button.directive';
@@ -43,11 +43,11 @@ export class AddPlayerModal extends Modal {
 			nonNullable: true,
 			validators: [Validators.required, Validators.minLength(4), Validators.maxLength(20)],
 		}),
-		color: new FormControl<PlayerColorKey | ''>('', {
+		color: new FormControl<PlayerColorKey>('' as PlayerColorKey, {
 			nonNullable: true,
 			validators: [Validators.required],
 		}),
-		icon: new FormControl<PlayerIconKey | ''>('', {
+		icon: new FormControl<PlayerIconKey>('' as PlayerIconKey, {
 			nonNullable: true,
 			validators: [Validators.required],
 		}),
@@ -55,13 +55,7 @@ export class AddPlayerModal extends Modal {
 
 	private readonly formChange = toSignal(this.form.valueChanges);
 
-	partialPlayer: Signal<Partial<Player>> = computed(() => {
-		this.formChange();
-
-		return this.partialPlayerFromForm();
-	});
-
-	player: Signal<Player | null> = computed(() => {
+	player: Signal<Player> = computed(() => {
 		this.formChange();
 
 		return this.playerFromForm();
@@ -70,31 +64,15 @@ export class AddPlayerModal extends Modal {
 	onSubmit(): void {
 		const player = this.player();
 
-		if (this.form.invalid || null === player) {
+		if (this.form.invalid) {
 			return;
 		}
 
+		this.close();
 		this.playerStore.addPlayer(player);
 	}
 
-	private playerFromForm(): Player | null {
-		const { name, nick, color, icon } = this.form.controls;
-
-		if ('' === color.value || '' === icon.value) {
-			return null;
-		}
-
-		return new Player(name.value, nick.value, color.value, icon.value);
-	}
-
-	private partialPlayerFromForm(): Partial<Player> {
-		const { name, nick, color, icon } = this.form.controls;
-
-		return {
-			name: name.value,
-			nick: nick.value,
-			color: '' !== color.value ? color.value : undefined,
-			icon: '' !== icon.value ? icon.value : undefined,
-		};
+	private playerFromForm(): Player {
+		return new Player(this.form.getRawValue() as Player);
 	}
 }

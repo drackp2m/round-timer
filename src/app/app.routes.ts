@@ -9,12 +9,12 @@ export const APP_ROUTES: Routes = [
 		children: [
 			{
 				path: '',
-				loadChildren: () => import('./page/dashboard/dashboard.routes'),
+				loadComponent: () =>
+					import('./page/dashboard/dashboard.page').then(({ DashboardPage }) => DashboardPage),
 			},
 			{
-				path: 'new-game',
-				loadComponent: () =>
-					import('./page/new-match/new-match.page').then(({ NewMatchPage }) => NewMatchPage),
+				path: 'new-match',
+				loadChildren: () => import('./page/new-match/new-match.routes'),
 			},
 		],
 	},

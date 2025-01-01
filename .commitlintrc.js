@@ -14,7 +14,7 @@ module.exports = {
 						'✨': 'feat',
 						'🎨': 'style',
 						'🧪': 'test',
-						'♻️ ': 'refactor',
+						'♻️': 'refactor',
 						'🐛': 'fix',
 						'📚': 'docs',
 						'🚀': 'perf',
@@ -24,8 +24,10 @@ module.exports = {
 						'⏪': 'revert',
 					};
 
+					console.log({ header })
+
 					const match = header.match(
-						/^(✨|🎨|🧪|♻️\s|🐛|📚|🚀|🏗️\s|💻|🎒|⏪)\s(feat|style|test|refactor|fix|docs|perf|build|ci|chore|revert):/,
+						/^(✨|🎨|🧪|♻️|🐛|📚|🚀|🏗️\s|💻|🎒|⏪)\s(feat|style|test|refactor|fix|docs|perf|build|ci|chore|revert):/,
 					);
 
 					if (null === match) {

@@ -1,4 +1,5 @@
 import { Component, computed, input } from '@angular/core';
+import { Check } from '@app/util/check';
 
 @Component({
 	selector: 'app-svg',
@@ -29,11 +30,12 @@ import { Component, computed, input } from '@angular/core';
 		'[style.height]': 'size()',
 	},
 })
+// ToDo => try to inherit color from parent text color
 export class SvgComponent {
 	readonly icon = input.required<string, string>({ transform: this.getIcon });
 	readonly color = input<string>('surface-contrast');
 	readonly hexColor = input<string>('--var(--color-contrast)');
-	readonly squared = input<boolean, string | boolean>(false, { transform: this.convertToBoolean });
+	readonly squared = input(false, { transform: Check.isFalseAsStringOrTrue });
 	readonly size = input<string, number>('24px', { transform: (size) => `${size}px` });
 
 	readonly aspectRatio = computed(() => this.getAspectRatio());
@@ -68,9 +70,5 @@ export class SvgComponent {
 			default:
 				return '1 / 1';
 		}
-	}
-
-	private convertToBoolean(value: boolean | string): boolean {
-		return 'string' === typeof value ? 'false' !== value : value;
 	}
 }

@@ -12,15 +12,10 @@ export class Game {
 	readonly createdAt: Date = this.NOW;
 	readonly updatedAt: Date = this.NOW;
 
-	constructor(
-		name: string,
-		maxPlayers: number,
-		turnType: GameTurnTypeKey,
-		turnOrder: GameTurnOrderKey,
-	) {
-		this.name = name;
-		this.maxPlayers = maxPlayers;
-		this.turnType = turnType;
-		this.turnOrder = turnOrder;
+	constructor(model: Omit<Game, 'uuid' | 'createdAt' | 'updatedAt'>) {
+		this.name = model.name;
+		this.maxPlayers = model.maxPlayers;
+		this.turnType = model.turnType;
+		this.turnOrder = model.turnOrder;
 	}
 }

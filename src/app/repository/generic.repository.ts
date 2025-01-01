@@ -51,7 +51,7 @@ export class GenericRepository<T extends DBSchema> {
 		});
 	}
 
-	async getAll<K extends StoreNames<T>>(storeName: K): Promise<StoreValue<T, K>[] | undefined> {
+	async getAll<K extends StoreNames<T>>(storeName: K): Promise<StoreValue<T, K>[]> {
 		return this.withTransaction([storeName], 'readonly', async (tx) => {
 			return tx.objectStore(storeName).getAll();
 		});

@@ -1,4 +1,4 @@
-export abstract class ChangeTextCase {
+export abstract class Text {
 	static fromUpperCaseToSentenceCase(upperCaseName: string): string {
 		return upperCaseName
 			.toLowerCase()

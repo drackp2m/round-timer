@@ -97,7 +97,7 @@ const eslintConfig = tseslint.config(
 			'unused-imports/no-unused-imports': 'warn',
 			'no-unused-private-class-members': 'warn',
 			'@typescript-eslint/no-unused-vars': [
-				'warn',
+				'off',
 				{
 					argsIgnorePattern: '^_',
 					varsIgnorePattern: '^_',
@@ -177,7 +177,14 @@ const eslintConfig = tseslint.config(
 			yoda: ['warn', 'always'],
 			'no-implicit-coercion': ['warn', { boolean: true }],
 			'no-extra-boolean-cast': 'warn',
-			'@typescript-eslint/strict-boolean-expressions': 'warn',
+			'@typescript-eslint/strict-boolean-expressions': [
+				'warn',
+				{
+					allowNullableObject: false,
+					allowNumber: false,
+					allowString: false,
+				},
+			],
 			'@typescript-eslint/no-unnecessary-boolean-literal-compare': 'warn',
 		},
 	},

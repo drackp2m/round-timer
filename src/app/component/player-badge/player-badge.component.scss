@@ -1,0 +1,35 @@
+:host {
+	display: flex;
+	align-self: center;
+}
+
+.badge {
+	position: relative;
+
+	display: flex;
+	place-content: center center;
+
+	aspect-ratio: 1;
+
+	font-weight: bold;
+
+	border: solid 3px transparent;
+
+	// border: solid 1px red;
+	border-radius: 50%;
+
+	.nick {
+		position: absolute;
+		top: 0;
+	}
+
+	.debug {
+		position: absolute;
+		top: 0;
+		border: solid 1px lime;
+
+		path {
+			stroke: lime;
+		}
+	}
+}
