@@ -1,3 +1,7 @@
 main {
 	height: 100vh;
+
+	#router-outlet {
+		overflow: scroll;
+	}
 }

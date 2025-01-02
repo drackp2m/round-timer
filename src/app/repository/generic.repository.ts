@@ -10,10 +10,9 @@ import {
 	openDB,
 } from 'idb';
 
-import { MigrationHandler } from './migration-handler';
+import { Repository } from '@app/util/repository';
 
 export class GenericRepository<T extends DBSchema> {
-	protected migrationHandler = new MigrationHandler<T>();
 	private dbName = 'RoundTimer';
 	private dbPromise = this.getDbPromise();
 	private transaction: IDBPTransaction<T, StoreNames<T>[], 'readwrite' | 'readonly'> | null = null;
@@ -30,19 +29,19 @@ export class GenericRepository<T extends DBSchema> {
 		}
 	}
 
-	async set<K extends StoreNames<T>>(
+	async insert<K extends StoreNames<T>>(
 		storeName: K,
-		key: StoreKey<T, K>,
 		value: StoreValue<T, K>,
 	): Promise<StoreValue<T, K>> {
 		return this.withTransaction([storeName], 'readwrite', async (tx) => {
-			await tx.objectStore(storeName).put(value, key);
+			await tx.objectStore(storeName).put(value);
 
 			return value;
 		});
 	}
 
-	async get<K extends StoreNames<T>>(
+	// ToDo => try transform plain data to model
+	async find<K extends StoreNames<T>>(
 		storeName: K,
 		key: StoreKey<T, K>,
 	): Promise<StoreValue<T, K> | undefined> {
@@ -51,13 +50,13 @@ export class GenericRepository<T extends DBSchema> {
 		});
 	}
 
-	async getAll<K extends StoreNames<T>>(storeName: K): Promise<StoreValue<T, K>[]> {
+	async findAll<K extends StoreNames<T>>(storeName: K): Promise<StoreValue<T, K>[]> {
 		return this.withTransaction([storeName], 'readonly', async (tx) => {
 			return tx.objectStore(storeName).getAll();
 		});
 	}
 
-	async getByIndex<K extends StoreNames<T>>(
+	async findByIndex<K extends StoreNames<T>>(
 		storeName: K,
 		indexName: IndexNames<T, K>,
 		indexValue: IDBKeyRange | IndexKey<T, K, IndexNames<T, K>>,
@@ -100,9 +99,9 @@ export class GenericRepository<T extends DBSchema> {
 	}
 
 	private getDbPromise(): Promise<IDBPDatabase<T>> {
-		return openDB<T>(this.dbName, this.migrationHandler.getLatestVersion(), {
+		return openDB<T>(this.dbName, Repository.getLatestVersion(), {
 			upgrade: (db, oldVersion, newVersion, transaction) => {
-				this.migrationHandler.applyMigrations(db, oldVersion, newVersion, transaction);
+				Repository.applyMigrations(db, oldVersion, newVersion, transaction);
 			},
 		});
 	}

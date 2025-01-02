@@ -1,28 +1,23 @@
-import { Injectable } from '@angular/core';
 import { IDBPDatabase, IDBPTransaction, StoreNames, deleteDB } from 'idb';
 
-import { GameSchema } from '@app/repository/definition/game-schema.interface';
+import { AppSchemas } from '@app/repository/definition/app-schemas.interface';
 import { Migration } from '@app/repository/definition/migration.interface';
-import { PlayerSchema } from '@app/repository/definition/player-schema.interface';
 import { createPlayerStoreMigration } from '@app/repository/migration/v1_create-player-store.migration';
 import { createPlayerNickIndexMigration } from '@app/repository/migration/v2_create-player-nick-index.migration';
-import { createGameStoreMigration } from '@app/repository/migration/v3_create-game-store.migration copy 2';
+import { createGameStoreMigration } from '@app/repository/migration/v3_create-game-store.migration';
+import { createMatchStoresMigration } from '@app/repository/migration/v4_create-match-stores.migration';
 
-export type IDBPDatabaseSchemas = PlayerSchema | GameSchema;
+export abstract class Repository {
+	private static readonly deprecatedDatabaseNames: string[] = [];
 
-@Injectable({
-	providedIn: 'root',
-})
-export class MigrationHandler<T> {
-	private readonly deprecatedDatabaseNames: string[] = [];
-
-	private migrations: Migration<IDBPDatabaseSchemas>[] = [
+	private static migrations: Migration<AppSchemas>[] = [
 		createPlayerStoreMigration,
 		createPlayerNickIndexMigration,
 		createGameStoreMigration,
+		createMatchStoresMigration,
 	];
 
-	getLatestVersion(): number {
+	static getLatestVersion(): number {
 		if (0 === this.migrations.length) {
 			throw new Error('No migrations found');
 		}
@@ -43,7 +38,7 @@ export class MigrationHandler<T> {
 		return maxVersion;
 	}
 
-	applyMigrations(
+	static applyMigrations<T>(
 		database: IDBPDatabase<T>,
 		oldVersion: number,
 		newVersion: number | null,
@@ -62,7 +57,7 @@ export class MigrationHandler<T> {
 		}
 	}
 
-	async removeDeprecatedDatabase(): Promise<void> {
+	static async removeDeprecatedDatabase(): Promise<void> {
 		const promises: Promise<void>[] = [];
 
 		if ('databases' in indexedDB) {
@@ -83,3 +78,4 @@ export class MigrationHandler<T> {
 		await Promise.all(promises);
 	}
 }
+

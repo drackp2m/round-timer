@@ -10,9 +10,9 @@ import { GenericRepository } from './generic.repository';
 	providedIn: 'root',
 })
 export class GameRepository extends GenericRepository<GameSchema> {
-	override async getAll<K extends StoreNames<GameSchema>>(
+	override async findAll<K extends StoreNames<GameSchema>>(
 		storeName: K,
 	): Promise<StoreValue<GameSchema, K>[]> {
-		return await super.getAll(storeName).then((items) => items?.map((item) => new Game(item)));
+		return await super.findAll(storeName).then((items) => items?.map((item) => new Game(item)));
 	}
 }

@@ -1,7 +1,7 @@
+import { AppSchemas } from '@app/repository/definition/app-schemas.interface';
 import { Migration } from '@app/repository/definition/migration.interface';
-import { IDBPDatabaseSchemas } from '@app/repository/migration-handler';
 
-export const createPlayerNickIndexMigration: Migration<IDBPDatabaseSchemas> = {
+export const createPlayerNickIndexMigration: Migration<AppSchemas> = {
 	version: 2,
 	description: 'create player nick index',
 	apply: ({ oldVersion, transaction }) => {

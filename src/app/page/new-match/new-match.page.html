@@ -1,60 +1,72 @@
 <section class="flex-col gap-6">
-	<div class="flex-col gap-2">
-		<h4>Game</h4>
+	<h3>New Match</h3>
 
-		@let gamesValue = games();
+	<form [formGroup]="form" (ngSubmit)="createMatch()" class="flex-col gap-6">
+		<div class="flex-col gap-2">
+			<h4>Game</h4>
 
-		@if (gamesValue === null || gamesValue.length === 0) {
-			<p>{{ gamesStoreIsLoading() ? 'Loading...' : 'No games' }}</p>
-		} @else {
-			<select appSelect formControlName="game">
-				<option value="">Select game</option>
+			@let gamesValue = games();
 
-				@for (game of games(); track game.uuid) {
-					<option [attr.value]="game.uuid">{{ game.name }}</option>
-				}
-			</select>
-		}
+			@if (gamesValue === null || gamesValue.length === 0) {
+				<p>{{ gamesStoreIsLoading() ? 'Loading...' : 'No games' }}</p>
+			} @else {
+				<select appSelect formControlName="gameUuid">
+					<option value="">Select game</option>
 
-		<button appButton (click)="addGame()" class="mt-2">
-			<div class="flex-row gap-2 align-center">
-				<app-svg icon="grid-2-plus" [size]="16" color="surface-primary" />Add Game
-			</div>
-		</button>
-	</div>
-
-	<div class="flex-col gap-2">
-		<h4>Players</h4>
-
-		<ul class="flex-col gap-2">
-			@for (player of players(); track player.uuid) {
-				<li class="flex-row gap-2 align-center">
-					<input
-						#input
-						[name]="player.uuid"
-						formControlName="players"
-						type="checkbox"
-						[value]="player.uuid"
-						class="br-1"
-						style="width: 15px; aspect-ratio: 1; border: solid 1.5px"
-						[style.border-color]="
-							input.checked ? 'var(--color-contrast)' : 'var(--color-contrast-mid)'
-						"
-						[style.background-color]="input.checked ? 'var(--color-primary-mid)' : ''"
-						(change)="sortPlayers($event)"
-					/>
-					<app-svg [icon]="player.iconValue" [hexColor]="player.colorValue" [size]="20" squared />
-					{{ player.nick }} - {{ player.name }} - {{ player.uuid }}
-				</li>
-			} @empty {
-				<li>{{ playerStoreIsLoading() ? 'Loading...' : 'No players' }}</li>
+					@for (game of games(); track game.uuid) {
+						<option [attr.value]="game.uuid">{{ game.name }}</option>
+					}
+				</select>
 			}
-		</ul>
 
-		<button appButton (click)="addPlayer()" class="mt-2">
-			<div class="flex-row gap-2 align-center">
-				<app-svg icon="user-plus" [size]="16" color="surface-primary" />Add player
-			</div>
-		</button>
-	</div>
+			<button appButton (click)="addGame()" class="mt-2">
+				<div class="flex-row gap-2 align-center">
+					<app-svg icon="grid-2-plus" [size]="16" color="surface-primary" />Add Game
+				</div>
+			</button>
+		</div>
+
+		<div class="flex-col gap-2">
+			<h4>Players</h4>
+
+			<ul class="flex-col gap-2" formGroupName="players">
+				@for (player of players(); track player.uuid) {
+					<li class="flex-row gap-2 align-center">
+						<input
+							#input
+							[formControlName]="player.uuid"
+							type="checkbox"
+							[value]="player.uuid"
+							class="br-1"
+							style="width: 15px; aspect-ratio: 1; border: solid 1.5px; flex-shrink: 0"
+							[style.border-color]="
+								input.checked ? 'var(--color-contrast)' : 'var(--color-contrast-mid)'
+							"
+							[style.background-color]="input.checked ? 'var(--color-primary-mid)' : ''"
+							(change)="sortPlayers($event)"
+						/>
+						<app-svg
+							[icon]="player.computed.iconValue"
+							[hexColor]="player.computed.colorValue"
+							[size]="20"
+							squared
+						/>
+						{{ player.nick }} - {{ player.name }} - {{ player.uuid.split('-')[0] }}
+					</li>
+				} @empty {
+					<li>{{ playerStoreIsLoading() ? 'Loading...' : 'No players' }}</li>
+				}
+			</ul>
+
+			<button appButton (click)="addPlayer()" class="mt-2">
+				<div class="flex-row gap-2 align-center">
+					<app-svg icon="user-plus" [size]="16" color="surface-primary" />Add player
+				</div>
+			</button>
+		</div>
+
+		<input appInput formControlName="name" label="Match name" placeholder="The gamer cousins" />
+
+		<button appButton type="submit" color="accent">Create Match</button>
+	</form>
 </section>

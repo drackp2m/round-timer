@@ -1,14 +1,13 @@
 import { ModelConstructorOmit } from '@app/definition/model-constructor-omit.type';
 import { RepositoryModel } from '@app/model/repository.model';
 
-export class Match extends RepositoryModel<Match> {
+export class MatchPlayer extends RepositoryModel<MatchPlayer> {
 	readonly uuid!: string;
-	readonly gameUuid!: string;
-	readonly name?: string;
+	readonly matchUuid!: string;
+	readonly userUuid!: string;
 	readonly createdAt!: Date;
-	readonly updatedAt!: Date;
 
-	constructor(model: ModelConstructorOmit<Match>) {
+	constructor(model: ModelConstructorOmit<MatchPlayer>) {
 		super();
 
 		this.setComputed();
@@ -22,7 +21,6 @@ export class Match extends RepositoryModel<Match> {
 		Object.assign(this, {
 			uuid: crypto.randomUUID(),
 			createdAt: now,
-			updatedAt: now,
 		});
 	}
 }

@@ -1,8 +1,11 @@
 import { Component, ElementRef, effect, inject, linkedSignal, viewChildren } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { SvgComponent } from '@app/component/svg.component';
 import { ButtonDirective } from '@app/directive/button.directive';
+import { InputDirective } from '@app/directive/input.directive';
 import { SelectDirective } from '@app/directive/select.directive';
+import { Player } from '@app/model/player.model';
 import { AddGameModal } from '@app/page/new-match/modal/add-game/add-game.modal';
 import { GameStore } from '@app/store/game.store';
 import { ModalStore } from '@app/store/modal.store';
@@ -13,7 +16,7 @@ import { AddPlayerModal } from './modal/add-player/add-player.modal';
 @Component({
 	templateUrl: './new-match.page.html',
 	styleUrl: './new-match.page.scss',
-	imports: [ButtonDirective, SvgComponent, SelectDirective],
+	imports: [InputDirective, SelectDirective, ButtonDirective, SvgComponent, ReactiveFormsModule],
 })
 export class NewMatchPage {
 	private readonly gameStore = inject(GameStore);
@@ -28,11 +31,29 @@ export class NewMatchPage {
 
 	readonly inputs = viewChildren<ElementRef<HTMLInputElement>>('input');
 
-	// constructor() {
-	// 	effect(() => {
-	// 		// console.log(this.games());
-	// 	});
-	// }
+	readonly form = new FormGroup({
+		name: new FormControl<string>('', {
+			nonNullable: true,
+			validators: [Validators.required, Validators.minLength(5)],
+		}),
+		gameUuid: new FormControl<string>('', {
+			nonNullable: true,
+			validators: [Validators.required],
+		}),
+		players: new FormGroup({}),
+	});
+
+	constructor() {
+		const fillFormPlayersEffectRef = effect(() => {
+			const players = this.players();
+
+			if (null !== players) {
+				fillFormPlayersEffectRef.destroy();
+
+				this.fillFormPlayers(players);
+			}
+		});
+	}
 
 	addGame(): void {
 		this.modalStore.open(AddGameModal);
@@ -67,5 +88,22 @@ export class NewMatchPage {
 
 			return players;
 		});
+	}
+
+	createMatch(): void {
+		console.log(this.form.getRawValue());
+		console.log('match are created...');
+	}
+
+	private fillFormPlayers(players: Player[]): void {
+		const playerControls: Record<string, FormControl<boolean>> = {};
+
+		const controls = players.reduce((playerControls, player) => {
+			playerControls[player.uuid] = new FormControl<boolean>(false, { nonNullable: true });
+
+			return playerControls;
+		}, playerControls);
+
+		this.form.setControl('players', new FormGroup(controls));
 	}
 }

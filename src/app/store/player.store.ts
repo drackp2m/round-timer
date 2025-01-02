@@ -29,7 +29,7 @@ export class PlayerStore extends signalStore({ protectedState: false }, withStat
 	addPlayer(player: Player): void {
 		// FixMe => sort elements according to checkboxes
 		// FixMe => remove model data thats not present in the schema (schema maybe should use a different model)
-		this.playerRepository.set('player', player.uuid, player).then((player) => {
+		this.playerRepository.insert('player', player).then((player) => {
 			const currentItems = this.items();
 
 			patchState(this, { items: [...(currentItems ?? []), player] });
@@ -39,7 +39,7 @@ export class PlayerStore extends signalStore({ protectedState: false }, withStat
 	private fetchData(): void {
 		patchState(this, { isLoading: true });
 
-		this.playerRepository.getAll('player').then((items) => {
+		this.playerRepository.findAll('player').then((items) => {
 			patchState(this, { items, isLoading: false });
 		});
 	}

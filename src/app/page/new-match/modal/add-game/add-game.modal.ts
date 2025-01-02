@@ -22,7 +22,12 @@ export class AddGameModal extends Modal {
 	private readonly gameStore = inject(GameStore);
 
 	readonly turnTypes = Enum.toSelectOptions(GameTurnType);
+	readonly disabledTurnTypes: (keyof typeof GameTurnType)[] = ['PASS_ONCE', 'PASS_SOME'];
 	readonly turnOrders = Enum.toSelectOptions(GameTurnOrder);
+	readonly disabledTurnOrders: (keyof typeof GameTurnOrder)[] = [
+		'FIXED_PER_STAGE',
+		'EACH_ROUND_DIFFERENT',
+	];
 
 	readonly randomGameName = GameUtil.getRandomName();
 
@@ -49,6 +54,6 @@ export class AddGameModal extends Modal {
 		const game = new Game(this.form.getRawValue() as Game);
 
 		this.close();
-		this.gameStore.addGame(game);
+		this.gameStore.addGame(game.forRepository());
 	}
 }

@@ -1,26 +1,43 @@
+import { ModelConstructorOmit } from '@app/definition/model-constructor-omit.type';
 import { PlayerColor, PlayerColorKey } from '@app/definition/player/player-color.enum';
 import { PlayerIcon, PlayerIconKey } from '@app/definition/player/player-icon.enum';
+import { RepositoryModel } from '@app/model/repository.model';
 
-export class Player {
-	private readonly NOW = new Date();
+interface Computed {
+	colorValue: string;
+	iconValue: string;
+}
 
-	readonly uuid: string = crypto.randomUUID();
-	readonly name: string;
-	readonly nick: string;
-	readonly color: PlayerColorKey;
-	readonly colorValue: string;
-	readonly icon: PlayerIconKey;
-	readonly iconValue: string;
-	readonly createdAt: Date = this.NOW;
-	readonly updateAt: Date = this.NOW;
+export class Player extends RepositoryModel<Player> {
+	readonly uuid!: string;
+	readonly name!: string;
+	readonly nick!: string;
+	readonly color!: PlayerColorKey;
+	readonly icon!: PlayerIconKey;
+	readonly createdAt!: Date;
+	readonly updatedAt!: Date;
 
-	// FixMe => can need pass `uuid`, `createdAt`, and `updatedAt` properties (every auto-generated)
-	constructor(model: Omit<Player, 'uuid' | 'createdAt' | 'updateAt'>) {
-		this.name = model.name;
-		this.nick = model.nick;
-		this.color = model.color;
-		this.colorValue = PlayerColor[model.color];
-		this.icon = model.icon;
-		this.iconValue = PlayerIcon[model.icon];
+	computed!: Computed;
+
+	constructor(model: ModelConstructorOmit<Player>) {
+		super();
+
+		this.setComputed(model);
+
+		Object.assign(this, model);
+	}
+
+	private setComputed(model: ModelConstructorOmit<Player>): void {
+		const now = new Date();
+
+		Object.assign(this, {
+			uuid: crypto.randomUUID(),
+			createdAt: now,
+			updatedAt: now,
+			computed: {
+				colorValue: PlayerColor[model.color],
+				iconValue: PlayerIcon[model.icon],
+			},
+		});
 	}
 }
