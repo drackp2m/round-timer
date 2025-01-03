@@ -10,4 +10,8 @@ export abstract class Enum {
 			name: Text.fromUpperCaseToSentenceCase(key),
 		}));
 	}
+
+	static emptyStringAs<T>(): T {
+		return '' as T;
+	}
 }

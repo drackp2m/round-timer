@@ -8,6 +8,7 @@ export const createGameStoreMigration: Migration<AppSchemas> = {
 		if (3 > oldVersion) {
 			const store = database.createObjectStore('game', { keyPath: 'uuid' });
 			store.createIndex('name', 'name', { unique: true });
+			store.createIndex('victoryType', 'victory_type', { unique: true });
 		}
 	},
 };

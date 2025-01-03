@@ -4,23 +4,25 @@ import { RepositoryModel } from '@app/model/repository.model';
 export class MatchEvent extends RepositoryModel<MatchEvent> {
 	readonly uuid!: string;
 	readonly matchUuid!: string;
-	readonly userUuid!: string;
+	readonly playerUuid!: string;
 	readonly createdAt!: Date;
 
 	constructor(model: ModelConstructorOmit<MatchEvent>) {
 		super();
 
-		this.setComputed();
+		this.setInitialValues();
 
 		Object.assign(this, model);
 	}
 
-	private setComputed(): void {
+	private setInitialValues(): void {
 		const now = new Date();
 
-		Object.assign(this, {
+		const values: Partial<MatchEvent> = {
 			uuid: crypto.randomUUID(),
 			createdAt: now,
-		});
+		};
+
+		Object.assign(this, values);
 	}
 }

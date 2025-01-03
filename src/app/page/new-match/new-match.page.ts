@@ -1,12 +1,23 @@
-import { Component, ElementRef, effect, inject, linkedSignal, viewChildren } from '@angular/core';
+import {
+	Component,
+	ElementRef,
+	effect,
+	inject,
+	linkedSignal,
+	signal,
+	viewChildren,
+} from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { SvgComponent } from '@app/component/svg.component';
 import { ButtonDirective } from '@app/directive/button.directive';
 import { InputDirective } from '@app/directive/input.directive';
 import { SelectDirective } from '@app/directive/select.directive';
+import { MatchPlayer } from '@app/model/match-participant.model';
+import { Match } from '@app/model/match.model';
 import { Player } from '@app/model/player.model';
 import { AddGameModal } from '@app/page/new-match/modal/add-game/add-game.modal';
+import { MatchRepository } from '@app/repository/match.repository';
 import { GameStore } from '@app/store/game.store';
 import { ModalStore } from '@app/store/modal.store';
 import { PlayerStore } from '@app/store/player.store';
@@ -22,6 +33,7 @@ export class NewMatchPage {
 	private readonly gameStore = inject(GameStore);
 	private readonly playerStore = inject(PlayerStore);
 	private readonly modalStore = inject(ModalStore);
+	private readonly matchRepository = inject(MatchRepository);
 
 	readonly games = this.gameStore.items;
 	readonly gamesStoreIsLoading = this.gameStore.isLoading;
@@ -30,6 +42,8 @@ export class NewMatchPage {
 	readonly playerStoreIsLoading = this.playerStore.isLoading;
 
 	readonly inputs = viewChildren<ElementRef<HTMLInputElement>>('input');
+
+	readonly formPlayersLoaded = signal(false);
 
 	readonly form = new FormGroup({
 		name: new FormControl<string>('', {
@@ -40,7 +54,7 @@ export class NewMatchPage {
 			nonNullable: true,
 			validators: [Validators.required],
 		}),
-		players: new FormGroup({}),
+		players: new FormGroup<Record<string, FormControl<boolean>>>({}),
 	});
 
 	constructor() {
@@ -51,6 +65,7 @@ export class NewMatchPage {
 				fillFormPlayersEffectRef.destroy();
 
 				this.fillFormPlayers(players);
+				this.formPlayersLoaded.set(true);
 			}
 		});
 	}
@@ -91,8 +106,26 @@ export class NewMatchPage {
 	}
 
 	createMatch(): void {
-		console.log(this.form.getRawValue());
-		console.log('match are created...');
+		const match = new Match(this.form.getRawValue());
+
+		this.matchRepository.beginTransaction(['match', 'match_player']);
+
+		this.matchRepository.insert('match', match.forRepository()).then(() => {
+			const matchPlayers = Object.entries(this.form.getRawValue().players)
+				.filter(([, value]) => value)
+				.map(([playerUuid]) => {
+					const matchPlayer = new MatchPlayer({
+						matchUuid: match.uuid,
+						playerUuid,
+					});
+
+					return this.matchRepository.insert('match_player', matchPlayer.forRepository());
+				});
+
+			Promise.all(matchPlayers).then(() => {
+				this.matchRepository.commitTransaction();
+			});
+		});
 	}
 
 	private fillFormPlayers(players: Player[]): void {

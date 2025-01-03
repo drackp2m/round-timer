@@ -3,6 +3,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 
 import { GameTurnOrder, GameTurnOrderKey } from '@app/definition/game/game-turn-order.enum';
 import { GameTurnType, GameTurnTypeKey } from '@app/definition/game/game-turn-type.enum';
+import { GameVictoryType, GameVictoryTypeKey } from '@app/definition/game/game-victory-type.enum';
 import { ButtonDirective } from '@app/directive/button.directive';
 import { InputDirective } from '@app/directive/input.directive';
 import { SelectDirective } from '@app/directive/select.directive';
@@ -28,6 +29,7 @@ export class AddGameModal extends Modal {
 		'FIXED_PER_STAGE',
 		'EACH_ROUND_DIFFERENT',
 	];
+	readonly victoryTypes = Enum.toSelectOptions(GameVictoryType);
 
 	readonly randomGameName = GameUtil.getRandomName();
 
@@ -40,18 +42,22 @@ export class AddGameModal extends Modal {
 			nonNullable: true,
 			validators: [Validators.required, Validators.min(2), Validators.max(20)],
 		}),
-		turnType: new FormControl<GameTurnTypeKey | ''>('', {
+		turnType: new FormControl<GameTurnTypeKey>(Enum.emptyStringAs<GameTurnTypeKey>(), {
 			nonNullable: true,
 			validators: [Validators.required],
 		}),
-		turnOrder: new FormControl<GameTurnOrderKey | ''>('', {
+		turnOrder: new FormControl<GameTurnOrderKey>(Enum.emptyStringAs<GameTurnOrderKey>(), {
+			nonNullable: true,
+			validators: [Validators.required],
+		}),
+		victoryType: new FormControl<GameVictoryTypeKey>(Enum.emptyStringAs<GameVictoryTypeKey>(), {
 			nonNullable: true,
 			validators: [Validators.required],
 		}),
 	});
 
 	onSubmit(): void {
-		const game = new Game(this.form.getRawValue() as Game);
+		const game = new Game(this.form.getRawValue());
 
 		this.close();
 		this.gameStore.addGame(game.forRepository());

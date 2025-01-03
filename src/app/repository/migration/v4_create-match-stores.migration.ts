@@ -8,12 +8,12 @@ export const createMatchStoresMigration: Migration<AppSchemas> = {
 		if (4 > oldVersion) {
 			database.createObjectStore('match', { keyPath: 'uuid' });
 
-			const matchUserStore = database.createObjectStore('match_player', { keyPath: 'uuid' });
-			matchUserStore.createIndex('match_uuid', 'matchUuid', { unique: false });
-			matchUserStore.createIndex('match_uuid', 'userUuid', { unique: false });
+			const matchPlayerStore = database.createObjectStore('match_player', { keyPath: 'uuid' });
+			matchPlayerStore.createIndex('match_uuid', 'match_uuid', { unique: false });
+			matchPlayerStore.createIndex('player_uuid', 'player_uuid', { unique: false });
 
 			const matchEventStore = database.createObjectStore('match_event', { keyPath: 'uuid' });
-			matchEventStore.createIndex('match_uuid', 'matchUuid', { unique: false });
+			matchEventStore.createIndex('match_uuid', 'match_uuid', { unique: false });
 		}
 	},
 };

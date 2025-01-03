@@ -22,22 +22,31 @@ export class Player extends RepositoryModel<Player> {
 	constructor(model: ModelConstructorOmit<Player>) {
 		super();
 
-		this.setComputed(model);
+		this.setInitialValues();
+
+		this.setComputedData(model);
 
 		Object.assign(this, model);
 	}
 
-	private setComputed(model: ModelConstructorOmit<Player>): void {
+	private setInitialValues(): void {
 		const now = new Date();
 
-		Object.assign(this, {
+		const values: Partial<Player> = {
 			uuid: crypto.randomUUID(),
 			createdAt: now,
 			updatedAt: now,
-			computed: {
-				colorValue: PlayerColor[model.color],
-				iconValue: PlayerIcon[model.icon],
-			},
-		});
+		};
+
+		Object.assign(this, values);
+	}
+
+	private setComputedData(model: ModelConstructorOmit<Player>): void {
+		const computed: Computed = {
+			colorValue: PlayerColor[model.color],
+			iconValue: PlayerIcon[model.icon],
+		};
+
+		Object.assign(this, { computed });
 	}
 }

@@ -34,9 +34,15 @@ export class GenericRepository<T extends DBSchema> {
 		value: StoreValue<T, K>,
 	): Promise<StoreValue<T, K>> {
 		return this.withTransaction([storeName], 'readwrite', async (tx) => {
-			await tx.objectStore(storeName).put(value);
+			try {
+				await tx.objectStore(storeName).put(value);
 
-			return value;
+				return value;
+			} catch (error) {
+				return Promise.reject(
+					`Error inserting data in \`${storeName}\`: ${JSON.stringify(value)}\n${error}`,
+				);
+			}
 		});
 	}
 

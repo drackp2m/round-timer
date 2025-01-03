@@ -30,7 +30,7 @@
 			<h4>Players</h4>
 
 			<ul class="flex-col gap-2" formGroupName="players">
-				@for (player of players(); track player.uuid) {
+				@for (player of formPlayersLoaded() ? players() : []; track player.uuid) {
 					<li class="flex-row gap-2 align-center">
 						<input
 							#input
@@ -65,7 +65,11 @@
 			</button>
 		</div>
 
-		<input appInput formControlName="name" label="Match name" placeholder="The gamer cousins" />
+		<div class="flex-col gap-2">
+			<h4>Others</h4>
+
+			<input appInput formControlName="name" label="Match name" placeholder="The gamer cousins" />
+		</div>
 
 		<button appButton type="submit" color="accent">Create Match</button>
 	</form>

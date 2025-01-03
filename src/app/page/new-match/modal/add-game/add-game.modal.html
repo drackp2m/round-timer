@@ -24,7 +24,7 @@
 		</select>
 
 		<select appSelect formControlName="turnOrder">
-			<option value="">Icon</option>
+			<option value="">Turn order</option>
 
 			@for (turnOrder of turnOrders; track $index) {
 				<option
@@ -32,6 +32,16 @@
 					[disabled]="disabledTurnOrders.includes(turnOrder.value)"
 				>
 					{{ turnOrder.name }}
+				</option>
+			}
+		</select>
+
+		<select appSelect formControlName="victoryType">
+			<option value="">Victory type</option>
+
+			@for (victoryType of victoryTypes; track $index) {
+				<option [attr.value]="victoryType.value">
+					{{ victoryType.name }}
 				</option>
 			}
 		</select>
