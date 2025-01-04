@@ -1,21 +1,34 @@
 .buttons {
-	li {
-		.button {
-			border-radius: 50%;
-		}
+	$relative-position: 1.5px;
 
+	li {
 		&:first-child {
 			app-svg {
 				position: relative;
-				right: 2px;
+				right: $relative-position;
 			}
 		}
 
 		&:last-child {
 			app-svg {
 				position: relative;
-				left: 2px;
+				left: $relative-position;
+			}
+		}
+
+		.button {
+			border-radius: 50%;
+
+			&.play {
+				app-svg {
+					position: relative;
+					left: $relative-position;
+				}
 			}
 		}
 	}
+}
+
+hr {
+	border: solid 0.5px var(--color-contrast);
 }

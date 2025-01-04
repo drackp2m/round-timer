@@ -3,15 +3,6 @@
 
 	<p>Now, on round #{{ round() }}, turn #{{ turn() }}</p>
 
-	<ul>
-		@for (turn of matchTurns(); track $index) {
-			<li>
-				{{ playerByUuid()(turn.playerUuid)?.name }} {{ turn.playerUuid.split('-')[0] }}
-				{{ turn.time | elapsedTime }}
-			</li>
-		}
-	</ul>
-
 	<div class="flex-col gap-2">
 		<h5>Round order</h5>
 
@@ -21,6 +12,22 @@
 			}
 		</ul>
 	</div>
+
+	<ul>
+		@for (turn of matchTurns(); track $index; let index = $index) {
+			@if (index % 3 === 0) {
+				<li class="mt-4">
+					<strong>Round {{ index / 3 + 1 }}</strong>
+					<hr />
+				</li>
+			}
+			<li>
+				{{ playerByUuid()(turn.playerUuid)?.name }} -
+				<!-- {{ turn.playerUuid.split('-')[0] }} -->
+				{{ turn.time | elapsedTime }}
+			</li>
+		}
+	</ul>
 
 	<p>Playing {{ currentPlayer()?.name }} - with {{ currentTimeRunning() | elapsedTime }} current</p>
 
@@ -44,7 +51,11 @@
 			</button>
 		</li>
 		<li>
-			<button class="button surface-contrast p-4" (click)="togglePlayPauseEvent()">
+			<button
+				class="button surface-contrast p-4"
+				[class]="{ play: !timerIsRunning() }"
+				(click)="togglePlayPauseEvent()"
+			>
 				<app-svg [icon]="timerIsRunning() ? 'pause' : 'play'" squared color="surface-primary" />
 			</button>
 		</li>
