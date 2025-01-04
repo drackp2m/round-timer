@@ -9,7 +9,6 @@ import {
 import { MatchEvent } from '@app/model/match-event.model';
 import { Match } from '@app/model/match.model';
 import { MatchRepository } from '@app/repository/match.repository';
-import { PlayerStore } from '@app/store/player.store';
 
 import { CalculateMatchTurns } from 'src/app/use-case/match/calculate-match-turns.use-case';
 
@@ -32,32 +31,23 @@ const initialState: MatchStoreProps = {
 })
 export class MatchStore extends signalStore({ protectedState: false }, withState(initialState)) {
 	private readonly matchRepository = inject(MatchRepository);
-	private readonly playerStore = inject(PlayerStore);
 	private readonly calculateMatchTurns = inject(CalculateMatchTurns);
 
-	// readonly players = computed(() => {
-	// 	const players = this.playerStore.items();
-	// 	const matchPlayers = this.events()?.find((event) => 'SET_TURN_ORDER' === event.type)?.payload;
-
-	// 	return players?.filter((player) => matchPlayers?.includes(player.uuid));
-	// });
-
-	readonly round = computed(() => {
+	readonly matchTurns = computed(() => {
 		const events = this.events() ?? [];
-		const playersCount = this.playerUuids()?.length ?? 0;
 
-		const nextTurnEventsCount = events.filter((event) => 'NEXT_TURN' === event.type).length;
-
-		return Math.floor(nextTurnEventsCount % playersCount) + 1;
+		return this.calculateMatchTurns.execute(events);
 	});
 
-	readonly turn = computed(() => {
-		const events = this.events() ?? [];
+	readonly turn = computed(() => this.matchTurns().length);
 
-		const nextTurnEventsCount = events.filter((event) => 'NEXT_TURN' === event.type).length;
-		const previousTurnEventsCount = events.filter((event) => 'PREVIOUS_TURN' === event.type).length;
+	readonly round = computed(() => {
+		const turn = this.turn();
+		const playersCount = this.playerUuids()?.length ?? 0;
 
-		return nextTurnEventsCount - previousTurnEventsCount;
+		console.log({ turn, playersCount });
+
+		return Math.floor((turn - 1) / playersCount) + 1;
 	});
 
 	readonly timerIsRunning = computed(() => {
@@ -82,12 +72,6 @@ export class MatchStore extends signalStore({ protectedState: false }, withState
 		const turn = this.turn();
 
 		return playersOrder?.at(turn - 1);
-	});
-
-	readonly matchTurns = computed(() => {
-		const events = this.events() ?? [];
-
-		return this.calculateMatchTurns.execute(events);
 	});
 
 	constructor() {

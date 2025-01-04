@@ -3,6 +3,8 @@ import { Injectable } from '@angular/core';
 import { MatchEvent } from '@app/model/match-event.model';
 import { Check } from '@app/util/check';
 
+import { ElapsedTimePipe } from 'src/app/pipe/elapsed-time.pipe';
+
 interface MatchTurn {
 	playerUuid: string;
 	time: number;
@@ -12,16 +14,22 @@ interface MatchTurn {
 	providedIn: 'root',
 })
 export class CalculateMatchTurns {
-	private readonly turns: MatchTurn[] = [];
+	private turns: MatchTurn[] = [];
 	private currentTurnOrder: string[] = [];
 	private currentTurn = 0;
-	private lastRelevantDate = new Date();
+	private previousEventDate = new Date();
 
 	execute(events: MatchEvent[]) {
-		for (const event of events) {
-			console.log(`Checking event ${event.type}...`);
+		this.turns = [];
+		this.currentTurnOrder = [];
+		this.currentTurn = 0;
+		this.previousEventDate = new Date();
+
+		for (const [key, event] of events.entries()) {
+			console.log(`Checking event #${key} ${event.type}...`);
 
 			if (Check.isEventType(event, 'SET_TURN_ORDER')) {
+				this.previousEventDate = new Date(event.createdAt);
 				this.currentTurnOrder = event.payload;
 				continue;
 			}
@@ -33,7 +41,12 @@ export class CalculateMatchTurns {
 				case 'PAUSE':
 					this.dispatchPauseEvent(event);
 					break;
+				case 'RESUME':
+					this.dispatchResumeEvent();
+					break;
 			}
+
+			this.previousEventDate = new Date(event.createdAt);
 		}
 
 		return this.turns;
@@ -43,48 +56,45 @@ export class CalculateMatchTurns {
 		if (0 === this.currentTurn) {
 			console.log('First turn');
 
-			this.lastRelevantDate = new Date(event.createdAt);
 			this.currentTurn++;
 
 			return;
 		}
 
-		const currentDate = new Date();
+		// ToDo => get date from previous event
+		const currentEventDate = new Date(event.createdAt);
 
-		this.addTimeToCurrentTurn(currentDate);
+		this.addTimeToCurrentTurn(currentEventDate);
 
-		this.lastRelevantDate = currentDate;
 		this.currentTurn++;
 	}
 
 	private dispatchPauseEvent(event: MatchEvent): void {
-		const currentDate = new Date(event.createdAt);
+		const currentEventDate = new Date(event.createdAt);
 
-		this.addTimeToCurrentTurn(currentDate);
-
-		this.lastRelevantDate = currentDate;
-		this.currentTurn++;
+		this.addTimeToCurrentTurn(currentEventDate);
 	}
 
-	private dispatchEventResume(): void {
-		this.lastRelevantDate = new Date();
+	private dispatchResumeEvent(): void {
+		console.log('Resuming...');
 	}
 
 	private getCurrentPlayerUuid(): string {
 		return this.currentTurnOrder[this.currentTurn % this.currentTurnOrder.length] ?? '';
 	}
 
-	private addTimeToCurrentTurn(currentDate: Date): void {
-		const time = currentDate.getTime() - this.lastRelevantDate.getTime();
+	private addTimeToCurrentTurn(lastEventDate: Date): void {
+		const pipe = new ElapsedTimePipe();
+		const time = lastEventDate.getTime() - this.previousEventDate.getTime();
 
-		const currentTurn = this.turns[this.currentTurn];
+		console.log({ turn: this.currentTurn, time: pipe.transform(time) });
+
+		const currentTurn = this.turns[this.currentTurn - 1];
 
 		if (currentTurn !== undefined) {
 			currentTurn.time += time;
 		} else {
 			const currentPlayerUuid = this.getCurrentPlayerUuid();
-
-			console.log(time);
 
 			this.turns.push({ playerUuid: currentPlayerUuid, time });
 		}

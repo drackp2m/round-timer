@@ -3,13 +3,12 @@
 
 	<p>Now, on round #{{ round() }}, turn #{{ turn() }}</p>
 
-	<p>Timer is {{ timerIsRunning() ? 'running' : 'stopped' }}</p>
-
-	{{ matchTurns() | json }}
-
 	<ul>
-		@for (turn of matchTurns(); track turn.playerUuid) {
-			<li>{{ turn.time | elapsedTime: 1 }}</li>
+		@for (turn of matchTurns(); track $index) {
+			<li>
+				{{ playerByUuid()(turn.playerUuid)?.name }} {{ turn.playerUuid.split('-')[0] }}
+				{{ turn.time | elapsedTime }}
+			</li>
 		}
 	</ul>
 
@@ -23,39 +22,24 @@
 		</ul>
 	</div>
 
-	<p>Playing {{ currentPlayer()?.name }}</p>
-
-	<div class="flex-col gap-2">
-		<h5>Events</h5>
-
-		<ul>
-			@for (event of events(); track event.uuid) {
-				<li>
-					{{ event.type }}, {{ event.createdAt | date: 'd MMM' }} at
-					{{ event.createdAt | date: 'hh:mm:ss' }}
-				</li>
-			}
-		</ul>
-	</div>
-
-	{{ currentTimeRunning() }}
+	<p>Playing {{ currentPlayer()?.name }} - with {{ currentTimeRunning() | elapsedTime }} current</p>
 
 	<h2 class="text-center color-accent">
 		@let currentTurnValue = currentTurn();
 
 		@if (currentTurnValue) {
-			{{ currentTurnValue.time + currentTimeRunning() | elapsedTime: 2 }}
+			{{ currentTurnValue.time + currentTimeRunning() | elapsedTime }}
 		}
 	</h2>
 
 	<ul class="buttons flex-row gap-6 justify-center">
 		<li>
-			<button class="button surface-contrast p-4" (click)="dispatch('PREVIOUS_TURN')">
+			<button class="button surface-contrast p-4">
 				<app-svg icon="backward" squared color="surface-primary" />
 			</button>
 		</li>
 		<li>
-			<button class="button surface-contrast p-4" (click)="dispatch('END')">
+			<button class="button surface-contrast p-4">
 				<app-svg icon="stop" squared color="surface-primary" />
 			</button>
 		</li>
@@ -70,4 +54,17 @@
 			</button>
 		</li>
 	</ul>
+
+	<div class="flex-col gap-2">
+		<h5>Events</h5>
+
+		<ul>
+			@for (event of events()?.toReversed(); track event.uuid) {
+				<li>
+					{{ event.type }}, {{ event.createdAt | date: 'd MMM' }} at
+					{{ event.createdAt | date: 'hh:mm:ss' }}
+				</li>
+			}
+		</ul>
+	</div>
 </section>

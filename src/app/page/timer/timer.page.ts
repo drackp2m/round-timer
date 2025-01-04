@@ -1,4 +1,4 @@
-import { DatePipe, JsonPipe } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { Component, computed, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { interval } from 'rxjs';
@@ -13,7 +13,7 @@ import { ElapsedTimePipe } from 'src/app/pipe/elapsed-time.pipe';
 @Component({
 	templateUrl: './timer.page.html',
 	styleUrl: './timer.page.scss',
-	imports: [SvgComponent, DatePipe, JsonPipe, ElapsedTimePipe],
+	imports: [SvgComponent, DatePipe, ElapsedTimePipe],
 })
 export class TimerPage {
 	private readonly matchStore = inject(MatchStore);
@@ -22,6 +22,11 @@ export class TimerPage {
 	timer = toSignal(interval(10));
 
 	readonly players = this.playerStore.items;
+	readonly playerByUuid = computed(() => {
+		const playerMap = new Map(this.players()?.map((player) => [player.uuid, player]));
+
+		return (uuid: string) => playerMap.get(uuid);
+	});
 
 	readonly match = this.matchStore.match;
 	readonly events = this.matchStore.events;
@@ -46,7 +51,7 @@ export class TimerPage {
 		if (timerIsRunning && currentTurn !== undefined && lastEvent !== undefined) {
 			const lastEventCreatedAt = new Date(lastEvent.createdAt);
 
-			return currentTurn.time + Date.now() - lastEventCreatedAt.getTime();
+			return Date.now() - lastEventCreatedAt.getTime();
 		}
 
 		return 0;
@@ -62,6 +67,10 @@ export class TimerPage {
 	readonly currentPlayer = computed(() =>
 		this.players()?.find((player) => player.uuid === this.matchStore.currentPlayer()),
 	);
+
+	getPlayerByUuid(uuid: string) {
+		return this.players()?.find((player) => player.uuid === uuid);
+	}
 
 	dispatch(eventType: MatchEventTypeKey): void {
 		const type = MatchEventType[eventType];
