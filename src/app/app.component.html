@@ -1,1 +1,5 @@
-<router-outlet />
+@if (loading()) {
+	Loading...
+} @else {
+	<router-outlet />
+}

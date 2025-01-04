@@ -16,6 +16,10 @@ export const APP_ROUTES: Routes = [
 				path: 'new-match',
 				loadChildren: () => import('./page/new-match/new-match.routes'),
 			},
+			{
+				path: 'timer',
+				loadChildren: () => import('./page/timer/timer.routes'),
+			},
 		],
 	},
 ];

@@ -1,4 +1,5 @@
 export enum MatchEventType {
+	SET_TURN_ORDER = 'set-turn-order',
 	NEXT_TURN = 'next-turn',
 	PREVIOUS_TURN = 'previous-turn',
 	SKIP_TURN = 'skip-turn',

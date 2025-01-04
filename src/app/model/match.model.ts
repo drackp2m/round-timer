@@ -28,6 +28,6 @@ export class Match extends RepositoryModel<Match> {
 			updatedAt: now,
 		};
 
-		Object.assign(this, { values });
+		Object.assign(this, values);
 	}
 }

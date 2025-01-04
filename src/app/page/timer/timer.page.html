@@ -1,0 +1,73 @@
+<section class="flex-col gap-6">
+	<h4>Playing {{ match()?.name ?? 'any game' }} match</h4>
+
+	<p>Now, on round #{{ round() }}, turn #{{ turn() }}</p>
+
+	<p>Timer is {{ timerIsRunning() ? 'running' : 'stopped' }}</p>
+
+	{{ matchTurns() | json }}
+
+	<ul>
+		@for (turn of matchTurns(); track turn.playerUuid) {
+			<li>{{ turn.time | elapsedTime: 1 }}</li>
+		}
+	</ul>
+
+	<div class="flex-col gap-2">
+		<h5>Round order</h5>
+
+		<ul>
+			@for (player of playersOrder(); track player.uuid) {
+				<li>{{ player.name }} ({{ player.uuid.split('-')[0] }})</li>
+			}
+		</ul>
+	</div>
+
+	<p>Playing {{ currentPlayer()?.name }}</p>
+
+	<div class="flex-col gap-2">
+		<h5>Events</h5>
+
+		<ul>
+			@for (event of events(); track event.uuid) {
+				<li>
+					{{ event.type }}, {{ event.createdAt | date: 'd MMM' }} at
+					{{ event.createdAt | date: 'hh:mm:ss' }}
+				</li>
+			}
+		</ul>
+	</div>
+
+	{{ currentTimeRunning() }}
+
+	<h2 class="text-center color-accent">
+		@let currentTurnValue = currentTurn();
+
+		@if (currentTurnValue) {
+			{{ currentTurnValue.time + currentTimeRunning() | elapsedTime: 2 }}
+		}
+	</h2>
+
+	<ul class="buttons flex-row gap-6 justify-center">
+		<li>
+			<button class="button surface-contrast p-4" (click)="dispatch('PREVIOUS_TURN')">
+				<app-svg icon="backward" squared color="surface-primary" />
+			</button>
+		</li>
+		<li>
+			<button class="button surface-contrast p-4" (click)="dispatch('END')">
+				<app-svg icon="stop" squared color="surface-primary" />
+			</button>
+		</li>
+		<li>
+			<button class="button surface-contrast p-4" (click)="togglePlayPauseEvent()">
+				<app-svg [icon]="timerIsRunning() ? 'pause' : 'play'" squared color="surface-primary" />
+			</button>
+		</li>
+		<li>
+			<button class="button surface-contrast p-4">
+				<app-svg icon="forward" squared color="surface-primary" (click)="dispatch('NEXT_TURN')" />
+			</button>
+		</li>
+	</ul>
+</section>

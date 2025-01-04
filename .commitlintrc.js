@@ -24,8 +24,6 @@ module.exports = {
 						'⏪': 'revert',
 					};
 
-					console.log({ header })
-
 					const match = header.match(
 						/^(✨|🎨|🧪|♻️|🐛|📚|🚀|🏗️|💻|🎒|⏪)\s(feat|style|test|refactor|fix|docs|perf|build|ci|chore|revert):/,
 					);

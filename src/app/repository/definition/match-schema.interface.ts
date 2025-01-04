@@ -1,13 +1,14 @@
 import { DBSchema } from 'idb';
 
 import { MatchEvent } from '@app/model/match-event.model';
-import { MatchPlayer } from '@app/model/match-participant.model';
+import { MatchPlayer } from '@app/model/match-player.model';
 import { Match } from '@app/model/match.model';
 
 export interface MatchSchema extends DBSchema {
 	match: {
 		key: string;
 		value: Match;
+		indexes: { game_uuid: string; status: string };
 	};
 	match_player: {
 		key: string;

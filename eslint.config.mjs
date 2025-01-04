@@ -177,6 +177,9 @@ const eslintConfig = tseslint.config(
 			yoda: ['warn', 'always'],
 			'no-implicit-coercion': ['warn', { boolean: true }],
 			'no-extra-boolean-cast': 'warn',
+			'@typescript-eslint/no-floating-promises': 'warn',
+			'@typescript-eslint/no-misused-promises': 'warn',
+			'@typescript-eslint/no-unnecessary-boolean-literal-compare': 'warn',
 			'@typescript-eslint/strict-boolean-expressions': [
 				'warn',
 				{
@@ -185,7 +188,6 @@ const eslintConfig = tseslint.config(
 					allowString: false,
 				},
 			],
-			'@typescript-eslint/no-unnecessary-boolean-literal-compare': 'warn',
 		},
 	},
 	{
@@ -221,7 +223,7 @@ const eslintConfig = tseslint.config(
 			'max-lines': [
 				'warn',
 				{
-					max: 200,
+					max: 250,
 					skipComments: true,
 				},
 			],
@@ -245,7 +247,5 @@ const eslintConfig = tseslint.config(
 		},
 	},
 );
-
-// console.log(eslintConfig);
 
 export default eslintConfig;

@@ -1,0 +1,21 @@
+.buttons {
+	li {
+		.button {
+			border-radius: 50%;
+		}
+
+		&:first-child {
+			app-svg {
+				position: relative;
+				right: 2px;
+			}
+		}
+
+		&:last-child {
+			app-svg {
+				position: relative;
+				left: 2px;
+			}
+		}
+	}
+}

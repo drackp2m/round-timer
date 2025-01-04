@@ -10,10 +10,12 @@ import {
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { SvgComponent } from '@app/component/svg.component';
+import { MatchEventType } from '@app/definition/match/match-event-type.enum';
 import { ButtonDirective } from '@app/directive/button.directive';
 import { InputDirective } from '@app/directive/input.directive';
 import { SelectDirective } from '@app/directive/select.directive';
-import { MatchPlayer } from '@app/model/match-participant.model';
+import { MatchEvent } from '@app/model/match-event.model';
+import { MatchPlayer } from '@app/model/match-player.model';
 import { Match } from '@app/model/match.model';
 import { Player } from '@app/model/player.model';
 import { AddGameModal } from '@app/page/new-match/modal/add-game/add-game.modal';
@@ -71,11 +73,11 @@ export class NewMatchPage {
 	}
 
 	addGame(): void {
-		this.modalStore.open(AddGameModal);
+		void this.modalStore.open(AddGameModal);
 	}
 
 	addPlayer(): void {
-		this.modalStore.open(AddPlayerModal);
+		void this.modalStore.open(AddPlayerModal);
 	}
 
 	sortPlayers(event: Event): void {
@@ -105,27 +107,21 @@ export class NewMatchPage {
 		});
 	}
 
-	createMatch(): void {
-		const match = new Match(this.form.getRawValue());
-
-		this.matchRepository.beginTransaction(['match', 'match_player']);
-
-		this.matchRepository.insert('match', match.forRepository()).then(() => {
-			const matchPlayers = Object.entries(this.form.getRawValue().players)
-				.filter(([, value]) => value)
-				.map(([playerUuid]) => {
-					const matchPlayer = new MatchPlayer({
-						matchUuid: match.uuid,
-						playerUuid,
-					});
-
-					return this.matchRepository.insert('match_player', matchPlayer.forRepository());
-				});
-
-			Promise.all(matchPlayers).then(() => {
-				this.matchRepository.commitTransaction();
-			});
+	async createMatch(): Promise<void> {
+		const rawForm = this.form.getRawValue();
+		const match = new Match({ gameUuid: rawForm.gameUuid, name: rawForm.name });
+		const matchPlayers = this.getPlayersFromForm(match.uuid);
+		const matchEvent = new MatchEvent<MatchEventType.SET_TURN_ORDER>({
+			matchUuid: match.uuid,
+			type: 'SET_TURN_ORDER',
+			payload: matchPlayers.map(({ playerUuid }) => playerUuid),
 		});
+
+		await this.matchRepository.beginTransaction(['match', 'match_player', 'match_event']);
+		await this.matchRepository.insert('match', match.forRepository());
+		await this.matchRepository.batchInsert('match_player', matchPlayers);
+		await this.matchRepository.insert('match_event', matchEvent.forRepository());
+		await this.matchRepository.commitTransaction();
 	}
 
 	private fillFormPlayers(players: Player[]): void {
@@ -138,5 +134,13 @@ export class NewMatchPage {
 		}, playerControls);
 
 		this.form.setControl('players', new FormGroup(controls));
+	}
+
+	private getPlayersFromForm(matchUuid: string): MatchPlayer[] {
+		return (
+			this.players()
+				?.filter((player) => this.form.controls.players.get(player.uuid)?.value)
+				.map(({ uuid }) => new MatchPlayer({ matchUuid, playerUuid: uuid }).forRepository()) ?? []
+		);
 	}
 }

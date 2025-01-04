@@ -7,6 +7,6 @@ export interface GameSchema extends DBSchema {
 	game: {
 		key: string;
 		value: Game;
-		indexes: { name: string; victoryType: string };
+		indexes: { name: string; victory_type: string };
 	};
 }

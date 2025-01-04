@@ -1,10 +1,18 @@
+import { MatchEventType } from '@app/definition/match/match-event-type.enum';
+import {
+	MatchEventPayload,
+	MatchEventType as MatchEventTypeType,
+} from '@app/definition/match/match-event-type.type';
 import { ModelConstructorOmit } from '@app/definition/model-constructor-omit.type';
 import { RepositoryModel } from '@app/model/repository.model';
 
-export class MatchEvent extends RepositoryModel<MatchEvent> {
+export class MatchEvent<
+	T extends MatchEventType = MatchEventType,
+> extends RepositoryModel<MatchEvent> {
 	readonly uuid!: string;
 	readonly matchUuid!: string;
-	readonly playerUuid!: string;
+	readonly type!: MatchEventTypeType[T];
+	readonly payload!: MatchEventPayload[T];
 	readonly createdAt!: Date;
 
 	constructor(model: ModelConstructorOmit<MatchEvent>) {
