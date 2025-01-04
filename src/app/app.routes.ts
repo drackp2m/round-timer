@@ -17,8 +17,8 @@ export const APP_ROUTES: Routes = [
 				loadChildren: () => import('./page/new-match/new-match.routes'),
 			},
 			{
-				path: 'timer',
-				loadChildren: () => import('./page/timer/timer.routes'),
+				path: 'timer', // ToDo => rename to match all timer routes and files
+				loadChildren: () => import('./page/match/timer.routes'),
 			},
 		],
 	},
