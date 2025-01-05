@@ -11,11 +11,11 @@ import { PlayerStore } from '@app/store/player.store';
 import { ElapsedTimePipe } from 'src/app/pipe/elapsed-time.pipe';
 
 @Component({
-	templateUrl: './timer.page.html',
-	styleUrl: './timer.page.scss',
+	templateUrl: './match.page.html',
+	styleUrl: './match.page.scss',
 	imports: [SvgComponent, DatePipe, ElapsedTimePipe],
 })
-export class TimerPage {
+export class MatchPage {
 	private readonly matchStore = inject(MatchStore);
 	private readonly playerStore = inject(PlayerStore);
 

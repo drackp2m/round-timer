@@ -5,9 +5,11 @@ html {
 
 	overscroll-behavior: none;
 
-	font-family: 'Helvetica Now', sans-serif;
+	font-family: 'Helvetica Now Text', sans-serif;
 	font-size: 16px;
 	font-weight: var(--font-weight-md);
+	line-height: 1.5em;
+	letter-spacing: -0.01rem;
 
 	font-synthesis: none;
 
@@ -31,7 +33,9 @@ h3,
 h4,
 h5,
 h6 {
-	font-weight: var(--font-weight-xxl);
+	font-weight: var(--font-weight-xl);
+	line-height: 1.5em;
+	letter-spacing: 0.015em;
 }
 
 h1 {

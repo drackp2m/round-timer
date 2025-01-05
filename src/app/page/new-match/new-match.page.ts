@@ -8,6 +8,7 @@ import {
 	viewChildren,
 } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 
 import { SvgComponent } from '@app/component/svg.component';
 import { MatchEventType } from '@app/definition/match/match-event-type.enum';
@@ -36,6 +37,7 @@ export class NewMatchPage {
 	private readonly playerStore = inject(PlayerStore);
 	private readonly modalStore = inject(ModalStore);
 	private readonly matchRepository = inject(MatchRepository);
+	private readonly router = inject(Router);
 
 	readonly games = this.gameStore.items;
 	readonly gamesStoreIsLoading = this.gameStore.isLoading;
@@ -122,6 +124,8 @@ export class NewMatchPage {
 		await this.matchRepository.batchInsert('match_player', matchPlayers);
 		await this.matchRepository.insert('match_event', matchEvent.forRepository());
 		await this.matchRepository.commitTransaction();
+
+		await this.router.navigate(['/match']);
 	}
 
 	private fillFormPlayers(players: Player[]): void {

@@ -8,7 +8,7 @@ import { ButtonDirective } from '@app/directive/button.directive';
 	template: `<section
 		class="header p-2 px-4 surface-contrast color-primary flex-row align-center justify-between"
 	>
-		<button [routerLink]="'/'">
+		<button routerLink="/">
 			<h3>Round Timer</h3>
 		</button>
 

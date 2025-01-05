@@ -20,12 +20,13 @@ $font-size: (
 ) !default;
 
 $font-weight: (
+	xxs: 100,
+	xs: 200,
 	sm: 300,
 	md: 400,
 	lg: 500,
-	xl: 600,
-	xxl: 700,
-	xxxl: 900,
+	xl: 700,
+	xxl: 800,
 ) !default;
 
 $font-oblique: (

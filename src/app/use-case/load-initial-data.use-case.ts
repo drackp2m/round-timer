@@ -22,7 +22,7 @@ export class LoadInitialDataUseCase {
 			if (!isLoading && null !== match) {
 				findInProgressMatchEffectRef.destroy();
 
-				void this.router.navigate(['/timer']);
+				void this.router.navigate(['/match']);
 			}
 		});
 	}

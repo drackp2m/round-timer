@@ -1,7 +1,9 @@
 <section class="flex-col gap-4">
 	<h4>Previous statistics</h4>
 
-	<button appButton [routerLink]="'/new-match'">New match</button>
+	<button appButton routerLink="/new-match" color="accent">New match</button>
+
+	<button appButton (click)="createInitialData()">Insert Game and Players</button>
 
 	<p>
 		Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse error consequuntur distinctio
