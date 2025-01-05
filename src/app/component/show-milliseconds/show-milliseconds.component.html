@@ -1,0 +1,11 @@
+<div class="timer flex-row">
+	@if (parts()[3] !== '0') {
+		<div class="hours">{{ parts()[3] }}h</div>
+	}
+	@if (parts()[2] !== '0') {
+		<div class="minutes">{{ parts()[2] }}m</div>
+	}
+	<div class="seconds">
+		{{ seconds() }}<span class="milliseconds">{{ milliseconds() }}</span>
+	</div>
+</div>

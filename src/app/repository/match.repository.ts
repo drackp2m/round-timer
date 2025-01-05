@@ -27,8 +27,6 @@ export class MatchRepository extends GenericRepository<MatchSchema> {
 			(a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
 		);
 
-		console.log(matchEvents);
-
 		return { match: new Match(match), matchPlayers, matchEvents };
 	}
 }

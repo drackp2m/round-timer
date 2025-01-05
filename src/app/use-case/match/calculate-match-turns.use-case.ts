@@ -3,8 +3,6 @@ import { Injectable } from '@angular/core';
 import { MatchEvent } from '@app/model/match-event.model';
 import { Check } from '@app/util/check';
 
-import { ElapsedTimePipe } from 'src/app/pipe/elapsed-time.pipe';
-
 interface MatchTurn {
 	playerUuid: string;
 	time: number;
@@ -14,65 +12,63 @@ interface MatchTurn {
 	providedIn: 'root',
 })
 export class CalculateMatchTurns {
-	private turns: MatchTurn[] = [];
-	private currentTurnOrder: string[] = [];
-	private currentTurn = 0;
-	private previousEventDate = new Date();
+	private events!: MatchEvent[];
+	private eventCheckingIndex!: number;
+	private turns!: MatchTurn[];
+	private turnOrder!: string[];
+	private currentTurn!: number;
 
 	execute(events: MatchEvent[]) {
+		this.events = events;
 		this.turns = [];
-		this.currentTurnOrder = [];
-		this.currentTurn = 0;
-		this.previousEventDate = new Date();
+		this.turnOrder = [];
+		this.currentTurn = -1;
 
-		for (const [key, event] of events.entries()) {
-			console.log(`Checking event #${key} ${event.type}...`);
+		for (const [index, event] of events.entries()) {
+			this.eventCheckingIndex = index;
+			console.log(`Checking event #${index} ${event.type}...`);
 
 			if (Check.isEventType(event, 'SET_TURN_ORDER')) {
-				this.previousEventDate = new Date(event.createdAt);
-				this.currentTurnOrder = event.payload;
+				this.turnOrder = event.payload;
 				continue;
 			}
 
 			switch (event.type) {
 				case 'NEXT_TURN':
-					this.dispatchNextTurnEvent(event);
+					this.dispatchNextTurnEvent();
 					break;
 				case 'PAUSE':
-					this.dispatchPauseEvent(event);
+					this.dispatchPauseEvent();
 					break;
 				case 'RESUME':
 					this.dispatchResumeEvent();
 					break;
 			}
-
-			this.previousEventDate = new Date(event.createdAt);
 		}
+
+		console.log({ turns: this.turns, currentTurn: this.currentTurn });
 
 		return this.turns;
 	}
 
-	private dispatchNextTurnEvent(event: MatchEvent): void {
-		if (0 === this.currentTurn) {
-			console.log('First turn');
+	private dispatchNextTurnEvent(): void {
+		this.currentTurn++;
 
-			this.currentTurn++;
+		const currentTurn = this.turns[this.currentTurn];
 
-			return;
+		if (currentTurn === undefined) {
+			const currentPlayerUuid = this.getCurrentPlayerUuid();
+
+			this.turns.push({ playerUuid: currentPlayerUuid, time: 0 });
 		}
 
-		// ToDo => get date from previous event
-		const currentEventDate = new Date(event.createdAt);
-
-		this.addTimeToCurrentTurn(currentEventDate);
-
-		this.currentTurn++;
+		if (0 !== this.currentTurn) {
+			this.addTimeToCurrentTurn();
+		}
 	}
 
-	private dispatchPauseEvent(event: MatchEvent): void {
-		const currentEventDate = new Date(event.createdAt);
-
-		this.addTimeToCurrentTurn(currentEventDate);
+	private dispatchPauseEvent(): void {
+		this.addTimeToCurrentTurn(false);
 	}
 
 	private dispatchResumeEvent(): void {
@@ -80,23 +76,26 @@ export class CalculateMatchTurns {
 	}
 
 	private getCurrentPlayerUuid(): string {
-		return this.currentTurnOrder[this.currentTurn % this.currentTurnOrder.length] ?? '';
+		return this.turnOrder[this.currentTurn % this.turnOrder.length] ?? '';
 	}
 
-	private addTimeToCurrentTurn(lastEventDate: Date): void {
-		const pipe = new ElapsedTimePipe();
-		const time = lastEventDate.getTime() - this.previousEventDate.getTime();
+	private addTimeToCurrentTurn(isNextEvent = true): void {
+		const currentEventDate = new Date(this.events[this.eventCheckingIndex]?.createdAt ?? 0);
+		const previousEventDate = new Date(this.events[this.eventCheckingIndex - 1]?.createdAt ?? 0);
+		const time = currentEventDate.getTime() - previousEventDate.getTime();
 
-		console.log({ turn: this.currentTurn, time: pipe.transform(time) });
+		const currentEventType = this.events[this.eventCheckingIndex]?.type;
+		const previousEventType = this.events[this.eventCheckingIndex - 1]?.type;
 
-		const currentTurn = this.turns[this.currentTurn - 1];
+		const currentTurn = this.turns[this.currentTurn - (isNextEvent ? 1 : 0)];
 
-		if (currentTurn !== undefined) {
+		console.log(currentTurn);
+
+		if (
+			currentTurn !== undefined &&
+			!('PAUSE' === previousEventType && 'NEXT_TURN' === currentEventType)
+		) {
 			currentTurn.time += time;
-		} else {
-			const currentPlayerUuid = this.getCurrentPlayerUuid();
-
-			this.turns.push({ playerUuid: currentPlayerUuid, time });
 		}
 	}
 }

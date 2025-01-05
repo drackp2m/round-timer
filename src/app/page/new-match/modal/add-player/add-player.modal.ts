@@ -3,8 +3,8 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { PlayerBadgeComponent } from '@app/component/player-badge/player-badge.component';
-import { PlayerColor, PlayerColorKey } from '@app/definition/player/player-color.enum';
-import { PlayerIcon, PlayerIconKey } from '@app/definition/player/player-icon.enum';
+import { PlayerColor, PlayerColorKey } from '@app/definition/model/player/player-color.enum';
+import { PlayerIcon, PlayerIconKey } from '@app/definition/model/player/player-icon.enum';
 import { ButtonDirective } from '@app/directive/button.directive';
 import { InputDirective } from '@app/directive/input.directive';
 import { SelectDirective } from '@app/directive/select.directive';

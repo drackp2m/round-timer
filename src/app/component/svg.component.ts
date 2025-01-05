@@ -47,7 +47,8 @@ export class SvgComponent {
 
 	private getAspectRatio(): string {
 		const icon = this.icon();
-		const iconNameRegex = /\/svg\/(.+)-solid.svg/;
+
+		const iconNameRegex = /svg\/(.+)-solid.svg/;
 
 		const match = iconNameRegex.exec(icon);
 
@@ -55,17 +56,23 @@ export class SvgComponent {
 
 		switch (iconName) {
 			case 'backward-step':
-			case 'forward-step':
-			case 'pause':
 			case 'chevron-left':
 			case 'chevron-right':
+			case 'forward-step':
+			case 'pause':
 				return '320 / 512';
 			case 'ghost':
+			case 'play':
 			case 'stop':
 			case 'xmark':
 				return '384 / 512';
+			case 'rabbit':
 			case 'trash':
 				return '448 / 512';
+			case 'turtle':
+				return '398 / 512';
+			case 'delete-left':
+				return '576 / 512';
 			case 'user-plus':
 				return '640 / 512';
 			default:

@@ -1,14 +1,12 @@
 import { Injectable, computed, inject } from '@angular/core';
 import { patchState, signalStore, withState } from '@ngrx/signals';
 
-import { MatchEventType } from '@app/definition/match/match-event-type.enum';
-import {
-	MatchEventPayload,
-	MatchEventType as MatchEventTypeType,
-} from '@app/definition/match/match-event-type.type';
+import { MatchEventType } from '@app/definition/model/match/match-event-type.enum';
+import { MatchEventPayload } from '@app/definition/model/match/match-event-type.type';
 import { MatchEvent } from '@app/model/match-event.model';
 import { Match } from '@app/model/match.model';
 import { MatchRepository } from '@app/repository/match.repository';
+import { Enum } from '@app/util/enum';
 
 import { CalculateMatchTurns } from 'src/app/use-case/match/calculate-match-turns.use-case';
 
@@ -39,13 +37,10 @@ export class MatchStore extends signalStore({ protectedState: false }, withState
 		return this.calculateMatchTurns.execute(events);
 	});
 
-	readonly turn = computed(() => this.matchTurns().length);
-
+	readonly turn = computed(() => (0 !== this.matchTurns().length ? this.matchTurns().length : 1));
 	readonly round = computed(() => {
 		const turn = this.turn();
 		const playersCount = this.playerUuids()?.length ?? 0;
-
-		console.log({ turn, playersCount });
 
 		return Math.floor((turn - 1) / playersCount) + 1;
 	});
@@ -81,19 +76,20 @@ export class MatchStore extends signalStore({ protectedState: false }, withState
 	}
 
 	async dispatchEvent<T extends MatchEventType = MatchEventType>(
-		type: MatchEventTypeType[T],
+		type: MatchEventType,
 		payload?: MatchEventPayload[T],
 	): Promise<void> {
 		const match = this.match();
 		const events = this.events() ?? [];
+		const typeKey = Enum.getEnumKeyByValue(MatchEventType, type);
 
 		if (null === match) {
 			return;
 		}
 
-		const event = new MatchEvent({ matchUuid: match.uuid, type: type, payload });
+		const event = new MatchEvent({ matchUuid: match.uuid, type: typeKey, payload });
 
-		await this.matchRepository.insert('match_event', event.forRepository());
+		// await this.matchRepository.insert('match_event', event.forRepository());
 
 		patchState(this, { events: [...events, event] });
 	}

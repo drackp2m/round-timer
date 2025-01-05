@@ -1,0 +1,30 @@
+.buttons {
+	$relative-position: 1.5px;
+
+	li {
+		&:first-child {
+			app-svg {
+				position: relative;
+				right: $relative-position;
+			}
+		}
+
+		&:last-child {
+			app-svg {
+				position: relative;
+				left: $relative-position;
+			}
+		}
+
+		.button {
+			border-radius: 50%;
+
+			&.play {
+				app-svg {
+					position: relative;
+					left: $relative-position;
+				}
+			}
+		}
+	}
+}

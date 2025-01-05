@@ -1,8 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { PlayerColor, PlayerColorKey } from '@app/definition/player/player-color.enum';
-import { PlayerIcon, PlayerIconKey } from '@app/definition/player/player-icon.enum';
+import { PlayerColor, PlayerColorKey } from '@app/definition/model/player/player-color.enum';
+import { PlayerIcon, PlayerIconKey } from '@app/definition/model/player/player-icon.enum';
 import { ButtonDirective } from '@app/directive/button.directive';
 import { Game } from '@app/model/game.model';
 import { Player } from '@app/model/player.model';

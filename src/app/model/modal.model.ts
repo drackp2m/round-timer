@@ -9,6 +9,6 @@ export abstract class Modal {
 	OVERLAY_CLOSABLE = true;
 
 	close() {
-		this.modalStore.close();
+		void this.modalStore.close();
 	}
 }

@@ -9,8 +9,8 @@ import {
 } from '@angular/core';
 
 import { SvgComponent } from '@app/component/svg.component';
-import { PlayerColor } from '@app/definition/player/player-color.enum';
-import { PlayerIcon } from '@app/definition/player/player-icon.enum';
+import { PlayerColor } from '@app/definition/model/player/player-color.enum';
+import { PlayerIcon } from '@app/definition/model/player/player-icon.enum';
 import { Player } from '@app/model/player.model';
 import { Async } from '@app/util/async';
 import { Check } from '@app/util/check';
@@ -56,7 +56,7 @@ export class PlayerBadgeComponent implements AfterViewInit {
 	});
 
 	ngAfterViewInit(): void {
-		Async.waitForFrames(3).then(() => {
+		void Async.waitForFrames(3).then(() => {
 			const element = this.elementRef;
 
 			const fontSize = window.getComputedStyle(element.nativeElement).fontSize;

@@ -1,30 +1,26 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-	name: 'elapsedTime',
+	name: 'showMilliseconds',
 })
-export class ElapsedTimePipe implements PipeTransform {
-	transform(ms: number, decimals = 2): string {
+export class ShowMillisecondsPipe implements PipeTransform {
+	transform(ms: number, decimals = 2): string[] {
 		const [milliseconds, extraSecond] = this.getMillisecondsAndExtraSecond(ms, decimals);
 		const seconds = Math.floor(((ms + extraSecond * 1000) / 1000) % 60);
 		const minutes = Math.floor(((ms + extraSecond * 1000) / (1000 * 60)) % 60);
 		const hours = Math.floor((ms + extraSecond * 1000) / (1000 * 60 * 60));
 
-		const secondsFormatted = seconds + (0 < decimals ? `.${milliseconds}` : '');
-
 		const parts: string[] = [];
 
-		if (0 < hours) {
-			parts.push(`${hours}h`);
-		}
+		parts.push(milliseconds);
 
-		if (0 < minutes || 0 < hours) {
-			parts.push(`${minutes.toString()}m`);
-		}
+		parts.push(seconds.toString());
 
-		parts.push(`${secondsFormatted}s`);
+		parts.push(minutes.toString());
 
-		return parts.join(' ');
+		parts.push(hours.toString());
+
+		return parts;
 	}
 
 	private getMillisecondsAndExtraSecond(ms: number, decimals: number): [string, number] {
@@ -33,6 +29,9 @@ export class ElapsedTimePipe implements PipeTransform {
 		const extraSeconds = this.isExtraSecondNeeded(milliseconds, decimals) ? 1 : 0;
 
 		switch (decimals) {
+			case 0:
+				milliseconds = '';
+				break;
 			case 1:
 				milliseconds = '10' === milliseconds ? '0' : milliseconds.toString();
 				break;
@@ -49,8 +48,6 @@ export class ElapsedTimePipe implements PipeTransform {
 	private isExtraSecondNeeded(milliseconds: string, decimals: number): boolean {
 		switch (decimals) {
 			case 0:
-				console.log(milliseconds);
-
 				return '1' === milliseconds;
 			case 1:
 				return '10' === milliseconds;

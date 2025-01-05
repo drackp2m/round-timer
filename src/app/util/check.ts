@@ -1,4 +1,4 @@
-import { MatchEventType, MatchEventTypeKey } from '@app/definition/match/match-event-type.enum';
+import { MatchEventType, MatchEventTypeKey } from '@app/definition/model/match/match-event-type.enum';
 import { MatchEvent } from '@app/model/match-event.model';
 
 export abstract class Check {

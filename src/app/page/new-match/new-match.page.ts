@@ -11,7 +11,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router } from '@angular/router';
 
 import { SvgComponent } from '@app/component/svg.component';
-import { MatchEventType } from '@app/definition/match/match-event-type.enum';
+import { MatchEventType } from '@app/definition/model/match/match-event-type.enum';
 import { ButtonDirective } from '@app/directive/button.directive';
 import { InputDirective } from '@app/directive/input.directive';
 import { SelectDirective } from '@app/directive/select.directive';
@@ -29,7 +29,6 @@ import { AddPlayerModal } from './modal/add-player/add-player.modal';
 
 @Component({
 	templateUrl: './new-match.page.html',
-	styleUrl: './new-match.page.scss',
 	imports: [InputDirective, SelectDirective, ButtonDirective, SvgComponent, ReactiveFormsModule],
 })
 export class NewMatchPage {

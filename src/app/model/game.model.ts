@@ -1,6 +1,6 @@
-import { GameTurnOrderKey } from '@app/definition/game/game-turn-order.enum';
-import { GameTurnTypeKey } from '@app/definition/game/game-turn-type.enum';
-import { GameVictoryTypeKey } from '@app/definition/game/game-victory-type.enum';
+import { GameTurnOrderKey } from '@app/definition/model/game/game-turn-order.enum';
+import { GameTurnTypeKey } from '@app/definition/model/game/game-turn-type.enum';
+import { GameVictoryTypeKey } from '@app/definition/model/game/game-victory-type.enum';
 import { ModelConstructorOmit } from '@app/definition/model-constructor-omit.type';
 import { RepositoryModel } from '@app/model/repository.model';
 

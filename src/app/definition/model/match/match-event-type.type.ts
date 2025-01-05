@@ -1,4 +1,4 @@
-import { MatchEventType as MatchEventTypeEnum } from '@app/definition/match/match-event-type.enum';
+import { MatchEventType as MatchEventTypeEnum } from '@app/definition/model/match/match-event-type.enum';
 
 export interface MatchEventType {
 	[MatchEventTypeEnum.SET_TURN_ORDER]: 'SET_TURN_ORDER';

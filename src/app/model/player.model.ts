@@ -1,6 +1,6 @@
 import { ModelConstructorOmit } from '@app/definition/model-constructor-omit.type';
-import { PlayerColor, PlayerColorKey } from '@app/definition/player/player-color.enum';
-import { PlayerIcon, PlayerIconKey } from '@app/definition/player/player-icon.enum';
+import { PlayerColor, PlayerColorKey } from '@app/definition/model/player/player-color.enum';
+import { PlayerIcon, PlayerIconKey } from '@app/definition/model/player/player-icon.enum';
 import { RepositoryModel } from '@app/model/repository.model';
 
 interface Computed {

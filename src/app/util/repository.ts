@@ -62,7 +62,8 @@ export abstract class Repository {
 
 		if ('databases' in indexedDB) {
 			const databases = await indexedDB.databases();
-			databases.forEach((database): Promise<void> | void => {
+
+			databases.forEach((database): void => {
 				if (database.name !== undefined && this.deprecatedDatabaseNames.includes(database.name)) {
 					const deletePromise = deleteDB(database.name, {
 						blocked() {
@@ -78,4 +79,3 @@ export abstract class Repository {
 		await Promise.all(promises);
 	}
 }
-

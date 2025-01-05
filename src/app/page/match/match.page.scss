@@ -1,34 +1,28 @@
-.buttons {
-	$relative-position: 1.5px;
-
-	li {
-		&:first-child {
-			app-svg {
-				position: relative;
-				right: $relative-position;
-			}
-		}
-
-		&:last-child {
-			app-svg {
-				position: relative;
-				left: $relative-position;
-			}
-		}
-
-		.button {
-			border-radius: 50%;
-
-			&.play {
-				app-svg {
-					position: relative;
-					left: $relative-position;
-				}
-			}
-		}
+.title {
+	span {
+		text-decoration: underline;
+		text-decoration-thickness: 2px;
 	}
 }
 
 hr {
-	border: solid 0.5px var(--color-contrast);
+	border-bottom: solid 2px var(--color-contrast);
+}
+
+.times {
+	display: grid;
+	grid-template-columns: min-content 1fr min-content min-content min-content 2em;
+	align-items: bottom;
+
+	.header {
+		grid-column: 1 / span 6;
+
+		&:not(:first-child) {
+			margin-top: var(--spacing-2);
+		}
+	}
+
+	.turn {
+		white-space: nowrap;
+	}
 }

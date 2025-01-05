@@ -148,11 +148,11 @@ $text-align: (
 }
 
 @function get-rules($name) {
-	@return (text-#{$name}: (font-size: var(--font-size-#{$name})));
+	@return (fs-#{$name}: (font-size: var(--font-size-#{$name})));
 }
 
 @function get-weight-rules($name) {
-	@return (weight-#{$name}: (font-weight: var(--font-weight-#{$name})));
+	@return (fw-#{$name}: (font-weight: var(--font-weight-#{$name})));
 }
 
 @include mix.generate-responsive($text-align);

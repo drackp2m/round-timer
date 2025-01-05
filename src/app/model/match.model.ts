@@ -1,4 +1,4 @@
-import { MatchStatusKey } from '@app/definition/match/match-status.enum';
+import { MatchStatusKey } from '@app/definition/model/match/match-status.enum';
 import { ModelConstructorOmit } from '@app/definition/model-constructor-omit.type';
 import { RepositoryModel } from '@app/model/repository.model';
 

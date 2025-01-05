@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
+import { SvgComponent } from '@app/component/svg.component';
 import { ButtonDirective } from '@app/directive/button.directive';
 
 @Component({

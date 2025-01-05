@@ -1,9 +1,9 @@
 import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
-import { GameTurnOrder, GameTurnOrderKey } from '@app/definition/game/game-turn-order.enum';
-import { GameTurnType, GameTurnTypeKey } from '@app/definition/game/game-turn-type.enum';
-import { GameVictoryType, GameVictoryTypeKey } from '@app/definition/game/game-victory-type.enum';
+import { GameTurnOrder, GameTurnOrderKey } from '@app/definition/model/game/game-turn-order.enum';
+import { GameTurnType, GameTurnTypeKey } from '@app/definition/model/game/game-turn-type.enum';
+import { GameVictoryType, GameVictoryTypeKey } from '@app/definition/model/game/game-victory-type.enum';
 import { ButtonDirective } from '@app/directive/button.directive';
 import { InputDirective } from '@app/directive/input.directive';
 import { SelectDirective } from '@app/directive/select.directive';

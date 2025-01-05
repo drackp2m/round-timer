@@ -1,8 +1,8 @@
-import { MatchEventType } from '@app/definition/match/match-event-type.enum';
+import { MatchEventType } from '@app/definition/model/match/match-event-type.enum';
 import {
 	MatchEventPayload,
 	MatchEventType as MatchEventTypeType,
-} from '@app/definition/match/match-event-type.type';
+} from '@app/definition/model/match/match-event-type.type';
 import { ModelConstructorOmit } from '@app/definition/model-constructor-omit.type';
 import { RepositoryModel } from '@app/model/repository.model';
 

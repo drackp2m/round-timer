@@ -27,7 +27,7 @@ export class GameStore extends signalStore({ protectedState: false }, withState(
 	}
 
 	addGame(game: Game): void {
-		this.gameRepository.insert('game', game).then((game) => {
+		void this.gameRepository.insert('game', game).then((game) => {
 			const currentItems = this.items();
 
 			patchState(this, { items: [...(currentItems ?? []), game] });
@@ -37,7 +37,7 @@ export class GameStore extends signalStore({ protectedState: false }, withState(
 	private fetchData(): void {
 		patchState(this, { isLoading: true });
 
-		this.gameRepository.findAll('game').then((items) => {
+		void this.gameRepository.findAll('game').then((items) => {
 			patchState(this, { items, isLoading: false });
 		});
 	}
