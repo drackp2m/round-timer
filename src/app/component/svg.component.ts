@@ -1,4 +1,5 @@
 import { Component, computed, input } from '@angular/core';
+
 import { Check } from '@app/util/check';
 
 @Component({
@@ -41,7 +42,7 @@ export class SvgComponent {
 	readonly aspectRatio = computed(() => this.getAspectRatio());
 
 	getIcon(value: string): string {
-		return `url(/svg/${value}-solid.svg) no-repeat center`;
+		return `url(svg/${value}-solid.svg) no-repeat center`;
 	}
 
 	private getAspectRatio(): string {
