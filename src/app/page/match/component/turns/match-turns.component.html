@@ -1,0 +1,47 @@
+<div #turns class="turns">
+	@for (turn of matchTurns(); track $index; let index = $index; let last = $last) {
+		@if (index % playersCount() === 0) {
+			<div class="header px-2 surface-contrast-mid color-primary">
+				Round #{{ index / playersCount() + 1 }}
+			</div>
+		}
+
+		@let parts = turn.time | showMilliseconds;
+		@let player = playerByUuid().get(turn.playerUuid);
+		@let faster = fasterTurn().index === index;
+		@let slower = slowerTurn().index === index;
+
+		<div
+			class="turn pl-2 flex-row justify-between color-contrast-mid text-sm"
+			[class]="{ faster, slower }"
+		>
+			<span>#</span> <span class="ml-1">{{ index + 1 }}</span>
+		</div>
+		<div class="player-name px-2" [class]="{ faster, slower }">
+			{{ player?.nick }} ({{ player?.name }})
+		</div>
+		<div class="hours px-1 flex-row justify-end" [class]="{ faster, slower }">
+			@if (parts[3] !== '0') {
+				{{ parts[3] }}m
+			}
+		</div>
+		<div class="minutes px-1 flex-row justify-end" [class]="{ faster, slower }">
+			@if (parts[2] !== '0') {
+				{{ parts[2] }}m
+			}
+		</div>
+		<div class="seconds px-1 flex-row justify-end" [class]="{ faster, slower }">
+			{{ parts[1] }}.{{ parts[0] }}s
+		</div>
+		<div class="icon px-2 flex-col justify-center" [class]="{ faster, slower }">
+			@if (faster) {
+				<app-svg icon="rabbit" [size]="16" squared flip />
+			} @else if (slower) {
+				<app-svg icon="turtle" [size]="14" squared flip />
+			}
+		</div>
+		@if (last || index % 3 === 0 || index % 3 === 1) {
+			<div class="separator"></div>
+		}
+	}
+</div>

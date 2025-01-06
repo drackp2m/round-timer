@@ -5,7 +5,7 @@ import { Check } from '@app/util/check';
 @Component({
 	selector: 'app-svg',
 	template: `<div
-		[attr.class]="color()"
+		[attr.class]="class()"
 		[style.aspect-ratio]="aspectRatio()"
 		[style.mask]="icon()"
 		[style.background-color]="hexColor()"
@@ -22,6 +22,10 @@ import { Check } from '@app/util/check';
 
 				div {
 					height: 100%;
+
+					&.flip {
+						transform: scaleX(-1);
+					}
 				}
 			}
 		`,
@@ -37,9 +41,16 @@ export class SvgComponent {
 	readonly color = input<string>('surface-contrast');
 	readonly hexColor = input<string>('--var(--color-contrast)');
 	readonly squared = input(false, { transform: Check.isFalseAsStringOrTrue });
+	readonly flip = input(false, { transform: Check.isFalseAsStringOrTrue });
 	readonly size = input<string, number>('24px', { transform: (size) => `${size}px` });
 
 	readonly aspectRatio = computed(() => this.getAspectRatio());
+	readonly class = computed(() => {
+		const color = this.color();
+		const flip = this.flip();
+
+		return color + (flip ? ' flip' : '');
+	});
 
 	getIcon(value: string): string {
 		return `url(svg/${value}-solid.svg) no-repeat center`;
@@ -70,7 +81,7 @@ export class SvgComponent {
 			case 'trash':
 				return '448 / 512';
 			case 'turtle':
-				return '398 / 512';
+				return '512 / 398';
 			case 'delete-left':
 				return '576 / 512';
 			case 'user-plus':

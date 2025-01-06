@@ -40,13 +40,8 @@ export class CalculateMatchTurns {
 				case 'PAUSE':
 					this.dispatchPauseEvent();
 					break;
-				case 'RESUME':
-					this.dispatchResumeEvent();
-					break;
 			}
 		}
-
-		console.log({ turns: this.turns, currentTurn: this.currentTurn });
 
 		return this.turns;
 	}
@@ -71,10 +66,6 @@ export class CalculateMatchTurns {
 		this.addTimeToCurrentTurn(false);
 	}
 
-	private dispatchResumeEvent(): void {
-		console.log('Resuming...');
-	}
-
 	private getCurrentPlayerUuid(): string {
 		return this.turnOrder[this.currentTurn % this.turnOrder.length] ?? '';
 	}
@@ -88,8 +79,6 @@ export class CalculateMatchTurns {
 		const previousEventType = this.events[this.eventCheckingIndex - 1]?.type;
 
 		const currentTurn = this.turns[this.currentTurn - (isNextEvent ? 1 : 0)];
-
-		console.log(currentTurn);
 
 		if (
 			currentTurn !== undefined &&

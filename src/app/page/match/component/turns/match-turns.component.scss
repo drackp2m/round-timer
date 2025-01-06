@@ -1,0 +1,43 @@
+.turns {
+	overflow: scroll;
+	display: grid;
+	grid-template-columns: min-content 1fr min-content min-content min-content min-content;
+	max-height: 100%;
+
+	.header,
+	.separator {
+		grid-column: 1 / span 6;
+	}
+
+	.header {
+		position: sticky;
+		z-index: 1;
+		top: 0;
+	}
+
+	.separator {
+		border-bottom: solid 1px var(--color-contrast-mid);
+	}
+
+	.turn {
+		white-space: nowrap;
+	}
+
+	.turn,
+	.player-name,
+	.hours,
+	.minutes,
+	.seconds,
+	.icon {
+		padding-top: 1px;
+		padding-bottom: 1px;
+
+		&.faster {
+			background-color: rgb(220 255 220);
+		}
+
+		&.slower {
+			background-color: rgb(255 220 220);
+		}
+	}
+}

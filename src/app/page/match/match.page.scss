@@ -1,28 +1,15 @@
-.title {
-	span {
-		text-decoration: underline;
-		text-decoration-thickness: 2px;
-	}
-}
+section {
+	height: 100%;
 
-hr {
-	border-bottom: solid 2px var(--color-contrast);
-}
-
-.times {
-	display: grid;
-	grid-template-columns: min-content 1fr min-content min-content min-content 2em;
-	align-items: bottom;
-
-	.header {
-		grid-column: 1 / span 6;
-
-		&:not(:first-child) {
-			margin-top: var(--spacing-2);
+	.title {
+		span {
+			text-decoration: underline;
+			text-decoration-thickness: 2px;
 		}
 	}
 
-	.turn {
-		white-space: nowrap;
+	app-match-turns {
+		overflow: hidden;
+		flex-grow: 1;
 	}
 }

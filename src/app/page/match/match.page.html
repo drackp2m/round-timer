@@ -1,50 +1,21 @@
-<section class="flex-col gap-6">
+<section class="flex-col gap-4">
 	<h4 class="title color-contrast-mid">
 		Playing <span class="color-contrast">{{ match()?.name ?? 'any game' }}</span> match
 	</h4>
 
-	<p>Now, on round #{{ round() }}, turn #{{ turn() }}</p>
+	@if (false) {
+		<div class="flex-col gap-1">
+			<h5>Round order</h5>
 
-	<div class="flex-col gap-2">
-		<h5>Round order</h5>
-
-		<ul>
-			@for (player of playersOrder(); track player.uuid) {
-				<li>{{ player.name }} ({{ player.uuid.split('-')[0] }})</li>
-			}
-		</ul>
-	</div>
-
-	<div class="times">
-		@for (turn of matchTurns(); track $index; let index = $index) {
-			@if (index % 3 === 0) {
-				<div class="header px-2 surface-contrast-mid color-primary">Round #{{ index / 3 + 1 }}</div>
-			}
-
-			@let parts = turn.time | showMilliseconds;
-
-			<div class="turn pl-2 flex-row justify-between color-contrast-mid text-sm">
-				<span>#</span> <span class="ml-1">{{ index + 1 }}</span>
-			</div>
-			<div class="playerName px-2">{{ playerByUuid().get(turn.playerUuid)?.name }}</div>
-			<div class="hours px-1 flex-row justify-end">
-				@if (parts[3] !== '0') {
-					{{ parts[3] }}m
+			<p>
+				@for (player of playersOrder(); track player.uuid) {
+					{{ player.name }} ({{ player.uuid.split('-')[0] }})
 				}
-			</div>
-			<div class="minutes px-1 flex-row justify-end">
-				@if (parts[2] !== '0') {
-					{{ parts[2] }}m
-				}
-			</div>
-			<div class="seconds px-1 flex-row justify-end">{{ parts[1] }}.{{ parts[0] }}s</div>
-			<div class="icon px-1 flex-col justify-center">
-				@if (fasterTurn().index === index) {
-					<app-svg icon="rabbit" [size]="16" />
-				}
-			</div>
-		}
-	</div>
+			</p>
+		</div>
+	}
+
+	<app-match-turns [playersCount]="playersOrder().length" [matchTurns]="matchTurns()" />
 
 	<p>
 		Playing {{ currentPlayer()?.name }} - with {{ currentTimeRunning() | showMilliseconds }} current
@@ -65,16 +36,18 @@
 		(buttonPressed)="dispatch($event)"
 	/>
 
-	<div class="flex-col gap-2">
-		<h5>Events</h5>
+	@if (false) {
+		<div class="flex-col gap-2">
+			<h5>Events</h5>
 
-		<ul>
-			@for (event of events()?.toReversed(); track event.uuid) {
-				<li>
-					{{ event.type }}, {{ event.createdAt | date: 'd MMM' }} at
-					{{ event.createdAt | date: 'hh:mm:ss' }}
-				</li>
-			}
-		</ul>
-	</div>
+			<ul>
+				@for (event of events()?.toReversed(); track event.uuid) {
+					<li>
+						{{ event.type }}, {{ event.createdAt | date: 'd MMM' }} at
+						{{ event.createdAt | date: 'hh:mm:ss' }}
+					</li>
+				}
+			</ul>
+		</div>
+	}
 </section>

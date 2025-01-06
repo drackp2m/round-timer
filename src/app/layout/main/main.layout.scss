@@ -3,5 +3,6 @@ main {
 
 	#router-outlet {
 		overflow: scroll;
+		height: 100%;
 	}
 }

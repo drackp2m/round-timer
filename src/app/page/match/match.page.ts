@@ -4,14 +4,13 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { interval } from 'rxjs';
 
 import { ShowMillisecondsComponent } from '@app/component/show-milliseconds/show-milliseconds.component';
-import { SvgComponent } from '@app/component/svg.component';
 import { MatchEventType } from '@app/definition/model/match/match-event-type.enum';
 import { MatchButtonsComponent } from '@app/page/match/component/buttons/match-buttons.component';
+import { MatchTurnsComponent } from '@app/page/match/component/turns/match-turns.component';
 import { MatchStore } from '@app/store/match.store';
 import { PlayerStore } from '@app/store/player.store';
 
 import { ShowMillisecondsPipe } from 'src/app/pipe/show-milliseconds.pipe';
-import { Match } from '@app/model/match.model';
 
 @Component({
 	templateUrl: './match.page.html',
@@ -21,7 +20,7 @@ import { Match } from '@app/model/match.model';
 		MatchButtonsComponent,
 		ShowMillisecondsPipe,
 		ShowMillisecondsComponent,
-		SvgComponent,
+		MatchTurnsComponent,
 	],
 })
 export class MatchPage {
@@ -31,9 +30,6 @@ export class MatchPage {
 	timer = toSignal(interval(10));
 
 	readonly players = this.playerStore.items;
-	readonly playerByUuid = computed(
-		() => new Map(this.players()?.map((player) => [player.uuid, player])),
-	);
 
 	readonly match = this.matchStore.match;
 	readonly events = this.matchStore.events;
@@ -67,34 +63,24 @@ export class MatchPage {
 	readonly playersOrder = computed(() =>
 		this.matchStore
 			.currentPlayersOrder()
-			.map((uuid) => this.playerStore.items()?.find((player) => player.uuid === uuid))
+			.map((uuid) => this.players()?.find((player) => player.uuid === uuid))
 			.filter((player) => player !== undefined),
 	);
 	readonly currentPlayer = computed(() =>
 		this.players()?.find((player) => player.uuid === this.matchStore.currentPlayer()),
 	);
-	readonly fasterTurn = computed(() => {
-		const turns = this.matchTurns();
-
-		let index = -1;
-
-		return turns.reduce(
-			(acc, turn) => {
-				index++;
-				if (turn.time < acc.time) {
-					return { index, time: turn.time };
-				}
-
-				return acc;
-			},
+	readonly fasterTurn = computed(() =>
+		this.matchTurns().reduce(
+			(acc, turn, index) => (turn.time < acc.time ? { index, time: turn.time } : acc),
 			{ index: 0, time: Number.MAX_SAFE_INTEGER },
-		);
-	});
-	readonly slowerTurn = computed(() => {
-		const turns = this.matchTurns();
-
-		return turns.toSorted((turn) => -turn.time)[0];
-	});
+		),
+	);
+	readonly slowerTurn = computed(() =>
+		this.matchTurns().reduce(
+			(acc, turn, index) => (turn.time > acc.time ? { index, time: turn.time } : acc),
+			{ index: 0, time: 0 },
+		),
+	);
 
 	getPlayerByUuid(uuid: string) {
 		return this.players()?.find((player) => player.uuid === uuid);
