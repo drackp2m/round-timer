@@ -1,13 +1,12 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { SvgComponent } from '@app/component/svg.component';
 import { ButtonDirective } from '@app/directive/button.directive';
 
 @Component({
 	selector: 'app-header',
 	template: `<section
-		class="header p-2 px-4 surface-contrast color-primary flex-row align-center justify-between"
+		class="header pb-2 px-4 surface-contrast color-primary flex-row align-center justify-between"
 	>
 		<button routerLink="/">
 			<h3>Round Timer</h3>
@@ -25,6 +24,15 @@ import { ButtonDirective } from '@app/directive/button.directive';
 			</button>
 		</div>
 	</section>`,
+	styles: [
+		`
+			.header {
+				padding-top: calc(56px);
+				// padding-top: var(--spacing-2);
+				// margin-top: calc(56px - var(--spacing-2));
+			}
+		`,
+	],
 	imports: [RouterLink, ButtonDirective],
 })
 export class HeaderComponent {}

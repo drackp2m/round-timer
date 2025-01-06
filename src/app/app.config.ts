@@ -14,15 +14,15 @@ export const appConfig: ApplicationConfig = {
 	providers: [
 		provideRouter(APP_ROUTES, withHashLocation()),
 		provideAnimations(),
-		provideServiceWorker('ngsw-worker.js', {
-			enabled: !isDevMode(),
-			registrationStrategy: 'registerWhenStable:5000',
-			scope: '/',
-		}),
 		provideExperimentalZonelessChangeDetection(),
 		provideExperimentalCheckNoChangesForDebug({
+			interval: 50,
 			exhaustive: true,
-			interval: 500,
+		}),
+		provideServiceWorker('ngsw-worker.js', {
+			enabled: !isDevMode(),
+			scope: '/',
+			registrationStrategy: 'registerWhenStable:2000',
 		}),
 	],
 };
