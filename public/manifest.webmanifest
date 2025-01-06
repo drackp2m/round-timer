@@ -3,8 +3,8 @@
 	"short_name": "Round Timer",
 	"display": "standalone",
 	"orientation": "portrait-primary",
-	"scope": "/project-name/",
-	"start_url": "/project-name/",
+	"scope": "/round-timer/",
+	"start_url": "/round-timer/",
 	"launch_handler": {
 		"client_mode": "focus-existing"
 	},
