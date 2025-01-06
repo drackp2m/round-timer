@@ -15,13 +15,15 @@
 		</div>
 	}
 
-	<app-match-turns [playersCount]="playersOrder().length" [matchTurns]="matchTurns()" />
+	<div class="turns flex-col">
+		<app-match-turns [playersCount]="playersOrder().length" [matchTurns]="matchTurns()" />
 
-	<p>
-		Playing {{ currentPlayer()?.name }} - with {{ currentTimeRunning() | showMilliseconds }} current
-	</p>
+		<div class="px-2 py-1 fs-lg surface-contrast color-primary flex-row justify-between">
+			Playing {{ currentPlayer()?.name }}, on turn {{ roundTurn() }} of round {{ round() }}
+		</div>
+	</div>
 
-	<h2 class="text-center color-accent">
+	<h2 class="text-center color-accent fw-xl">
 		@let currentTurnValue = currentTurn();
 
 		<app-show-milliseconds

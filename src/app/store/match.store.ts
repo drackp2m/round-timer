@@ -67,7 +67,7 @@ export class MatchStore extends signalStore({ protectedState: false }, withState
 		const playersOrder = this.currentPlayersOrder();
 		const turn = this.turn();
 
-		return playersOrder?.at(turn - 1);
+		return playersOrder?.at((turn - 1) % 3);
 	});
 
 	constructor() {

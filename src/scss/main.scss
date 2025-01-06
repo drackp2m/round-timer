@@ -1,5 +1,9 @@
 @use './abstract/variable' as var;
 
+* {
+	overscroll-behavior: none;
+}
+
 html {
 	cursor: default;
 
@@ -15,7 +19,7 @@ html {
 
 	body {
 		overflow: hidden;
-		height: 100vh;
+		height: 100dvh;
 
 		main {
 			ng-component {
@@ -33,7 +37,7 @@ h3,
 h4,
 h5,
 h6 {
-	font-weight: var(--font-weight-xl);
+	font-weight: var(--font-weight-lg);
 	line-height: 1.5em;
 	letter-spacing: 0.015em;
 }
@@ -60,6 +64,10 @@ h5 {
 
 h6 {
 	font-size: var(--font-size-sm);
+}
+
+strong {
+	font-weight: var(--font-weight-lg);
 }
 
 button,

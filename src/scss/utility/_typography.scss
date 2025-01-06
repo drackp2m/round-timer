@@ -120,6 +120,73 @@
 	src: url('/font/helvetica-now-text/HelveticaNowText-ExtraLight.woff2') format('woff2');
 }
 
+@font-face {
+	font-family: 'Simply Mono';
+	font-weight: 400;
+	font-style: normal;
+	src: url('/font/simply-mono/SimplyMono-Regular.woff2') format('woff2');
+}
+
+@font-face {
+	font-family: 'Simply Mono';
+	font-weight: 400;
+	font-style: italic;
+	src: url('/font/simply-mono/SimplyMono-RegularOblique.woff2') format('woff2');
+}
+
+@font-face {
+	font-family: 'Simply Mono';
+	font-weight: 700;
+	font-style: normal;
+	src: url('/font/simply-mono/SimplyMono-Bold.woff2') format('woff2');
+}
+
+@font-face {
+	font-family: 'Simply Mono';
+	font-weight: 700;
+	font-style: italic;
+	src: url('/font/simply-mono/SimplyMono-BoldOblique.woff2') format('woff2');
+}
+
+@font-face {
+	font-family: 'Fira Code';
+	font-weight: 300;
+	font-style: normal;
+	src: url('/font/fira-code/FiraCode-Light.woff2') format('woff2');
+}
+
+@font-face {
+	font-family: 'Fira Code';
+	font-weight: 400;
+	font-style: normal;
+	src: url('/font/fira-code/FiraCode-Regular.woff2') format('woff2');
+}
+
+@font-face {
+	font-family: 'Fira Code';
+	font-weight: 500;
+	font-style: normal;
+	src: url('/font/fira-code/FiraCode-Medium.woff2') format('woff2');
+}
+
+@font-face {
+	font-family: 'Fira Code';
+	font-weight: 600;
+	font-style: normal;
+	src: url('/font/fira-code/FiraCode-SemiBold.woff2') format('woff2');
+}
+
+@font-face {
+	font-family: 'Fira Code';
+	font-weight: 700;
+	font-style: normal;
+	src: url('/font/fira-code/FiraCode-Bold.woff2') format('woff2');
+}
+
+.mono {
+	font-family: 'Fira Code', monospace;
+}
+
 $text-align: (
 	text-left: (
 		text-align: left,

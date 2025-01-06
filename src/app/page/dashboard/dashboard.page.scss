@@ -1,0 +1,11 @@
+.test {
+	overflow: scroll;
+	display: grid;
+	grid-template-columns: min-content 1fr min-content min-content min-content min-content;
+	max-height: 100%;
+
+	span {
+		padding-top: 1px;
+		padding-bottom: 1px;
+	}
+}

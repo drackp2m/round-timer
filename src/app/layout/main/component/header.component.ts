@@ -13,10 +13,7 @@ import { ButtonDirective } from '@app/directive/button.directive';
 		</button>
 
 		<div class="flex-row gap-2 align-center">
-			<button appButton icon="user-plus" color="primary-mid">
-				<!---->
-			</button>
-			<button appButton icon="trash" color="primary-mid">
+			<button appButton routerLink="/match" icon="dice" color="primary-mid">
 				<!---->
 			</button>
 			<button appButton icon="gear" color="primary-mid">
@@ -27,9 +24,7 @@ import { ButtonDirective } from '@app/directive/button.directive';
 	styles: [
 		`
 			.header {
-				padding-top: calc(56px);
-				// padding-top: var(--spacing-2);
-				// margin-top: calc(56px - var(--spacing-2));
+				padding-top: calc(var(--spacing-2) + env(safe-area-inset-top, 0));
 			}
 		`,
 	],

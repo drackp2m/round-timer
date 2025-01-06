@@ -44,11 +44,9 @@ export class PlayerBadgeComponent implements AfterViewInit {
 		const margin = fontSize;
 		const radius = size / 2;
 
-		// M 50 4 A 46 46 0 1 0 50.001 4
 		// const move = ['M', radius, margin];
 		// const arc = ['A', radius - margin, radius - margin, 0, 1, 0, radius + 0.001, margin];
 
-		// M 50 104 A 46 46 0 1 1 50.001 104
 		const move = ['M', radius, size - margin];
 		const arc = ['A', radius - margin, radius - margin, 0, 1, 1, radius + 0.001, size - margin];
 
@@ -56,7 +54,7 @@ export class PlayerBadgeComponent implements AfterViewInit {
 	});
 
 	ngAfterViewInit(): void {
-		void Async.waitForFrames().then(() => {
+		void Async.waitForFrames(2).then(() => {
 			const element = this.elementRef;
 
 			const fontSize = window.getComputedStyle(element.nativeElement).fontSize;

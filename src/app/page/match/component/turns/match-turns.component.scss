@@ -1,12 +1,12 @@
 .turns {
 	overflow: scroll;
 	display: grid;
-	grid-template-columns: min-content 1fr min-content min-content min-content min-content;
+	grid-template-columns: min-content min-content 1fr min-content min-content min-content min-content;
 	max-height: 100%;
 
 	.header,
 	.separator {
-		grid-column: 1 / span 6;
+		grid-column: 1 / span 7;
 	}
 
 	.header {
@@ -19,18 +19,47 @@
 		border-bottom: solid 1px var(--color-contrast-mid);
 	}
 
-	.turn {
-		white-space: nowrap;
+	.mono {
+		span {
+			position: relative;
+			top: 1.5px;
+		}
+
+		@supports (-webkit-touch-callout: none) {
+			span {
+				top: 2px;
+			}
+		}
 	}
 
 	.turn,
+	.player-nick,
 	.player-name,
 	.hours,
 	.minutes,
 	.seconds,
 	.icon {
-		padding-top: 1px;
-		padding-bottom: 1px;
+		align-items: baseline;
+		padding-top: 2px;
+		padding-bottom: 2px;
+
+		&.turn {
+			align-items: flex-end;
+
+			@supports (-webkit-touch-callout: none) {
+				span {
+					position: relative;
+					top: 2px;
+				}
+			}
+		}
+
+		&.mono {
+			span {
+				position: relative;
+				top: 0.5px;
+			}
+		}
 
 		&.faster {
 			background-color: rgb(220 255 220);

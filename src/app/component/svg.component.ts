@@ -84,6 +84,7 @@ export class SvgComponent {
 				return '512 / 398';
 			case 'delete-left':
 				return '576 / 512';
+			case 'dice':
 			case 'user-plus':
 				return '640 / 512';
 			default:

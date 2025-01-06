@@ -1,8 +1,9 @@
 main {
-	height: 100vh;
+	height: 100dvh;
 
 	#router-outlet {
 		overflow: scroll;
 		height: 100%;
+		padding-bottom: env(safe-area-inset-bottom, 0);
 	}
 }

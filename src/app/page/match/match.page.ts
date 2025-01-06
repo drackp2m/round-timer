@@ -10,18 +10,10 @@ import { MatchTurnsComponent } from '@app/page/match/component/turns/match-turns
 import { MatchStore } from '@app/store/match.store';
 import { PlayerStore } from '@app/store/player.store';
 
-import { ShowMillisecondsPipe } from 'src/app/pipe/show-milliseconds.pipe';
-
 @Component({
 	templateUrl: './match.page.html',
 	styleUrl: './match.page.scss',
-	imports: [
-		DatePipe,
-		MatchButtonsComponent,
-		ShowMillisecondsPipe,
-		ShowMillisecondsComponent,
-		MatchTurnsComponent,
-	],
+	imports: [DatePipe, MatchButtonsComponent, ShowMillisecondsComponent, MatchTurnsComponent],
 })
 export class MatchPage {
 	private readonly matchStore = inject(MatchStore);
@@ -59,7 +51,8 @@ export class MatchPage {
 		return 0;
 	});
 	readonly round = this.matchStore.round;
-	readonly turn = this.matchStore.turn;
+	readonly matchTurn = this.matchStore.turn;
+	readonly roundTurn = computed(() => ((this.matchTurn() - 1) % this.playersOrder().length) + 1);
 	readonly playersOrder = computed(() =>
 		this.matchStore
 			.currentPlayersOrder()

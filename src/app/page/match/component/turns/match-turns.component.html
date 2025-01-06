@@ -11,28 +11,34 @@
 		@let faster = fasterTurn().index === index;
 		@let slower = slowerTurn().index === index;
 
-		<div
-			class="turn pl-2 flex-row justify-between color-contrast-mid text-sm"
-			[class]="{ faster, slower }"
-		>
-			<span>#</span> <span class="ml-1">{{ index + 1 }}</span>
-		</div>
-		<div class="player-name px-2" [class]="{ faster, slower }">
-			{{ player?.nick }} ({{ player?.name }})
-		</div>
-		<div class="hours px-1 flex-row justify-end" [class]="{ faster, slower }">
-			@if (parts[3] !== '0') {
-				{{ parts[3] }}m
-			}
-		</div>
-		<div class="minutes px-1 flex-row justify-end" [class]="{ faster, slower }">
-			@if (parts[2] !== '0') {
-				{{ parts[2] }}m
-			}
-		</div>
-		<div class="seconds px-1 flex-row justify-end" [class]="{ faster, slower }">
-			{{ parts[1] }}.{{ parts[0] }}s
-		</div>
+		<p class="turn pl-2 mono fs-sm color-contrast-mid" [class]="{ faster, slower }">
+			<span>#</span>
+			<span class="ml-1">{{ index + 1 }}</span>
+		</p>
+		<p class="player-nick px-2" [class]="{ faster, slower }">
+			{{ player?.nick }}
+		</p>
+		<p class="player-name color-contrast-mid fw-sm" [class]="{ faster, slower }">
+			{{ player?.name }}
+		</p>
+		<p class="hours px-1 mono flex-row justify-end" [class]="{ faster, slower }">
+			<span>
+				@if (parts[3] !== '0') {
+					{{ parts[3] }}m
+				}
+			</span>
+		</p>
+		<p class="minutes px-1 mono flex-row justify-end" [class]="{ faster, slower }">
+			<span>
+				@if (parts[2] !== '0') {
+					{{ parts[2] }}m
+				}
+			</span>
+		</p>
+		<p class="seconds px-1 mono flex-row justify-end" [class]="{ faster, slower }">
+			<span>{{ parts[1] }}</span>
+			<span class="fs-sm">.{{ parts[0] }}s</span>
+		</p>
 		<div class="icon px-2 flex-col justify-center" [class]="{ faster, slower }">
 			@if (faster) {
 				<app-svg icon="rabbit" [size]="16" squared flip />

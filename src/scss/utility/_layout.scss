@@ -63,6 +63,12 @@ $rules: (
 	align-self-end: (
 		align-self: flex-end,
 	),
+	align-base: (
+		align-items: baseline,
+	),
+	align-self-base: (
+		align-self: baseline,
+	),
 	justify-start: (
 		justify-content: flex-start,
 	),
@@ -80,6 +86,12 @@ $rules: (
 	),
 	justify-self-end: (
 		justify-self: flex-end,
+	),
+	justify-base: (
+		justify-content: baseline,
+	),
+	justify-self-base: (
+		justify-self: baseline,
 	),
 	justify-between: (
 		justify-content: space-between,

@@ -5,10 +5,10 @@
 		<app-svg [icon]="iconValue" [hexColor]="color()" [size]="size() / 2" squared />
 
 		<svg [attr.width]="svgSize()" [attr.height]="svgSize()" [attr.viewBox]="viewBox()" class="nick">
-			<defs><path id="x" [attr.d]="createCircle()" /></defs>
+			<defs><path id="path" [attr.d]="createCircle()" /></defs>
 
 			<text [attr.font-size]="fontSize() - 1">
-				<textPath href="#x" [attr.fill]="color()" startOffset="50%" text-anchor="middle">
+				<textPath href="#path" [attr.fill]="color()" startOffset="50%" text-anchor="middle">
 					{{ player().nick }}
 				</textPath>
 			</text>
