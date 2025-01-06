@@ -4,6 +4,7 @@ import { patchState, signalStore, withState } from '@ngrx/signals';
 import { MatchEventType } from '@app/definition/model/match/match-event-type.enum';
 import { MatchEventPayload } from '@app/definition/model/match/match-event-type.type';
 import { MatchEvent } from '@app/model/match-event.model';
+import { MatchPlayer } from '@app/model/match-player.model';
 import { Match } from '@app/model/match.model';
 import { MatchRepository } from '@app/repository/match.repository';
 import { Enum } from '@app/util/enum';
@@ -92,6 +93,24 @@ export class MatchStore extends signalStore({ protectedState: false }, withState
 		// await this.matchRepository.insert('match_event', event.forRepository());
 
 		patchState(this, { events: [...events, event] });
+	}
+
+	async createMatch(match: Match, matchPlayers: MatchPlayer[]): Promise<void> {
+		const playerUuids = matchPlayers.map(({ playerUuid }) => playerUuid);
+
+		const matchEvent = new MatchEvent<MatchEventType.SET_TURN_ORDER>({
+			matchUuid: match.uuid,
+			type: 'SET_TURN_ORDER',
+			payload: playerUuids,
+		});
+
+		await this.matchRepository.beginTransaction(['match', 'match_player', 'match_event']);
+		await this.matchRepository.insert('match', match.forRepository());
+		await this.matchRepository.batchInsert('match_player', matchPlayers);
+		await this.matchRepository.insert('match_event', matchEvent.forRepository());
+		await this.matchRepository.commitTransaction();
+
+		patchState(this, { match, playerUuids, events: [matchEvent] });
 	}
 
 	private fetchDataAsync(): void {

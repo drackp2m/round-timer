@@ -11,17 +11,16 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router } from '@angular/router';
 
 import { SvgComponent } from '@app/component/svg.component';
-import { MatchEventType } from '@app/definition/model/match/match-event-type.enum';
 import { ButtonDirective } from '@app/directive/button.directive';
 import { InputDirective } from '@app/directive/input.directive';
 import { SelectDirective } from '@app/directive/select.directive';
-import { MatchEvent } from '@app/model/match-event.model';
 import { MatchPlayer } from '@app/model/match-player.model';
 import { Match } from '@app/model/match.model';
 import { Player } from '@app/model/player.model';
 import { AddGameModal } from '@app/page/new-match/modal/add-game/add-game.modal';
 import { MatchRepository } from '@app/repository/match.repository';
 import { GameStore } from '@app/store/game.store';
+import { MatchStore } from '@app/store/match.store';
 import { ModalStore } from '@app/store/modal.store';
 import { PlayerStore } from '@app/store/player.store';
 
@@ -34,6 +33,7 @@ import { AddPlayerModal } from './modal/add-player/add-player.modal';
 export class NewMatchPage {
 	private readonly gameStore = inject(GameStore);
 	private readonly playerStore = inject(PlayerStore);
+	private readonly matchStore = inject(MatchStore);
 	private readonly modalStore = inject(ModalStore);
 	private readonly matchRepository = inject(MatchRepository);
 	private readonly router = inject(Router);
@@ -110,19 +110,11 @@ export class NewMatchPage {
 
 	async createMatch(): Promise<void> {
 		const rawForm = this.form.getRawValue();
-		const match = new Match({ gameUuid: rawForm.gameUuid, name: rawForm.name });
-		const matchPlayers = this.getPlayersFromForm(match.uuid);
-		const matchEvent = new MatchEvent<MatchEventType.SET_TURN_ORDER>({
-			matchUuid: match.uuid,
-			type: 'SET_TURN_ORDER',
-			payload: matchPlayers.map(({ playerUuid }) => playerUuid),
-		});
 
-		await this.matchRepository.beginTransaction(['match', 'match_player', 'match_event']);
-		await this.matchRepository.insert('match', match.forRepository());
-		await this.matchRepository.batchInsert('match_player', matchPlayers);
-		await this.matchRepository.insert('match_event', matchEvent.forRepository());
-		await this.matchRepository.commitTransaction();
+		const match = new Match({ gameUuid: rawForm.gameUuid, name: rawForm.name });
+		const players = this.getPlayersFromForm(match.uuid);
+
+		await this.matchStore.createMatch(match, players);
 
 		await this.router.navigate(['/match']);
 	}

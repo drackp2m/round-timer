@@ -40,7 +40,7 @@
 				<app-svg icon="turtle" [size]="14" squared flip />
 			}
 		</div>
-		@if (last || index % 3 === 0 || index % 3 === 1) {
+		@if (last || index % playersCount() !== playersCount() - 1) {
 			<div class="separator"></div>
 		}
 	}
