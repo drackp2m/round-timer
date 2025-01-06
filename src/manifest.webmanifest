@@ -1,0 +1,45 @@
+{
+	"name": "Play Set Online (not today)",
+	"short_name": "Play Set Online",
+	"display": "standalone",
+	"orientation": "portrait-primary",
+	"scope": "/",
+	"start_url": "/",
+	"launch_handler": {
+		"client_mode": "focus-existing"
+	},
+	"icons": [
+		{
+			"src": "/icon.svg",
+			"type": "image/svg+xml",
+			"sizes": "any",
+			"purpose": "maskable any"
+		},
+		{
+			"src": "/icon-512.png",
+			"type": "image/png",
+			"sizes": "512x512",
+			"purpose": "maskable any"
+		},
+		{
+			"src": "/icon-1014.png",
+			"type": "image/png",
+			"sizes": "1014x1014",
+			"purpose": "maskable any"
+		}
+	],
+	"shortcuts": [
+		{
+			"name": "Play solo",
+			"short_name": "Play",
+			"description": "Play new game solo",
+			"url": "/game"
+		},
+		{
+			"name": "Play online",
+			"short_name": "Online",
+			"description": "Play new game with friends",
+			"url": "/online"
+		}
+	]
+}

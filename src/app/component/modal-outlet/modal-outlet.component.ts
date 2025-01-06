@@ -91,7 +91,7 @@ export class ModalOutletComponent implements AfterViewInit {
 
 		this.title.set(componentRef.instance.TITLE);
 
-		await Async.waitForFrames(2);
+		await Async.waitForFrames();
 
 		this.height.set(modalContainer.nativeElement.offsetHeight);
 

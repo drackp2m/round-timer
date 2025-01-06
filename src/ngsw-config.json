@@ -1,0 +1,41 @@
+{
+	"$schema": "../../../node_modules/@angular/service-worker/config/schema.json",
+	"index": "/index.html",
+	"assetGroups": [
+		{
+			"name": "app",
+			"installMode": "prefetch",
+			"updateMode": "prefetch",
+			"resources": {
+				"files": [
+					"/favicon.ico",
+					"/favicon.svg",
+					"/index.html",
+					"/manifest.webmanifest",
+					"/*.js",
+					"/*.css"
+				]
+			}
+		},
+		{
+			"name": "assets",
+			"installMode": "prefetch",
+			"updateMode": "lazy",
+			"resources": {
+				"files": ["/public/**"]
+			}
+		}
+	],
+	"dataGroups": [
+		{
+			"name": "api-call",
+			"urls": ["https://api.playsetonline.com"],
+			"cacheConfig": {
+				"maxAge": "5m",
+				"maxSize": 10,
+				"strategy": "freshness",
+				"timeout": "1s"
+			}
+		}
+	]
+}

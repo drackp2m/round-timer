@@ -13,6 +13,7 @@ import { ShowMillisecondsPipe } from 'src/app/pipe/show-milliseconds.pipe';
 	styleUrl: './match-turns.component.scss',
 	imports: [ShowMillisecondsPipe, SvgComponent],
 })
+// ToDo => add time for round (and the paused lost time)
 export class MatchTurnsComponent {
 	readonly playersCount = input.required<number>();
 	readonly matchTurns = input.required<MatchTurn[], MatchTurn[]>({
@@ -46,7 +47,7 @@ export class MatchTurnsComponent {
 
 			const turnsContainer = this.turns()?.nativeElement;
 
-			void Async.waitForFrames(1).then(() => {
+			void Async.waitForFrames().then(() => {
 				turnsContainer?.scrollTo({
 					top: turnsContainer.scrollHeight,
 					behavior: 'smooth',

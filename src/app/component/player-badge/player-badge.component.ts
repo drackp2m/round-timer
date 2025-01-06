@@ -56,7 +56,7 @@ export class PlayerBadgeComponent implements AfterViewInit {
 	});
 
 	ngAfterViewInit(): void {
-		void Async.waitForFrames(3).then(() => {
+		void Async.waitForFrames().then(() => {
 			const element = this.elementRef;
 
 			const fontSize = window.getComputedStyle(element.nativeElement).fontSize;
