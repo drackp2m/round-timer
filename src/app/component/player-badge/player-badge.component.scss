@@ -1,24 +1,23 @@
 :host {
 	$border: 3px;
 
+	position: relative;
 	display: flex;
-	align-self: center;
+	aspect-ratio: 1;
 
 	.badge {
-		position: relative;
-
 		display: flex;
-		place-content: center center;
+		align-items: center;
+		justify-content: center;
 
 		aspect-ratio: 1;
 
 		font-weight: bold;
 
-		border: solid $border transparent;
-		border-radius: 50%;
-
 		.nick {
 			position: absolute;
+			border: solid $border transparent;
+			border-radius: 50%;
 		}
 
 		.debug {

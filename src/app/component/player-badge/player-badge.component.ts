@@ -34,33 +34,41 @@ export class PlayerBadgeComponent implements AfterViewInit {
 
 	readonly UUID = crypto.randomUUID();
 	readonly size = signal(72);
-	readonly svgSize = signal(0);
-	readonly viewBox = computed(() => `0 0 ${this.svgSize()} ${this.svgSize()}`);
+	readonly viewBox = computed(() => `0 0 ${this.size()} ${this.size()}`);
 	readonly fontSize = signal(0);
-	readonly createCircle = computed(() => {
-		const size = this.svgSize();
-		const fontSize = this.fontSize();
+	readonly createTopCircle = computed(() => {
+		const size = this.size();
 
-		const margin = fontSize;
-		const radius = size / 2;
+		const margin = this.fontSize() - 1;
 
-		// const move = ['M', radius, margin];
-		// const arc = ['A', radius - margin, radius - margin, 0, 1, 0, radius + 0.001, margin];
+		const move = ['M', size - margin, size / 2];
+		const arc = ['A', size / 2 - margin, size / 2 - margin, 0, 1, 1, margin, size / 2];
 
-		const move = ['M', radius, size - margin];
-		const arc = ['A', radius - margin, radius - margin, 0, 1, 1, radius + 0.001, size - margin];
+		return [...move, ...arc].join(' ');
+	});
+	readonly createBottomCircle = computed(() => {
+		const size = this.size();
+
+		const margin = this.fontSize() - 1;
+
+		const move = ['M', margin, size / 2];
+		const arc = ['A', size / 2 - margin, size / 2 - margin, 0, 1, 1, size - margin, size / 2];
 
 		return [...move, ...arc].join(' ');
 	});
 
 	ngAfterViewInit(): void {
 		void Async.waitForFrames(2).then(() => {
-			const element = this.elementRef;
+			const element = this.elementRef.nativeElement.querySelector('.badge');
 
-			const fontSize = window.getComputedStyle(element.nativeElement).fontSize;
+			if (null === element) {
+				return;
+			}
 
-			this.svgSize.set(element.nativeElement.clientWidth);
-			this.fontSize.set(parseInt(fontSize, 10));
+			const size = element.clientWidth + 3 * 2;
+
+			this.size.set(size);
+			this.fontSize.set(size * 0.15);
 		});
 	}
 }

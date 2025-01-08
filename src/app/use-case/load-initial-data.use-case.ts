@@ -9,12 +9,12 @@ export class LoadInitialDataUseCase {
 	private readonly router = inject(Router);
 
 	execute(): Signal<boolean> {
-		this.redirectToTimerIfMatchIsInProgress();
+		this.redirectToMatchIfMatchIsInProgress();
 
 		return this.matchStore.isLoading;
 	}
 
-	private redirectToTimerIfMatchIsInProgress(): void {
+	private redirectToMatchIfMatchIsInProgress(): void {
 		const findInProgressMatchEffectRef = effect(() => {
 			const isLoading = this.matchStore.isLoading();
 			const match = this.matchStore.match();
@@ -22,7 +22,8 @@ export class LoadInitialDataUseCase {
 			if (!isLoading && null !== match) {
 				findInProgressMatchEffectRef.destroy();
 
-				void this.router.navigate(['/match']);
+				// ToDo => change this to match page
+				void this.router.navigate(['/new-match']);
 			}
 		});
 	}

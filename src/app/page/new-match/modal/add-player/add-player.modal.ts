@@ -15,6 +15,7 @@ import { Enum } from '@app/util/enum';
 
 @Component({
 	templateUrl: './add-player.modal.html',
+	styleUrls: ['./add-player.modal.scss'],
 	imports: [
 		InputDirective,
 		SelectDirective,

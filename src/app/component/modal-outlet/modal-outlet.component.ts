@@ -4,6 +4,7 @@ import {
 	Component,
 	ComponentRef,
 	ElementRef,
+	Renderer2,
 	Type,
 	ViewContainerRef,
 	computed,
@@ -44,6 +45,7 @@ export class ModalOutletComponent implements AfterViewInit {
 	private readonly modalContent = viewChild.required('modalContent', { read: ViewContainerRef });
 
 	private readonly modalStore = inject(ModalStore);
+	private readonly renderer2 = inject(Renderer2);
 
 	private readonly ANIMATION_DURATION_MS = 400;
 	private readonly ANIMATION_EASING = 'cubic-bezier(0.4, 0.0, 0.2, 1)';
@@ -90,8 +92,10 @@ export class ModalOutletComponent implements AfterViewInit {
 		this.activeComponentRef = componentRef;
 
 		this.title.set(componentRef.instance.TITLE);
+		this.renderer2.addClass(componentRef.location.nativeElement, 'modal');
 
-		await Async.waitForFrames(3);
+		// ToDo => check if need for three
+		await Async.waitForFrames(2);
 
 		this.height.set(modalContainer.nativeElement.offsetHeight);
 

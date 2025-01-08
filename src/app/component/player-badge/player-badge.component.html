@@ -1,11 +1,39 @@
 @let iconValue = icon();
 
 @if (iconValue !== null) {
-	<div #badge class="badge flex-col align-center gap-2 p-8" [style.border-color]="color()">
-		<app-svg [icon]="iconValue" [hexColor]="color()" [size]="size() / 2" squared />
+	<div #badge class="badge" [style.padding]="size() * 0.4">
+		<app-svg [icon]="iconValue" [hexColor]="color()" [size]="size() * 0.4" squared />
 
-		<svg [attr.width]="svgSize()" [attr.height]="svgSize()" [attr.viewBox]="viewBox()" class="nick">
-			<defs><path id="path" [attr.d]="createCircle()" /></defs>
+		<svg
+			class="nick"
+			[attr.width]="size()"
+			[attr.height]="size()"
+			[attr.viewBox]="viewBox()"
+			[style.border-color]="color()"
+		>
+			<defs><path id="path-top" [attr.d]="createTopCircle()" /></defs>
+
+			<text [attr.font-size]="fontSize() - 1">
+				<textPath href="#path-top" [attr.fill]="color()" startOffset="50%" text-anchor="middle">
+					{{ player().nick }}
+				</textPath>
+			</text>
+		</svg>
+
+		@if (debug()) {
+			<svg [attr.width]="size()" [attr.height]="size()" [attr.viewBox]="viewBox()" class="debug">
+				<path [attr.d]="createTopCircle()" fill="none" stroke-width="1" />
+			</svg>
+		}
+
+		<svg
+			class="nick"
+			[attr.width]="size()"
+			[attr.height]="size()"
+			[attr.viewBox]="viewBox()"
+			[style.border-color]="color()"
+		>
+			<defs><path id="path" [attr.d]="createBottomCircle()" /></defs>
 
 			<text [attr.font-size]="fontSize() - 1">
 				<textPath href="#path" [attr.fill]="color()" startOffset="50%" text-anchor="middle">
@@ -15,13 +43,8 @@
 		</svg>
 
 		@if (debug()) {
-			<svg
-				[attr.width]="svgSize()"
-				[attr.height]="svgSize()"
-				[attr.viewBox]="viewBox()"
-				class="debug"
-			>
-				<path [attr.d]="createCircle()" fill="none" stroke-width="1" />
+			<svg [attr.width]="size()" [attr.height]="size()" [attr.viewBox]="viewBox()" class="debug">
+				<path [attr.d]="createBottomCircle()" fill="none" stroke-width="1" />
 			</svg>
 		}
 	</div>
