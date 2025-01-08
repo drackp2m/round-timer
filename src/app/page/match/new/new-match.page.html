@@ -46,8 +46,8 @@
 							(change)="sortPlayers($event)"
 						/>
 						<app-svg
+							[style.color]="player.computed.colorValue"
 							[icon]="player.computed.iconValue"
-							[hexColor]="player.computed.colorValue"
 							[size]="20"
 							squared
 						/>

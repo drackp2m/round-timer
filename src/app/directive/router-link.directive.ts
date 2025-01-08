@@ -31,12 +31,6 @@ export class RouterLinkDirective implements OnInit {
 			this.routerLinkWithHref.routerLink = link;
 		}
 
-		console.log({
-			appRouterLink: this.appRouterLink(),
-			routerLinkActive: this.routerLinkActive(),
-			routerLinkActiveOptions: this.routerLinkActiveOptions(),
-		});
-
 		this.routerLinkActiveDirective.routerLinkActive = this.routerLinkActive();
 		this.routerLinkActiveDirective.routerLinkActiveOptions = this.routerLinkActiveOptions();
 	}

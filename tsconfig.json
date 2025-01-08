@@ -27,6 +27,7 @@
 			"@app/model/*": ["src/app/model/*"],
 			"@app/page/*": ["src/app/page/*"],
 			"@app/repository/*": ["src/app/repository/*"],
+			"@app/service/*": ["src/app/service/*"],
 			"@app/store/*": ["src/app/store/*"],
 			"@app/util/*": ["src/app/util/*"]
 		}

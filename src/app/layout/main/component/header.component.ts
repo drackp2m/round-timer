@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { TitleService } from '@app/service/title.service';
 
 import { ButtonDirective } from '@app/directive/button.directive';
 import { RouterLinkDirective } from '@app/directive/router-link.directive';
@@ -8,8 +9,9 @@ import { RouterLinkDirective } from '@app/directive/router-link.directive';
 	template: `<section
 		class="header pb-2 px-4 surface-contrast color-primary flex-row align-center justify-between"
 	>
-		<button appRouterLink="/">
-			<h3>Round Timer</h3>
+		<button appRouterLink="/" class="flex-row gap-2 align-center logo">
+			<img src="favicon.svg" alt="App Logo" />
+			<h3>{{ title() }}</h3>
 		</button>
 
 		<div class="flex-row gap-2 align-center">
@@ -26,7 +28,12 @@ import { RouterLinkDirective } from '@app/directive/router-link.directive';
 			.header {
 				padding-top: calc(var(--spacing-2) + env(safe-area-inset-top, 0));
 
-				[appRouterLink] {
+				.logo {
+					height: 24px;
+					color: var(--color-primary);
+				}
+
+				[appRouterLink]:not(.logo) {
 					color: var(--color-primary-mid);
 
 					&.active {
@@ -38,4 +45,8 @@ import { RouterLinkDirective } from '@app/directive/router-link.directive';
 	],
 	imports: [RouterLinkDirective, ButtonDirective],
 })
-export class HeaderComponent {}
+export class HeaderComponent {
+	private readonly titleService = inject(TitleService);
+
+	readonly title = this.titleService.title;
+}

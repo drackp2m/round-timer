@@ -9,8 +9,7 @@ export const APP_ROUTES: Routes = [
 		children: [
 			{
 				path: '',
-				loadComponent: () =>
-					import('./page/dashboard/dashboard.page').then(({ DashboardPage }) => DashboardPage),
+				loadChildren: () => import('./page/dashboard/dashboard.routes'),
 			},
 			{
 				path: 'match',
@@ -18,7 +17,7 @@ export const APP_ROUTES: Routes = [
 			},
 			{
 				path: 'settings',
-				loadChildren: () => import('./page/setting/setting.routes'),
+				loadChildren: () => import('./page/config/setting.routes'),
 			},
 		],
 	},

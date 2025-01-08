@@ -1,5 +1,6 @@
-import { Component, computed, input } from '@angular/core';
+import { Component, computed, input, signal } from '@angular/core';
 
+import { SquaredDirective } from '@app/directive/squared.directive';
 import { Check } from '@app/util/check';
 
 @Component({
@@ -8,7 +9,7 @@ import { Check } from '@app/util/check';
 		[attr.class]="class()"
 		[style.aspect-ratio]="aspectRatio()"
 		[style.mask]="icon()"
-		[style.background-color]="hexColor()"
+		[style.background-color]="'currentColor'"
 	></div>`,
 	styles: [
 		`
@@ -30,19 +31,24 @@ import { Check } from '@app/util/check';
 			}
 		`,
 	],
+	hostDirectives: [
+		{
+			directive: SquaredDirective,
+			inputs: ['squared'],
+		},
+	],
 	host: {
-		'[attr.class]': 'squared() ? "squared" : ""',
 		'[style.height]': 'size()',
 	},
 })
 // ToDo => try to inherit color from parent text color
 export class SvgComponent {
 	readonly icon = input.required<string, string>({ transform: this.getIcon });
-	readonly color = input<string>('surface-contrast');
-	readonly hexColor = input<string>('--var(--color-contrast)');
-	readonly squared = input(false, { transform: Check.isFalseAsStringOrTrue });
 	readonly flip = input(false, { transform: Check.isFalseAsStringOrTrue });
 	readonly size = input<string, number>('24px', { transform: (size) => `${size}px` });
+
+	readonly color = signal('surface-contrast');
+	readonly hexColor = signal('surface-contrast');
 
 	readonly aspectRatio = computed(() => this.getAspectRatio());
 	readonly class = computed(() => {

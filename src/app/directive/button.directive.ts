@@ -82,7 +82,7 @@ export class ButtonDirective implements OnInit {
 
 		iconElement.setInput('icon', icon);
 		iconElement.setInput('size', iconSize);
-		iconElement.setInput('color', iconColor);
+		// iconElement.setInput('color', iconColor);
 
 		return iconElement;
 	}

@@ -1,8 +1,8 @@
 @let iconValue = icon();
 
 @if (iconValue !== null) {
-	<div #badge class="badge" [style.padding]="size() * 0.4">
-		<app-svg [icon]="iconValue" [hexColor]="color()" [size]="size() * 0.4" squared />
+	<div #badge class="badge" [style.padding]="size() * 0.4" [style.color]="color()">
+		<app-svg [icon]="iconValue" [size]="size() * 0.4" squared />
 
 		<svg
 			class="nick"
@@ -13,7 +13,7 @@
 		>
 			<defs><path id="path-top" [attr.d]="createTopCircle()" /></defs>
 
-			<text [attr.font-size]="fontSize() - 1">
+			<text [attr.font-size]="fontSize()">
 				<textPath href="#path-top" [attr.fill]="color()" startOffset="50%" text-anchor="middle">
 					{{ player().nick }}
 				</textPath>
@@ -35,7 +35,7 @@
 		>
 			<defs><path id="path" [attr.d]="createBottomCircle()" /></defs>
 
-			<text [attr.font-size]="fontSize() - 1">
+			<text [attr.font-size]="fontSize()">
 				<textPath href="#path" [attr.fill]="color()" startOffset="50%" text-anchor="middle">
 					{{ player().nick }}
 				</textPath>
