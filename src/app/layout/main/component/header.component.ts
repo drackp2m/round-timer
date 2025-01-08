@@ -1,22 +1,22 @@
 import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
 
 import { ButtonDirective } from '@app/directive/button.directive';
+import { RouterLinkDirective } from '@app/directive/router-link.directive';
 
 @Component({
 	selector: 'app-header',
 	template: `<section
 		class="header pb-2 px-4 surface-contrast color-primary flex-row align-center justify-between"
 	>
-		<button routerLink="/">
+		<button appRouterLink="/">
 			<h3>Round Timer</h3>
 		</button>
 
 		<div class="flex-row gap-2 align-center">
-			<button appButton routerLink="/match" icon="dice" color="primary-mid">
+			<button appButton appRouterLink="/match" icon="dice">
 				<!---->
 			</button>
-			<button appButton icon="gear" color="primary-mid">
+			<button appButton appRouterLink="/settings" icon="gear">
 				<!---->
 			</button>
 		</div>
@@ -25,9 +25,17 @@ import { ButtonDirective } from '@app/directive/button.directive';
 		`
 			.header {
 				padding-top: calc(var(--spacing-2) + env(safe-area-inset-top, 0));
+
+				[appRouterLink] {
+					color: var(--color-primary-mid);
+
+					&.active {
+						color: var(--color-primary);
+					}
+				}
 			}
 		`,
 	],
-	imports: [RouterLink, ButtonDirective],
+	imports: [RouterLinkDirective, ButtonDirective],
 })
 export class HeaderComponent {}

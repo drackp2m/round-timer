@@ -22,8 +22,7 @@ export class LoadInitialDataUseCase {
 			if (!isLoading && null !== match) {
 				findInProgressMatchEffectRef.destroy();
 
-				// ToDo => change this to match page
-				void this.router.navigate(['/new-match']);
+				void this.router.navigate(['/match/new']);
 			}
 		});
 	}

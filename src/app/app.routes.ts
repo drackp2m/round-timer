@@ -13,12 +13,12 @@ export const APP_ROUTES: Routes = [
 					import('./page/dashboard/dashboard.page').then(({ DashboardPage }) => DashboardPage),
 			},
 			{
-				path: 'new-match',
-				loadChildren: () => import('./page/new-match/new-match.routes'),
-			},
-			{
 				path: 'match',
 				loadChildren: () => import('./page/match/match.routes'),
+			},
+			{
+				path: 'settings',
+				loadChildren: () => import('./page/setting/setting.routes'),
 			},
 		],
 	},
