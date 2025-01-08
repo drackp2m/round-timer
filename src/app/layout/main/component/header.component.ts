@@ -1,8 +1,8 @@
 import { Component, inject } from '@angular/core';
-import { TitleService } from '@app/service/title.service';
 
 import { ButtonDirective } from '@app/directive/button.directive';
 import { RouterLinkDirective } from '@app/directive/router-link.directive';
+import { TitleService } from '@app/service/title.service';
 
 @Component({
 	selector: 'app-header',
@@ -10,7 +10,7 @@ import { RouterLinkDirective } from '@app/directive/router-link.directive';
 		class="header pb-2 px-4 surface-contrast color-primary flex-row align-center justify-between"
 	>
 		<button appRouterLink="/" class="flex-row gap-2 align-center logo">
-			<img src="favicon.svg" alt="App Logo" />
+			<img src="icon-solo-dark.svg" alt="App Logo" />
 			<h3>{{ title() }}</h3>
 		</button>
 
