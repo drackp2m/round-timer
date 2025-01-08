@@ -10,19 +10,19 @@
 	},
 	"icons": [
 		{
-			"src": "/icon.svg",
+			"src": "/icon-dark.svg",
 			"type": "image/svg+xml",
 			"sizes": "any",
 			"purpose": "maskable any"
 		},
 		{
-			"src": "/icon-512.png",
+			"src": "/icon-dark-512.png",
 			"type": "image/png",
 			"sizes": "512x512",
 			"purpose": "maskable any"
 		},
 		{
-			"src": "/icon-1024.png",
+			"src": "/icon-dark-1024.png",
 			"type": "image/png",
 			"sizes": "1024x1024",
 			"purpose": "maskable any"

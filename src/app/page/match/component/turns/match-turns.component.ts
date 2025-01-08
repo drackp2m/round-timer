@@ -16,9 +16,7 @@ import { ShowMillisecondsPipe } from 'src/app/pipe/show-milliseconds.pipe';
 // ToDo => add time for round (and the paused lost time)
 export class MatchTurnsComponent {
 	readonly playersCount = input.required<number>();
-	readonly matchTurns = input.required<MatchTurn[], MatchTurn[]>({
-		transform: (value) => value.filter((turn) => 0 < turn.time),
-	});
+	readonly matchTurns = input.required<MatchTurn[]>();
 
 	private readonly playerStore = inject(PlayerStore);
 
@@ -30,7 +28,8 @@ export class MatchTurnsComponent {
 	);
 	readonly fasterTurn = computed(() =>
 		this.matchTurns().reduce(
-			(acc, turn, index) => (turn.time < acc.time ? { index, time: turn.time } : acc),
+			(acc, turn, index) =>
+				0 !== turn.time && turn.time < acc.time ? { index, time: turn.time } : acc,
 			{ index: 0, time: Number.MAX_SAFE_INTEGER },
 		),
 	);

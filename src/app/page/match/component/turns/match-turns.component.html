@@ -8,8 +8,8 @@
 
 		@let parts = turn.time | showMilliseconds;
 		@let player = playerByUuid().get(turn.playerUuid);
-		@let faster = fasterTurn().index === index;
-		@let slower = slowerTurn().index === index;
+		@let faster = turn.time !== 0 && fasterTurn().index === index;
+		@let slower = turn.time !== 0 && slowerTurn().index === index;
 
 		<p class="turn pl-2 mono fs-sm color-contrast-mid" [class]="{ faster, slower }">
 			<span>#</span>
@@ -36,8 +36,8 @@
 			</span>
 		</p>
 		<p class="seconds px-1 mono flex-row justify-end" [class]="{ faster, slower }">
-			<span>{{ parts[1] }}</span>
-			<span class="fs-sm">.{{ parts[0] }}s</span>
+			<span>{{ turn.time === 0 ? '-' : parts[1] }}</span>
+			<span class="fs-sm">.{{ turn.time === 0 ? '--' : parts[0] }}s</span>
 		</p>
 		<div class="icon px-2 flex-col justify-center" [class]="{ faster, slower }">
 			@if (faster) {
