@@ -7,7 +7,7 @@ import { TitleService } from '@app/service/title.service';
 @Component({
 	selector: 'app-header',
 	template: `<section
-		class="header pb-2 px-4 surface-contrast color-primary flex-row align-center justify-between"
+		class="header force-light pb-2 px-4 surface-contrast color-primary flex-row align-center justify-between"
 	>
 		<button appRouterLink="/" class="flex-row gap-2 align-center logo">
 			<img src="icon-solo-dark.svg" alt="App Logo" />
@@ -27,6 +27,7 @@ import { TitleService } from '@app/service/title.service';
 		`
 			.header {
 				padding-top: calc(var(--spacing-2) + env(safe-area-inset-top, 0));
+				border-bottom: solid 1.5px var(--color-primary);
 
 				.logo {
 					height: 24px;

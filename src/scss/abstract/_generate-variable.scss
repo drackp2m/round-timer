@@ -38,3 +38,21 @@
 		--shadow-#{$name}: #{$value};
 	}
 }
+
+[data-theme='dark']:not(.force-light, .force-dark) {
+	@each $name, $value in var.$dark-color {
+		--color-#{$name}: #{$value};
+	}
+}
+
+.force-light {
+	@each $name, $value in var.$color {
+		--color-#{$name}: #{$value} !important;
+	}
+}
+
+.force-dark {
+	@each $name, $value in var.$dark-color {
+		--color-#{$name}: #{$value} !important;
+	}
+}

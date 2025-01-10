@@ -1,0 +1,24 @@
+.app-radio {
+	label {
+		display: flex;
+		flex-direction: row;
+		gap: var(--spacing-2);
+		align-items: center;
+
+		input {
+			aspect-ratio: 1;
+			width: 16px;
+			border: solid 1.5px;
+			border-color: var(--color-contrast-mid);
+
+			&:checked {
+				background-color: var(--color-contrast-mid);
+				border-color: var(--color-contrast);
+			}
+
+			&:hover {
+				border-color: var(--color-accent);
+			}
+		}
+	}
+}

@@ -13,6 +13,9 @@
 		position: sticky;
 		z-index: 1;
 		top: 0;
+
+		padding-top: 2px;
+		padding-bottom: 2px;
 	}
 
 	.separator {
@@ -61,14 +64,6 @@
 				position: relative;
 				top: 0.5px;
 			}
-		}
-
-		&.slower {
-			background-color: rgb(255 220 220);
-		}
-
-		&.faster {
-			background-color: rgb(220 255 220);
 		}
 	}
 }

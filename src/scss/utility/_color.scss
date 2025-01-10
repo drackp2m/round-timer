@@ -25,6 +25,6 @@
 
 @include mix.generate-responsive(get-list(var.$color));
 
-.dark-mode {
+[data-theme='dark'] {
 	@include mix.generate-responsive(get-list(var.$dark-color));
 }

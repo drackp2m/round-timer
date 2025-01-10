@@ -1,7 +1,7 @@
-import { AppSchemas } from '@app/repository/definition/app-schemas.interface';
+import { AppSchema } from '@app/repository/definition/app-schema.interface';
 import { Migration } from '@app/repository/definition/migration.interface';
 
-export const createMatchStoresMigration: Migration<AppSchemas> = {
+export const createMatchStoresMigration: Migration<AppSchema> = {
 	version: 4,
 	description: 'create match stores',
 	apply: ({ database, oldVersion }) => {

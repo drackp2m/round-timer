@@ -1,7 +1,7 @@
-import { AppSchemas } from '@app/repository/definition/app-schemas.interface';
+import { AppSchema } from '@app/repository/definition/app-schema.interface';
 import { Migration } from '@app/repository/definition/migration.interface';
 
-export const createGameStoreMigration: Migration<AppSchemas> = {
+export const createGameStoreMigration: Migration<AppSchema> = {
 	version: 3,
 	description: 'create game store',
 	apply: ({ database, oldVersion }) => {

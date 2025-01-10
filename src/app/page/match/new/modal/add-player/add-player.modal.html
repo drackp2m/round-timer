@@ -8,9 +8,15 @@
 	<app-player-badge [player]="player()" />
 
 	<form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex-col gap-4">
-		<input appInput formControlName="name" label="Name" placeholder="John Doe" />
+		<input appInput formControlName="name" label="Name" placeholder="John Doe" type="text" />
 
-		<input appInput formControlName="nick" label="Nickname" placeholder="JohnKiller69" />
+		<input
+			appInput
+			formControlName="nick"
+			label="Nickname"
+			placeholder="JohnKiller69"
+			type="text"
+		/>
 
 		<select appSelect formControlName="color">
 			<option value="">Color</option>

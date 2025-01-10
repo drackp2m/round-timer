@@ -1,6 +1,12 @@
 <section class="flex-col p-4 gap-4">
 	<form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex-col gap-4">
-		<input appInput formControlName="name" label="Name" [placeholder]="randomGameName" />
+		<input
+			appInput
+			formControlName="name"
+			label="Name"
+			[placeholder]="randomGameName"
+			type="text"
+		/>
 
 		<input
 			appInput

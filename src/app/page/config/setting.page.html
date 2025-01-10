@@ -1,7 +1,9 @@
 <section class="flex-col gap-4">
 	<h4>Appearance</h4>
 
-	<input type="radio" label="theme" />
-	<input type="radio" label="theme" />
-	<input type="radio" label="theme" />
+	<form [formGroup]="form" class="flex-col gap-1">
+		<input appRadio label="System" value="system" formControlName="appearance" type="radio" />
+		<input appRadio label="Light" value="light" formControlName="appearance" type="radio" />
+		<input appRadio label="Dark" value="dark" formControlName="appearance" type="radio" />
+	</form>
 </section>

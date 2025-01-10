@@ -1,20 +1,22 @@
 import { IDBPDatabase, IDBPTransaction, StoreNames, deleteDB } from 'idb';
 
-import { AppSchemas } from '@app/repository/definition/app-schemas.interface';
+import { AppSchema } from '@app/repository/definition/app-schema.interface';
 import { Migration } from '@app/repository/definition/migration.interface';
 import { createPlayerStoreMigration } from '@app/repository/migration/v1_create-player-store.migration';
 import { createPlayerNickIndexMigration } from '@app/repository/migration/v2_create-player-nick-index.migration';
 import { createGameStoreMigration } from '@app/repository/migration/v3_create-game-store.migration';
 import { createMatchStoresMigration } from '@app/repository/migration/v4_create-match-stores.migration';
+import { createSettingStoreMigration } from '@app/repository/migration/v5_create-setting-store.migration';
 
 export abstract class Repository {
 	private static readonly deprecatedDatabaseNames: string[] = [];
 
-	private static migrations: Migration<AppSchemas>[] = [
+	private static migrations: Migration<AppSchema>[] = [
 		createPlayerStoreMigration,
 		createPlayerNickIndexMigration,
 		createGameStoreMigration,
 		createMatchStoresMigration,
+		createSettingStoreMigration,
 	];
 
 	static getLatestVersion(): number {
