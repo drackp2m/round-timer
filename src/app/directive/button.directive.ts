@@ -19,7 +19,7 @@ import { SvgComponent } from '@app/component/svg.component';
 })
 export class ButtonDirective implements OnInit {
 	// Fixme => when create empty button @angular/eslint error occurs
-	readonly type = input('button');
+	readonly type = input.required<string>();
 	readonly color = input('contrast-mid');
 	readonly icon = input<string>();
 	readonly iconSize = input<number>(24);
@@ -40,9 +40,8 @@ export class ButtonDirective implements OnInit {
 
 		if (icon === undefined) {
 			this.addClassForTextButton(buttonElement);
-			this.renderer2.addClass(buttonElement, 'p-2');
 		} else {
-			this.renderer2.addClass(buttonElement, 'p-1');
+			this.renderer2.addClass(buttonElement, 'icon');
 			const iconElement = this.createIcon(icon);
 			this.renderer2.appendChild(buttonElement, iconElement.location.nativeElement);
 		}
@@ -51,8 +50,6 @@ export class ButtonDirective implements OnInit {
 	private addClassForTextButton(buttonElement: HTMLButtonElement): void {
 		const color = this.color();
 
-		this.renderer2.addClass(buttonElement, 'px-3');
-		this.renderer2.addClass(buttonElement, 'br-2');
 		this.renderer2.addClass(buttonElement, `surface-${color}`);
 		this.renderer2.addClass(buttonElement, this.getContrastColor(color));
 		this.renderer2.addClass(buttonElement, 'color-primary');
@@ -69,20 +66,17 @@ export class ButtonDirective implements OnInit {
 				return `color-primary`;
 			case 'accent':
 			default:
-				return 'color-primary';
+				return 'color-primary-light';
 		}
 	}
 
 	private createIcon(icon: string): ComponentRef<SvgComponent> {
 		const iconSize = this.iconSize();
-		const color = this.color();
 
-		const iconColor = `surface-${color}`;
 		const iconElement = this.viewContainerRef.createComponent(SvgComponent);
 
 		iconElement.setInput('icon', icon);
 		iconElement.setInput('size', iconSize);
-		// iconElement.setInput('color', iconColor);
 
 		return iconElement;
 	}

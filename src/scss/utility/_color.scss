@@ -4,27 +4,29 @@
 @use '../abstract/variable' as var;
 @use '../abstract/mixin' as mix;
 
-@function get-list($items, $rules-getter: get-rules) {
-	$rules: ();
+@layer utility {
+	@function get-list($items, $rules-getter: get-rules) {
+		$rules: ();
 
-	@each $name in map.keys($items) {
-		$rules-list: meta.call(meta.get-function($rules-getter), $name);
+		@each $name in map.keys($items) {
+			$rules-list: meta.call(meta.get-function($rules-getter), $name);
 
-		$rules: map.merge($rules, $rules-list);
+			$rules: map.merge($rules, $rules-list);
+		}
+
+		@return $rules;
 	}
 
-	@return $rules;
-}
+	@function get-rules($name) {
+		@return (
+			color-#{$name}: (color: var(--color-#{$name})),
+			color-#{$name}-light: (color: var(--color-#{$name})-light),
+			color-#{$name}-dark: (color: var(--color-#{$name})-dark),
+			surface-#{$name}: (background-color: var(--color-#{$name})),
+			surface-#{$name}-light: (background-color: var(--color-#{$name})-light),
+			surface-#{$name}-dark: (background-color: var(--color-#{$name})-dark)
+		);
+	}
 
-@function get-rules($name) {
-	@return (
-		color-#{$name}: (color: var(--color-#{$name})),
-		surface-#{$name}: (background-color: var(--color-#{$name}))
-	);
-}
-
-@include mix.generate-responsive(get-list(var.$color));
-
-[data-theme='dark'] {
-	@include mix.generate-responsive(get-list(var.$dark-color));
+	@include mix.generate-responsive(get-list(var.$color));
 }

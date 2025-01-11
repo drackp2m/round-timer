@@ -1,130 +1,132 @@
 @use '../abstract/variable' as var;
 
-.app-input {
-	$input-horizontal-padding: var(--spacing-3);
-	$input-vertical-padding: var(--spacing-2);
-	$border-width: 1.5px;
-	$transition-duration: 0.25s;
+@layer component {
+	.app-input {
+		$input-horizontal-padding: var(--spacing-3);
+		$input-vertical-padding: var(--spacing-2);
+		$border-width: 1.5px;
+		$transition-duration: 0.25s;
 
-	position: relative;
+		position: relative;
 
-	input,
-	.border-container,
-	.label-container {
-		padding: $input-vertical-padding $input-horizontal-padding;
-	}
-
-	label {
-		span {
-			position: absolute;
-			font-size: var(--font-size-sm);
-			visibility: hidden;
+		input,
+		.border-container,
+		.label-container {
+			padding: $input-vertical-padding $input-horizontal-padding;
 		}
 
-		input {
-			position: relative;
-			z-index: 1;
-			width: 100%;
+		label {
+			span {
+				position: absolute;
+				font-size: var(--font-size-sm);
+				visibility: hidden;
+			}
 
-			&::placeholder {
-				opacity: 0;
+			input {
+				position: relative;
+				z-index: 1;
+				width: 100%;
+
+				&::placeholder {
+					opacity: 0;
+				}
 			}
 		}
-	}
 
-	.border-container,
-	.label-container {
-		position: absolute;
-		inset: 0;
-	}
-
-	.border-container {
-		overflow: hidden;
-
-		&::before {
-			content: '';
-
+		.border-container,
+		.label-container {
 			position: absolute;
 			inset: 0;
-
-			clip-path: polygon(
-				0 0,
-				calc($input-horizontal-padding + var(--label-width) / 2) 0,
-				calc($input-horizontal-padding + var(--label-width) / 2) 2px,
-				calc($input-horizontal-padding + var(--label-width) / 2) 2px,
-				calc($input-horizontal-padding + var(--label-width) / 2) 0,
-				100% 0,
-				100% 100%,
-				0 100%
-			);
-			border: solid $border-width var(--color-contrast-mid);
-			border-radius: var(--border-radius-3);
-
-			transition: clip-path $transition-duration ease-in-out;
 		}
-	}
 
-	.label {
-		position: relative;
-		bottom: 0;
-		transition:
-			bottom $transition-duration ease-in-out,
-			font-size $transition-duration ease-in-out;
-	}
-
-	.placeholder {
-		position: relative;
-		top: calc(var(--input-height) / 2);
-		opacity: 0;
-		transition:
-			top $transition-duration ease-in-out,
-			opacity $transition-duration ease-in-out;
-	}
-
-	&.focused,
-	&.filled {
 		.border-container {
+			overflow: hidden;
+
 			&::before {
-				$clip-gap: 2px;
+				content: '';
+
+				position: absolute;
+				inset: 0;
 
 				clip-path: polygon(
 					0 0,
-					calc($input-horizontal-padding - $clip-gap) 0,
-					calc($input-horizontal-padding - $clip-gap) 2px,
-					calc($input-horizontal-padding + var(--label-width) + $clip-gap) 2px,
-					calc($input-horizontal-padding + var(--label-width) + $clip-gap) 0,
+					calc($input-horizontal-padding + var(--label-width) / 2) 0,
+					calc($input-horizontal-padding + var(--label-width) / 2) 2px,
+					calc($input-horizontal-padding + var(--label-width) / 2) 2px,
+					calc($input-horizontal-padding + var(--label-width) / 2) 0,
 					100% 0,
 					100% 100%,
 					0 100%
 				);
+				border: solid $border-width var(--color-contrast-mid);
+				border-radius: var(--border-radius-3);
+
+				transition: clip-path $transition-duration ease-in-out;
 			}
 		}
 
 		.label {
-			bottom: calc(var(--input-height) / 2 - $border-width);
-			font-size: var(--font-size-sm);
+			position: relative;
+			bottom: 0;
+			transition:
+				bottom $transition-duration ease-in-out,
+				font-size $transition-duration ease-in-out;
 		}
 
 		.placeholder {
-			top: 0;
-			left: 0;
-			opacity: 0.5;
+			position: relative;
+			top: calc(var(--input-height) / 2);
+			opacity: 0;
+			transition:
+				top $transition-duration ease-in-out,
+				opacity $transition-duration ease-in-out;
 		}
-	}
 
-	&:hover,
-	&.focused {
-		.border-container {
-			&::before {
-				border-color: var(--color-accent);
+		&.focused,
+		&.filled {
+			.border-container {
+				&::before {
+					$clip-gap: 2px;
+
+					clip-path: polygon(
+						0 0,
+						calc($input-horizontal-padding - $clip-gap) 0,
+						calc($input-horizontal-padding - $clip-gap) 2px,
+						calc($input-horizontal-padding + var(--label-width) + $clip-gap) 2px,
+						calc($input-horizontal-padding + var(--label-width) + $clip-gap) 0,
+						100% 0,
+						100% 100%,
+						0 100%
+					);
+				}
+			}
+
+			.label {
+				bottom: calc(var(--input-height) / 2 - $border-width);
+				font-size: var(--font-size-sm);
+			}
+
+			.placeholder {
+				top: 0;
+				left: 0;
+				opacity: 0.5;
 			}
 		}
-	}
 
-	&.filled {
-		.placeholder {
-			opacity: 0;
-			transition: none;
+		&:hover,
+		&.focused {
+			.border-container {
+				&::before {
+					border-color: var(--color-accent);
+				}
+			}
+		}
+
+		&.filled {
+			.placeholder {
+				opacity: 0;
+				transition: none;
+			}
 		}
 	}
 }

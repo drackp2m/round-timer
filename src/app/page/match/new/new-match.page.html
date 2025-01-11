@@ -17,7 +17,7 @@
 				</select>
 			}
 
-			<button appButton (click)="addGame()" class="mt-2">
+			<button appButton class="mt-2" type="button" (click)="addGame()">
 				<div class="flex-row gap-2 align-center">
 					<app-svg icon="grid-2-plus" [size]="16" color="surface-primary" />Add Game
 				</div>
@@ -56,7 +56,7 @@
 				}
 			</ul>
 
-			<button appButton (click)="addPlayer()" class="mt-2">
+			<button appButton class="mt-2" type="button" (click)="addPlayer()">
 				<div class="flex-row gap-2 align-center">
 					<app-svg icon="user-plus" [size]="16" color="surface-primary" />Add player
 				</div>

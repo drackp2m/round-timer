@@ -1,88 +1,89 @@
 @use './abstract/variable' as var;
 
-* {
-	overscroll-behavior: none;
-}
+@layer base {
+	* {
+		overscroll-behavior: none;
+	}
 
-html {
-	cursor: default;
+	html {
+		cursor: default;
 
-	overscroll-behavior: none;
+		overscroll-behavior: none;
 
-	font-family: 'Helvetica Now Text', sans-serif;
-	font-size: 16px;
-	font-weight: var(--font-weight-md);
-	line-height: 1.5em;
-	color: var(--color-contrast);
-	letter-spacing: -0.01rem;
+		font-family: 'Helvetica Now Text', sans-serif;
+		font-size: 16px;
+		font-weight: var(--font-weight-md);
+		line-height: 1.5em;
+		color: var(--color-contrast);
+		letter-spacing: -0.01rem;
 
-	background-color: var(--color-primary);
+		font-synthesis: none;
 
-	font-synthesis: none;
+		body {
+			overflow: hidden;
+			height: 100dvh;
+			background-color: var(--color-primary);
 
-	body {
-		overflow: hidden;
-		height: 100dvh;
-
-		main {
-			ng-component {
-				> section {
-					padding: var(--spacing-4);
+			main {
+				ng-component {
+					> section {
+						padding: var(--spacing-4);
+					}
 				}
 			}
 		}
 	}
-}
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-	font-weight: var(--font-weight-xl);
-	line-height: 1.5em;
-	letter-spacing: 0.015em;
-}
-
-h1 {
-	font-size: var(--font-size-xxxl);
-}
-
-h2 {
-	font-size: var(--font-size-xxl);
-}
-
-h3 {
-	font-size: var(--font-size-xl);
-}
-
-h4 {
-	font-size: var(--font-size-lg);
-}
-
-h5 {
-	font-size: var(--font-size-md);
-}
-
-h6 {
-	font-size: var(--font-size-sm);
-}
-
-strong {
-	font-weight: var(--font-weight-lg);
-}
-
-#modal-outlet {
-	.modal > section {
-		padding-bottom: calc(env(safe-area-inset-bottom, 0) + var(--spacing-4));
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6 {
+		font-weight: var(--font-weight-xl);
+		line-height: 1.5em;
+		letter-spacing: 0.015em;
 	}
-}
 
-button,
-.btn,
-a {
-	&:hover {
-		opacity: var.$hover-opacity;
+	h1 {
+		font-size: var(--font-size-xxxl);
+	}
+
+	h2 {
+		font-size: var(--font-size-xxl);
+	}
+
+	h3 {
+		font-size: var(--font-size-xl);
+	}
+
+	h4 {
+		font-size: var(--font-size-lg);
+	}
+
+	h5 {
+		font-size: var(--font-size-md);
+	}
+
+	h6 {
+		font-size: var(--font-size-sm);
+	}
+
+	strong {
+		font-weight: var(--font-weight-lg);
+	}
+
+	#modal-outlet {
+		.modal > section {
+			padding-bottom: calc(env(safe-area-inset-bottom, 0) + var(--spacing-4));
+		}
+	}
+
+	button,
+	.btn,
+	a {
+		&:hover {
+			opacity: var.$hover-opacity;
+		}
 	}
 }

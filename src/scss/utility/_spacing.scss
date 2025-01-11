@@ -3,82 +3,84 @@
 @use '../abstract/variable' as var;
 @use '../abstract/mixin' as mix;
 
-$rules: (
-	m: (
-		margin,
-	),
-	mt: (
-		margin-top,
-	),
-	mr: (
-		margin-right,
-	),
-	mb: (
-		margin-bottom,
-	),
-	ml: (
-		margin-left,
-	),
-	mx: (
-		margin-right,
-		margin-left,
-	),
-	my: (
-		margin-top,
-		margin-bottom,
-	),
-	p: (
-		padding,
-	),
-	pt: (
-		padding-top,
-	),
-	pr: (
-		padding-right,
-	),
-	pb: (
-		padding-bottom,
-	),
-	pl: (
-		padding-left,
-	),
-	px: (
-		padding-right,
-		padding-left,
-	),
-	py: (
-		padding-top,
-		padding-bottom,
-	),
-);
+@layer utility {
+	$rules: (
+		m: (
+			margin,
+		),
+		mt: (
+			margin-top,
+		),
+		mr: (
+			margin-right,
+		),
+		mb: (
+			margin-bottom,
+		),
+		ml: (
+			margin-left,
+		),
+		mx: (
+			margin-right,
+			margin-left,
+		),
+		my: (
+			margin-top,
+			margin-bottom,
+		),
+		p: (
+			padding,
+		),
+		pt: (
+			padding-top,
+		),
+		pr: (
+			padding-right,
+		),
+		pb: (
+			padding-bottom,
+		),
+		pl: (
+			padding-left,
+		),
+		px: (
+			padding-right,
+			padding-left,
+		),
+		py: (
+			padding-top,
+			padding-bottom,
+		),
+	);
 
-@function get-list() {
-	$list: ();
+	@function get-list() {
+		$list: ();
 
-	@each $rule, $properties in $rules {
-		$list: map.merge($list, get-rules($rule, $properties));
-	}
-
-	@return $list;
-}
-
-@function get-rules($rule, $properties) {
-	$rules: ();
-
-	@each $spacing in map.keys(var.$spacing) {
-		$properties-with-values: ();
-
-		@each $property, $value in $properties {
-			$properties-with-values: map.merge(
-				$properties-with-values,
-				(#{$property}: var(--spacing-#{$spacing}))
-			);
+		@each $rule, $properties in $rules {
+			$list: map.merge($list, get-rules($rule, $properties));
 		}
 
-		$rules: map.merge($rules, (#{$rule}-#{$spacing}: $properties-with-values));
+		@return $list;
 	}
 
-	@return $rules;
-}
+	@function get-rules($rule, $properties) {
+		$rules: ();
 
-@include mix.generate-responsive(get-list());
+		@each $spacing in map.keys(var.$spacing) {
+			$properties-with-values: ();
+
+			@each $property, $value in $properties {
+				$properties-with-values: map.merge(
+					$properties-with-values,
+					(#{$property}: var(--spacing-#{$spacing}))
+				);
+			}
+
+			$rules: map.merge($rules, (#{$rule}-#{$spacing}: $properties-with-values));
+		}
+
+		@return $rules;
+	}
+
+	@include mix.generate-responsive(get-list());
+}

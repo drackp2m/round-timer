@@ -1,23 +1,4 @@
-.turns {
-	.turn,
-	.player-nick,
-	.player-name,
-	.hours,
-	.minutes,
-	.seconds,
-	.icon {
-		&.slower {
-			background-color: rgb(255 220 220);
-		}
-
-		&.faster {
-			background-color: rgb(220 255 220);
-		}
-	}
-}
-
-
-[data-theme='dark'] {
+@layer base {
 	.turns {
 		.turn,
 		.player-nick,
@@ -27,11 +8,31 @@
 		.seconds,
 		.icon {
 			&.slower {
-				background-color: rgb(100 20 20);
+				background-color: rgb(255 220 220);
 			}
 
 			&.faster {
-				background-color: rgb(20 80 20);
+				background-color: rgb(220 255 220);
+			}
+		}
+	}
+
+	[data-theme='dark'] {
+		.turns {
+			.turn,
+			.player-nick,
+			.player-name,
+			.hours,
+			.minutes,
+			.seconds,
+			.icon {
+				&.slower {
+					background-color: rgb(100 20 20);
+				}
+
+				&.faster {
+					background-color: rgb(20 80 20);
+				}
 			}
 		}
 	}

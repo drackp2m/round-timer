@@ -1,11 +1,25 @@
-.app-button {
-	display: flex;
-	flex-direction: row;
-	justify-content: center;
-}
+@layer component {
+	.app-button {
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
 
-button {
-	&:disabled {
-		opacity: 0.5;
+		padding: var(--spacing-2) var(--spacing-3);
+
+		border-radius: var(--border-radius-2);
+
+		&.icon {
+			padding: var(--spacing-1);
+		}
+
+		&[class='surface-contrast'] {
+			color: var(--color-contrast-mid) !important;
+		}
+	}
+
+	button {
+		&:disabled {
+			opacity: 0.5;
+		}
 	}
 }

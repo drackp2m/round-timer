@@ -4,224 +4,226 @@
 @use '../abstract/mixin' as mix;
 @use '../abstract/variable' as var;
 
-@font-face {
-	font-family: Recursive;
-	font-style: normal;
-	src: url('/font/recursive/latin_basic.woff2') format('woff2-variations');
-}
+@layer utility {
+	$text-align: (
+		text-left: (
+			text-align: left,
+		),
+		text-center: (
+			text-align: center,
+		),
+		text-right: (
+			text-align: right,
+		),
+		text-justify: (
+			text-align: justify,
+		),
+	);
 
-@font-face {
-	font-family: 'Helvetica Now';
-	font-style: normal;
-	src: url('/font/helvetica-now/regular.woff2') format('woff2');
-}
+	@function get-list($items, $rules-getter: get-rules) {
+		$rules: ();
 
-@font-face {
-	font-family: 'Helvetica Now';
-	font-style: italic;
-	src: url('/font/helvetica-now/italic.woff2') format('woff2');
-}
+		@each $name in map.keys($items) {
+			$rules-list: meta.call(meta.get-function($rules-getter), $name);
 
-@font-face {
-	font-family: 'Helvetica Now Text';
-	font-weight: 100;
-	font-style: normal;
-	src: url('/font/helvetica-now-text/HelveticaNowText-Thin.woff2') format('woff2');
-}
+			$rules: map.merge($rules, $rules-list);
+		}
 
-@font-face {
-	font-family: 'Helvetica Now Text';
-	font-weight: 100;
-	font-style: italic;
-	src: url('/font/helvetica-now-text/HelveticaNowText-ThinItalic.woff2') format('woff2');
-}
-
-@font-face {
-	font-family: 'Helvetica Now Text';
-	font-weight: 200;
-	font-style: normal;
-	src: url('/font/helvetica-now-text/HelveticaNowText-ExtraLight.woff2') format('woff2');
-}
-
-@font-face {
-	font-family: 'Helvetica Now Text';
-	font-weight: 200;
-	font-style: italic;
-	src: url('/font/helvetica-now-text/HelveticaNowText-ExtLtIta.woff2') format('woff2');
-}
-
-@font-face {
-	font-family: 'Helvetica Now Text';
-	font-weight: 300;
-	font-style: normal;
-	src: url('/font/helvetica-now-text/HelveticaNowText-Light.woff2') format('woff2');
-}
-
-@font-face {
-	font-family: 'Helvetica Now Text';
-	font-weight: 300;
-	font-style: italic;
-	src: url('/font/helvetica-now-text/HelveticaNowText-LightItalic.woff2') format('woff2');
-}
-
-@font-face {
-	font-family: 'Helvetica Now Text';
-	font-weight: 400;
-	font-style: normal;
-	src: url('/font/helvetica-now-text/HelveticaNowText-Regular.woff2') format('woff2');
-}
-
-@font-face {
-	font-family: 'Helvetica Now Text';
-	font-weight: 400;
-	font-style: italic;
-	src: url('/font/helvetica-now-text/HelveticaNowText-RegIta.woff2') format('woff2');
-}
-
-@font-face {
-	font-family: 'Helvetica Now Text';
-	font-weight: 500;
-	font-style: normal;
-	src: url('/font/helvetica-now-text/HelveticaNowText-Medium.woff2') format('woff2');
-}
-
-@font-face {
-	font-family: 'Helvetica Now Text';
-	font-weight: 500;
-	font-style: italic;
-	src: url('/font/helvetica-now-text/HelveticaNowText-MediumItalic.woff2') format('woff2');
-}
-
-@font-face {
-	font-family: 'Helvetica Now Text';
-	font-weight: 700;
-	font-style: normal;
-	src: url('/font/helvetica-now-text/HelveticaNowText-Bold.woff2') format('woff2');
-}
-
-@font-face {
-	font-family: 'Helvetica Now Text';
-	font-weight: 700;
-	font-style: italic;
-	src: url('/font/helvetica-now-text/HelveticaNowText-BoldItalic.woff2') format('woff2');
-}
-
-@font-face {
-	font-family: 'Helvetica Now Text';
-	font-weight: 800;
-	font-style: normal;
-	src: url('/font/helvetica-now-text/HelveticaNowText-ExtraBold.woff2') format('woff2');
-}
-
-@font-face {
-	font-family: 'Helvetica Now Text';
-	font-weight: 800;
-	font-style: italic;
-	src: url('/font/helvetica-now-text/HelveticaNowText-ExtraLight.woff2') format('woff2');
-}
-
-@font-face {
-	font-family: 'Simply Mono';
-	font-weight: 400;
-	font-style: normal;
-	src: url('/font/simply-mono/SimplyMono-Regular.woff2') format('woff2');
-}
-
-@font-face {
-	font-family: 'Simply Mono';
-	font-weight: 400;
-	font-style: italic;
-	src: url('/font/simply-mono/SimplyMono-RegularOblique.woff2') format('woff2');
-}
-
-@font-face {
-	font-family: 'Simply Mono';
-	font-weight: 700;
-	font-style: normal;
-	src: url('/font/simply-mono/SimplyMono-Bold.woff2') format('woff2');
-}
-
-@font-face {
-	font-family: 'Simply Mono';
-	font-weight: 700;
-	font-style: italic;
-	src: url('/font/simply-mono/SimplyMono-BoldOblique.woff2') format('woff2');
-}
-
-@font-face {
-	font-family: 'Fira Code';
-	font-weight: 300;
-	font-style: normal;
-	src: url('/font/fira-code/FiraCode-Light.woff2') format('woff2');
-}
-
-@font-face {
-	font-family: 'Fira Code';
-	font-weight: 400;
-	font-style: normal;
-	src: url('/font/fira-code/FiraCode-Regular.woff2') format('woff2');
-}
-
-@font-face {
-	font-family: 'Fira Code';
-	font-weight: 500;
-	font-style: normal;
-	src: url('/font/fira-code/FiraCode-Medium.woff2') format('woff2');
-}
-
-@font-face {
-	font-family: 'Fira Code';
-	font-weight: 600;
-	font-style: normal;
-	src: url('/font/fira-code/FiraCode-SemiBold.woff2') format('woff2');
-}
-
-@font-face {
-	font-family: 'Fira Code';
-	font-weight: 700;
-	font-style: normal;
-	src: url('/font/fira-code/FiraCode-Bold.woff2') format('woff2');
-}
-
-.mono {
-	font-family: 'Fira Code', monospace;
-}
-
-$text-align: (
-	text-left: (
-		text-align: left,
-	),
-	text-center: (
-		text-align: center,
-	),
-	text-right: (
-		text-align: right,
-	),
-	text-justify: (
-		text-align: justify,
-	),
-);
-
-@function get-list($items, $rules-getter: get-rules) {
-	$rules: ();
-
-	@each $name in map.keys($items) {
-		$rules-list: meta.call(meta.get-function($rules-getter), $name);
-
-		$rules: map.merge($rules, $rules-list);
+		@return $rules;
 	}
 
-	@return $rules;
-}
+	@function get-rules($name) {
+		@return (fs-#{$name}: (font-size: var(--font-size-#{$name})));
+	}
 
-@function get-rules($name) {
-	@return (fs-#{$name}: (font-size: var(--font-size-#{$name})));
-}
+	@function get-weight-rules($name) {
+		@return (fw-#{$name}: (font-weight: var(--font-weight-#{$name})));
+	}
 
-@function get-weight-rules($name) {
-	@return (fw-#{$name}: (font-weight: var(--font-weight-#{$name})));
-}
+	@include mix.generate-responsive($text-align);
+	@include mix.generate-responsive(get-list(var.$font-size));
+	@include mix.generate-responsive(get-list(var.$font-weight, get-weight-rules));
 
-@include mix.generate-responsive($text-align);
-@include mix.generate-responsive(get-list(var.$font-size));
-@include mix.generate-responsive(get-list(var.$font-weight, get-weight-rules));
+	.mono {
+		font-family: 'Fira Code', monospace;
+	}
+
+	@font-face {
+		font-family: Recursive;
+		font-style: normal;
+		src: url('/font/recursive/latin_basic.woff2') format('woff2-variations');
+	}
+
+	@font-face {
+		font-family: 'Helvetica Now';
+		font-style: normal;
+		src: url('/font/helvetica-now/regular.woff2') format('woff2');
+	}
+
+	@font-face {
+		font-family: 'Helvetica Now';
+		font-style: italic;
+		src: url('/font/helvetica-now/italic.woff2') format('woff2');
+	}
+
+	@font-face {
+		font-family: 'Helvetica Now Text';
+		font-weight: 100;
+		font-style: normal;
+		src: url('/font/helvetica-now-text/HelveticaNowText-Thin.woff2') format('woff2');
+	}
+
+	@font-face {
+		font-family: 'Helvetica Now Text';
+		font-weight: 100;
+		font-style: italic;
+		src: url('/font/helvetica-now-text/HelveticaNowText-ThinItalic.woff2') format('woff2');
+	}
+
+	@font-face {
+		font-family: 'Helvetica Now Text';
+		font-weight: 200;
+		font-style: normal;
+		src: url('/font/helvetica-now-text/HelveticaNowText-ExtraLight.woff2') format('woff2');
+	}
+
+	@font-face {
+		font-family: 'Helvetica Now Text';
+		font-weight: 200;
+		font-style: italic;
+		src: url('/font/helvetica-now-text/HelveticaNowText-ExtLtIta.woff2') format('woff2');
+	}
+
+	@font-face {
+		font-family: 'Helvetica Now Text';
+		font-weight: 300;
+		font-style: normal;
+		src: url('/font/helvetica-now-text/HelveticaNowText-Light.woff2') format('woff2');
+	}
+
+	@font-face {
+		font-family: 'Helvetica Now Text';
+		font-weight: 300;
+		font-style: italic;
+		src: url('/font/helvetica-now-text/HelveticaNowText-LightItalic.woff2') format('woff2');
+	}
+
+	@font-face {
+		font-family: 'Helvetica Now Text';
+		font-weight: 400;
+		font-style: normal;
+		src: url('/font/helvetica-now-text/HelveticaNowText-Regular.woff2') format('woff2');
+	}
+
+	@font-face {
+		font-family: 'Helvetica Now Text';
+		font-weight: 400;
+		font-style: italic;
+		src: url('/font/helvetica-now-text/HelveticaNowText-RegIta.woff2') format('woff2');
+	}
+
+	@font-face {
+		font-family: 'Helvetica Now Text';
+		font-weight: 500;
+		font-style: normal;
+		src: url('/font/helvetica-now-text/HelveticaNowText-Medium.woff2') format('woff2');
+	}
+
+	@font-face {
+		font-family: 'Helvetica Now Text';
+		font-weight: 500;
+		font-style: italic;
+		src: url('/font/helvetica-now-text/HelveticaNowText-MediumItalic.woff2') format('woff2');
+	}
+
+	@font-face {
+		font-family: 'Helvetica Now Text';
+		font-weight: 700;
+		font-style: normal;
+		src: url('/font/helvetica-now-text/HelveticaNowText-Bold.woff2') format('woff2');
+	}
+
+	@font-face {
+		font-family: 'Helvetica Now Text';
+		font-weight: 700;
+		font-style: italic;
+		src: url('/font/helvetica-now-text/HelveticaNowText-BoldItalic.woff2') format('woff2');
+	}
+
+	@font-face {
+		font-family: 'Helvetica Now Text';
+		font-weight: 800;
+		font-style: normal;
+		src: url('/font/helvetica-now-text/HelveticaNowText-ExtraBold.woff2') format('woff2');
+	}
+
+	@font-face {
+		font-family: 'Helvetica Now Text';
+		font-weight: 800;
+		font-style: italic;
+		src: url('/font/helvetica-now-text/HelveticaNowText-ExtraLight.woff2') format('woff2');
+	}
+
+	@font-face {
+		font-family: 'Simply Mono';
+		font-weight: 400;
+		font-style: normal;
+		src: url('/font/simply-mono/SimplyMono-Regular.woff2') format('woff2');
+	}
+
+	@font-face {
+		font-family: 'Simply Mono';
+		font-weight: 400;
+		font-style: italic;
+		src: url('/font/simply-mono/SimplyMono-RegularOblique.woff2') format('woff2');
+	}
+
+	@font-face {
+		font-family: 'Simply Mono';
+		font-weight: 700;
+		font-style: normal;
+		src: url('/font/simply-mono/SimplyMono-Bold.woff2') format('woff2');
+	}
+
+	@font-face {
+		font-family: 'Simply Mono';
+		font-weight: 700;
+		font-style: italic;
+		src: url('/font/simply-mono/SimplyMono-BoldOblique.woff2') format('woff2');
+	}
+
+	@font-face {
+		font-family: 'Fira Code';
+		font-weight: 300;
+		font-style: normal;
+		src: url('/font/fira-code/FiraCode-Light.woff2') format('woff2');
+	}
+
+	@font-face {
+		font-family: 'Fira Code';
+		font-weight: 400;
+		font-style: normal;
+		src: url('/font/fira-code/FiraCode-Regular.woff2') format('woff2');
+	}
+
+	@font-face {
+		font-family: 'Fira Code';
+		font-weight: 500;
+		font-style: normal;
+		src: url('/font/fira-code/FiraCode-Medium.woff2') format('woff2');
+	}
+
+	@font-face {
+		font-family: 'Fira Code';
+		font-weight: 600;
+		font-style: normal;
+		src: url('/font/fira-code/FiraCode-SemiBold.woff2') format('woff2');
+	}
+
+	@font-face {
+		font-family: 'Fira Code';
+		font-weight: 700;
+		font-style: normal;
+		src: url('/font/fira-code/FiraCode-Bold.woff2') format('woff2');
+	}
+}

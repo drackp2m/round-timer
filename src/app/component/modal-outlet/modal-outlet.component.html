@@ -14,7 +14,14 @@
 				<div class="header flex-row justify-between align-center p-4 pb-0">
 					<h4 class="color-contrast-mid">{{ title() }}</h4>
 
-					<button appButton icon="xmark" [iconSize]="22" color="contrast-mid" (click)="close()">
+					<button
+						appButton
+						type="button"
+						color="contrast-mid"
+						icon="xmark"
+						[iconSize]="22"
+						(click)="close()"
+					>
 						<!---->
 					</button>
 				</div>
