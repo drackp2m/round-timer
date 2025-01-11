@@ -55,4 +55,5 @@
 * use node 23.6, add semantic release ([3757c9c](https://github.com/drackp2m/round-timer/commit/3757c9cc9914f1819c6df67e8bb16b2862b7ff1b)) by Marc Jovaní González
 ### 🎒 Chores
 * add commitlint with emojis ([bb63828](https://github.com/drackp2m/round-timer/commit/bb63828df3251322ac4cb2c57553a8c3c89620bd)) by Marc Jovaní González
+
 **Full Changelog**: https://github.com/drackp2m/round-timer/compare/...v1.0.0
