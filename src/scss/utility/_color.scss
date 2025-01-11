@@ -20,11 +20,11 @@
 	@function get-rules($name) {
 		@return (
 			color-#{$name}: (color: var(--color-#{$name})),
-			color-#{$name}-light: (color: var(--color-#{$name})-light),
-			color-#{$name}-dark: (color: var(--color-#{$name})-dark),
+			color-#{$name}-light: (color: var(--color-#{$name}-light)),
+			color-#{$name}-dark: (color: var(--color-#{$name}-dark)),
 			surface-#{$name}: (background-color: var(--color-#{$name})),
-			surface-#{$name}-light: (background-color: var(--color-#{$name})-light),
-			surface-#{$name}-dark: (background-color: var(--color-#{$name})-dark)
+			surface-#{$name}-light: (background-color: var(--color-#{$name}-light)),
+			surface-#{$name}-dark: (background-color: var(--color-#{$name}-dark))
 		);
 	}
 

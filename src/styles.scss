@@ -1,7 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
 
 @use './scss/abstract/layer';
-@use 'the-new-css-reset/css/reset';
+
+@use './scss/abstract/reset';
 
 @use './scss/abstract/generate-variable';
 @use './scss/utility/layout';
