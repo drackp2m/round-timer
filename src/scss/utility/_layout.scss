@@ -139,6 +139,22 @@
 		}
 	}
 
+	.flex-grow {
+		flex-grow: 1;
+	}
+
+	.no-flex-grow {
+		flex-grow: 0;
+	}
+
+	.flex-shrink {
+		flex-shrink: 1;
+	}
+
+	.no-flex-shrink {
+		flex-shrink: 0;
+	}
+
 	@include mix.generate-responsive($rules);
 	@include mix.generate-responsive(get-list());
 }

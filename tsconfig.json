@@ -20,6 +20,7 @@
     "target": "ES2023",
     "module": "ES2022",
 		"paths": {
+			"@app/package": ["package.json"],
 			"@app/component/*": ["src/app/component/*"],
 			"@app/definition/*": ["src/app/definition/*"],
 			"@app/directive/*": ["src/app/directive/*"],
