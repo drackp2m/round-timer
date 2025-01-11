@@ -65,5 +65,13 @@
 				top: 0.5px;
 			}
 		}
+
+		&.slower {
+			background-color: var(--color-slower);
+		}
+
+		&.faster {
+			background-color: var(--color-faster);
+		}
 	}
 }

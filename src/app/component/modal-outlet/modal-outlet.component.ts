@@ -32,15 +32,26 @@ import { Async } from '@app/util/async';
 			transition('* <=> visible', animate('{{duration}}ms {{easing}}')),
 		]),
 		trigger('fadeAnimation', [
-			state('visible', style({ 'background-color': '#0006' })),
-			state('hidden', style({ 'background-color': '#0000' })),
+			state(
+				'visible',
+				style({
+					'background-color': 'rgb(from var(--color-overlay) r g b / var(--opacity-overlay))',
+					'backdrop-filter': 'blur(2px) grayscale(0.5)',
+				}),
+			),
+			state(
+				'hidden',
+				style({
+					'background-color': 'rgb(from var(--color-overlay) r g b / 0%)',
+					'backdrop-filter': 'blur(0px) grayscale(0)',
+				}),
+			),
 			transition('* <=> visible', animate('{{duration}}ms {{easing}}')),
 		]),
 	],
 })
 export class ModalOutletComponent implements AfterViewInit {
 	// Fixme => solve error when modal content change his height
-	// Fixme => create class to ensure add title on modals and require it on open method
 	private readonly modalContainer = viewChild.required('modalContainer', { read: ElementRef });
 	private readonly modalContent = viewChild.required('modalContent', { read: ViewContainerRef });
 

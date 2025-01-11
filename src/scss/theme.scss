@@ -1,39 +1,15 @@
 @layer base {
-	.turns {
-		.turn,
-		.player-nick,
-		.player-name,
-		.hours,
-		.minutes,
-		.seconds,
-		.icon {
-			&.slower {
-				background-color: rgb(255 220 220);
-			}
-
-			&.faster {
-				background-color: rgb(220 255 220);
-			}
-		}
+	:root {
+		--color-slower: rgb(255 220 220);
+		--color-faster: rgb(220 255 220);
+		--color-overlay: rgb(0 0 0);
+		--opacity-overlay: 30%;
 	}
 
 	[data-theme='dark'] {
-		.turns {
-			.turn,
-			.player-nick,
-			.player-name,
-			.hours,
-			.minutes,
-			.seconds,
-			.icon {
-				&.slower {
-					background-color: rgb(100 20 20);
-				}
-
-				&.faster {
-					background-color: rgb(20 80 20);
-				}
-			}
-		}
+		--color-slower: rgb(100 20 20);
+		--color-faster: rgb(20 80 20);
+		--color-overlay: rgb(255 255 255);
+		--opacity-overlay: 10%;
 	}
 }

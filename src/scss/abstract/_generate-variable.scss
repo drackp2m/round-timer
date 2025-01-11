@@ -44,9 +44,7 @@
 			--shadow-#{$name}: #{$value};
 		}
 	}
-}
 
-@layer theme {
 	[data-theme='dark']:not(.force-light, .force-dark) {
 		@each $name, $value in var.$dark-color {
 			--color-#{$name}: #{$value};

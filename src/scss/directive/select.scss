@@ -76,7 +76,7 @@
 		&.filled {
 			.border-container {
 				&::before {
-					$clip-gap: 2px;
+					$clip-gap: 3px;
 
 					clip-path: polygon(
 						0 0,
@@ -92,7 +92,7 @@
 			}
 
 			.label {
-				bottom: calc(var(--input-height) / 2 - $border-width);
+				bottom: calc(var(--input-height) / 2 + 1px);
 				font-size: var(--font-size-sm);
 			}
 		}
