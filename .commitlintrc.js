@@ -1,11 +1,11 @@
 module.exports = {
-	parserPreset: {
-		parserOpts: {
-			headerPattern:
-				/^(✨|🎨|🧪|♻️|🐛|📚|🚀|🏗️|💻|🎒|⏪)\s(feat|style|test|refactor|fix|docs|perf|build|ci|chore|revert):\s(.*)$/,
-			headerCorrespondence: ['emoji', 'type', 'subject'],
-		},
-	},
+	// parserPreset: {
+	// 	parserOpts: {
+	// 		headerPattern:
+	// 			/^(.+?)\s(?<type>\w+): (?<subject>.+)$/u,
+	// 		headerCorrespondence: ['emoji', 'type', 'subject'],
+	// 	},
+	// },
 	plugins: [
 		{
 			rules: {
@@ -25,7 +25,7 @@ module.exports = {
 					};
 
 					const match = header.match(
-						/^(✨|🎨|🧪|♻️|🐛|📚|🚀|🏗️|💻|🎒|⏪)\s(feat|style|test|refactor|fix|docs|perf|build|ci|chore|revert):/,
+						/^(.+?)\s(?<type>\w+): (?<subject>.+)$/u,
 					);
 
 					if (null === match) {
