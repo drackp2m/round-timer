@@ -1,16 +1,17 @@
 import { Component, Signal, effect, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { version } from '@app/package';
 
 import { Theme } from '@app/definition/theme.type';
-import { RadioDirective } from '@app/directive/radio.directive';
+import { InputDirective } from '@app/directive/input.directive';
+import { RadioCheckboxDirective } from '@app/directive/radio-checkbox.directive';
+import { version } from '@app/package';
 import { ThemeService } from '@app/service/theme.service';
 
 @Component({
 	templateUrl: './setting.page.html',
 	styleUrl: './setting.page.scss',
-	imports: [ReactiveFormsModule, RadioDirective],
+	imports: [ReactiveFormsModule, RadioCheckboxDirective],
 })
 export class SettingPage {
 	readonly VERSION = version;

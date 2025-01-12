@@ -13,7 +13,8 @@ import {
 type InputDirectiveType = 'email' | 'number' | 'password' | 'search' | 'tel' | 'text' | 'url';
 
 @Directive({
-	selector: 'input[appInput]',
+	selector:
+		'input[appInput][type=email], input[appInput][type=number], input[appInput][type=password], input[appInput][type=search], input[appInput][type=tel], input[appInput][type=text], input[appInput][type=url]',
 })
 export class InputDirective implements OnInit, AfterViewInit {
 	// FixMe => input are not filled when write text on type number

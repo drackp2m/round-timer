@@ -29,27 +29,24 @@
 
 			<ul class="flex-col gap-2" formGroupName="players">
 				@for (player of formPlayersLoaded() ? players() : []; track player.uuid) {
-					<li class="flex-row gap-2 align-center">
+					<li>
+						<div #label class="flex-row gap-2 align-center">
+							<app-svg
+								[style.color]="player.computed.colorValue"
+								[icon]="player.computed.iconValue"
+								[size]="20"
+								squared
+							/>
+							{{ player.nick }} <span class="fw-sm">{{ player.name }}</span>
+						</div>
 						<input
-							#input
-							[formControlName]="player.uuid"
+							appInput
 							type="checkbox"
+							[label]="label"
+							[formControlName]="player.uuid"
 							[value]="player.uuid"
-							class="br-1"
-							style="width: 15px; aspect-ratio: 1; border: solid 1.5px; flex-shrink: 0"
-							[style.border-color]="
-								input.checked ? 'var(--color-contrast)' : 'var(--color-contrast-mid)'
-							"
-							[style.background-color]="input.checked ? 'var(--color-primary-mid)' : ''"
 							(change)="sortPlayers($event)"
 						/>
-						<app-svg
-							[style.color]="player.computed.colorValue"
-							[icon]="player.computed.iconValue"
-							[size]="20"
-							squared
-						/>
-						{{ player.nick }} - {{ player.name }} - {{ player.uuid.split('-')[0] }}
 					</li>
 				} @empty {
 					<li>{{ playerStoreIsLoading() ? 'Loading...' : 'No players' }}</li>

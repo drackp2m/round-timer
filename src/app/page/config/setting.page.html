@@ -2,9 +2,9 @@
 	<h4>Appearance</h4>
 
 	<form [formGroup]="form" class="flex-col gap-1">
-		<input appRadio label="System" value="system" formControlName="appearance" type="radio" />
-		<input appRadio label="Light" value="light" formControlName="appearance" type="radio" />
-		<input appRadio label="Dark" value="dark" formControlName="appearance" type="radio" />
+		<input appInput type="radio" label="System" value="system" formControlName="appearance" />
+		<input appInput type="radio" label="Light" value="light" formControlName="appearance" />
+		<input appInput type="radio" label="Dark" value="dark" formControlName="appearance" />
 	</form>
 
 	<p class="flex-row flex-grow justify-center align-end mono fs-sm">version {{ VERSION }}</p>

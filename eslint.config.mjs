@@ -191,6 +191,12 @@ const eslintConfig = tseslint.config(
 		},
 	},
 	{
+		files: ['**/*.js', '**/*.mjs'],
+		rules: {
+			'@typescript-eslint/no-require-imports': 'off',
+		},
+	},
+	{
 		files: ['**/*.html'],
 		extends: [...angular.configs.templateRecommended, ...angular.configs.templateAccessibility],
 		rules: {

@@ -11,15 +11,19 @@ import {
 
 import { SvgComponent } from '@app/component/svg.component';
 
+type ButtonDirectiveType = 'button' | 'menu' | 'reset' | 'submit';
+const selector =
+	`button[appButton][type=button]` +
+	`, button[appButton][type=menu]` +
+	`, button[appButton][type=reset]` +
+	`, button[appButton][type=submit]`;
+
 @Directive({
-	selector: 'button[appButton]',
-	host: {
-		'[attr.type]': 'type()',
-	},
+	selector,
 })
 export class ButtonDirective implements OnInit {
 	// Fixme => when create empty button @angular/eslint error occurs
-	readonly type = input.required<string>();
+	readonly type = input<ButtonDirectiveType>('button');
 	readonly color = input('contrast-mid');
 	readonly icon = input<string>();
 	readonly iconSize = input<number>(24);

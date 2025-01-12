@@ -1,24 +1,16 @@
-import {
-	Component,
-	ElementRef,
-	effect,
-	inject,
-	linkedSignal,
-	signal,
-	viewChildren,
-} from '@angular/core';
+import { Component, effect, inject, linkedSignal, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { SvgComponent } from '@app/component/svg.component';
 import { ButtonDirective } from '@app/directive/button.directive';
 import { InputDirective } from '@app/directive/input.directive';
+import { RadioCheckboxDirective } from '@app/directive/radio-checkbox.directive';
 import { SelectDirective } from '@app/directive/select.directive';
 import { MatchPlayer } from '@app/model/match-player.model';
 import { Match } from '@app/model/match.model';
 import { Player } from '@app/model/player.model';
 import { AddGameModal } from '@app/page/match/new/modal/add-game/add-game.modal';
-import { MatchRepository } from '@app/repository/match.repository';
 import { GameStore } from '@app/store/game.store';
 import { MatchStore } from '@app/store/match.store';
 import { ModalStore } from '@app/store/modal.store';
@@ -28,14 +20,20 @@ import { AddPlayerModal } from './modal/add-player/add-player.modal';
 
 @Component({
 	templateUrl: './new-match.page.html',
-	imports: [InputDirective, SelectDirective, ButtonDirective, SvgComponent, ReactiveFormsModule],
+	imports: [
+		InputDirective,
+		SelectDirective,
+		ButtonDirective,
+		SvgComponent,
+		ReactiveFormsModule,
+		RadioCheckboxDirective,
+	],
 })
 export class NewMatchPage {
 	private readonly gameStore = inject(GameStore);
 	private readonly playerStore = inject(PlayerStore);
 	private readonly matchStore = inject(MatchStore);
 	private readonly modalStore = inject(ModalStore);
-	private readonly matchRepository = inject(MatchRepository);
 	private readonly router = inject(Router);
 
 	readonly games = this.gameStore.items;
@@ -43,8 +41,6 @@ export class NewMatchPage {
 
 	readonly players = linkedSignal(this.playerStore.items);
 	readonly playerStoreIsLoading = this.playerStore.isLoading;
-
-	readonly inputs = viewChildren<ElementRef<HTMLInputElement>>('input');
 
 	readonly formPlayersLoaded = signal(false);
 
@@ -86,7 +82,9 @@ export class NewMatchPage {
 		const playerUuid = target.value;
 		const checked = target.checked;
 
-		const checkedElements = this.inputs().filter((input) => input.nativeElement.checked).length;
+		const checkedElements = Object.values(this.form.controls.players.value).filter(
+			(value) => value,
+		).length;
 
 		this.players.update((originalPlayers) => {
 			const players = [...(originalPlayers ?? [])];
