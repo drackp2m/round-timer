@@ -1,3 +1,10 @@
+# v1.0.1 (2025-01-11)
+## What's Changed
+### 🎨 Styles
+* remove bottom padding by class on modal, remove some semantic release deps ([07ad9c6](https://github.com/drackp2m/round-timer/commit/07ad9c6d9422ff469bf3d8a6d05a7264fe51fdb7)) by Marc Jovaní González
+
+**Full Changelog**: https://github.com/drackp2m/round-timer/compare/v1.0.0...v1.0.1
+
 # v1.0.0 (2025-01-11)
 ## What's Changed
 ### ✨ Features
