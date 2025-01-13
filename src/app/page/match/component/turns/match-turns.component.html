@@ -15,12 +15,15 @@
 			<span>#</span>
 			<span class="ml-1">{{ index + 1 }}</span>
 		</p>
-		<p class="player-nick px-2" [class]="{ faster, slower }">
+
+		<p class="player-nick px-2 nowrap" [class]="{ faster, slower }">
 			{{ player?.nick }}
 		</p>
+
 		<p class="player-name color-contrast-mid fw-sm" [class]="{ faster, slower }">
 			{{ player?.name }}
 		</p>
+
 		<p class="hours px-1 mono flex-row justify-end" [class]="{ faster, slower }">
 			<span>
 				@if (parts[3] !== '0') {
@@ -28,6 +31,7 @@
 				}
 			</span>
 		</p>
+
 		<p class="minutes px-1 mono flex-row justify-end" [class]="{ faster, slower }">
 			<span>
 				@if (parts[2] !== '0') {
@@ -35,10 +39,12 @@
 				}
 			</span>
 		</p>
+
 		<p class="seconds px-1 mono flex-row justify-end" [class]="{ faster, slower }">
 			<span>{{ turn.time === 0 ? '-' : parts[1] }}</span>
 			<span class="fs-sm">.{{ turn.time === 0 ? '--' : parts[0] }}s</span>
 		</p>
+
 		<div class="icon px-2 flex-col justify-center" [class]="{ faster, slower }">
 			@if (faster) {
 				<app-svg icon="rabbit" [size]="16" squared flip />
@@ -46,6 +52,7 @@
 				<app-svg icon="turtle" [size]="14" squared flip />
 			}
 		</div>
+
 		@if (last || index % playersCount() !== playersCount() - 1) {
 			<div class="separator"></div>
 		}
