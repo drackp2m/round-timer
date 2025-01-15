@@ -1,3 +1,12 @@
+# v1.1.1 (2025-01-15)
+## What's Changed
+### ♻️ Code Refactoring
+* create base and updatable model to simplify creation / update of models ([1978019](https://github.com/drackp2m/round-timer/commit/19780192404c959ecec3c5b76fb608d084919f53)) by Marc Jovaní González
+### 🐛 Bug Fixes
+* prevent wrap o nickname in match turns list ([9d7e275](https://github.com/drackp2m/round-timer/commit/9d7e27558ea1c76f37490ce2c4d26bd9ab302580)) by Marc Jovaní González
+
+**Full Changelog**: https://github.com/drackp2m/round-timer/compare/v1.1.0...v1.1.1
+
 # v1.1.0 (2025-01-12)
 ## What's Changed
 ### ✨ Features
