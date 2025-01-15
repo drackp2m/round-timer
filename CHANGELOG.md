@@ -1,3 +1,12 @@
+# v1.1.0 (2025-01-12)
+## What's Changed
+### ✨ Features
+* create directive for radio and checkbox input types ([eb3c5cd](https://github.com/drackp2m/round-timer/commit/eb3c5cd6a3b4a3e4a60a70acf18bd65c143ea052)) by Marc Jovaní González
+### 🎒 Chores
+* update deps ([fbe788f](https://github.com/drackp2m/round-timer/commit/fbe788faacee3991e3b114ba99150b4b2678d713)) by Marc Jovaní González
+
+**Full Changelog**: https://github.com/drackp2m/round-timer/compare/v1.0.1...v1.1.0
+
 # v1.0.1 (2025-01-11)
 ## What's Changed
 ### 🎨 Styles

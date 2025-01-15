@@ -1,7 +1,6 @@
 import { Injectable, OnDestroy, computed, effect, inject, signal } from '@angular/core';
 
 import { Theme } from '@app/definition/theme.type';
-import { Setting } from '@app/model/setting.model';
 import { SettingStore } from '@app/store/setting.store';
 
 @Injectable({
@@ -57,17 +56,14 @@ export class ThemeService implements OnDestroy {
 		}
 
 		if (saveSetting) {
-			const currentSetting = this.settingStore
+			const newSetting = this.settingStore
 				.settingEntities()
-				.find((setting) => 'THEME' === setting.type);
+				.find((setting) => 'THEME' === setting.type)
+				?.with({ payload: theme });
 
-			if (undefined === currentSetting) {
-				return;
+			if (undefined !== newSetting) {
+				this.settingStore.update(newSetting);
 			}
-
-			const updatedSetting = new Setting({ ...currentSetting, payload: theme });
-
-			this.settingStore.update(updatedSetting);
 		}
 	}
 
