@@ -1,5 +1,6 @@
 import { Injectable, inject } from '@angular/core';
-import { patchState, signalStore, withState } from '@ngrx/signals';
+import { patchState, signalStore, type, withState } from '@ngrx/signals';
+import { entityConfig, withEntities } from '@ngrx/signals/entities';
 
 import { Player } from '@app/model/player.model';
 import { PlayerRepository } from '@app/repository/player.repository';
@@ -14,10 +15,20 @@ const initialState: PlayerStoreProps = {
 	isLoading: false,
 };
 
+const playerConfig = entityConfig({
+	entity: type<Player>(),
+	collection: 'player',
+	selectId: (player) => player.uuid,
+});
+
 @Injectable({
 	providedIn: 'root',
 })
-export class PlayerStore extends signalStore({ protectedState: false }, withState(initialState)) {
+export class PlayerStore extends signalStore(
+	{ protectedState: false },
+	withState(initialState),
+	withEntities(playerConfig),
+) {
 	private readonly playerRepository = inject(PlayerRepository);
 
 	constructor() {

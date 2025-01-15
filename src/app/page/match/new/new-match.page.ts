@@ -133,7 +133,7 @@ export class NewMatchPage {
 		return (
 			this.players()
 				?.filter((player) => this.form.controls.players.get(player.uuid)?.value)
-				.map(({ uuid }) => new MatchPlayer({ matchUuid, playerUuid: uuid }).forRepository()) ?? []
+				.map(({ uuid }) => new MatchPlayer({ matchUuid, playerUuid: uuid }).toObject()) ?? []
 		);
 	}
 }

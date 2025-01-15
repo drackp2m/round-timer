@@ -40,9 +40,9 @@ export class DashboardPage {
 				}),
 		);
 
-		await this.gameRepository.insert('game', game.forRepository());
+		await this.gameRepository.insert('game', game.toObject());
 		await Promise.all(
-			players.map((player) => this.playerRepository.insert('player', player.forRepository())),
+			players.map((player) => this.playerRepository.insert('player', player.toObject())),
 		);
 	}
 }

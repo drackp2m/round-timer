@@ -1,14 +1,14 @@
-import { Injectable, OnDestroy, computed, inject, signal } from '@angular/core';
+import { Injectable, OnDestroy, computed, effect, inject, signal } from '@angular/core';
 
 import { Theme } from '@app/definition/theme.type';
 import { Setting } from '@app/model/setting.model';
-import { SettingRepository } from '@app/repository/setting.repository';
+import { SettingStore } from '@app/store/setting.store';
 
 @Injectable({
 	providedIn: 'root',
 })
 export class ThemeService implements OnDestroy {
-	private readonly settingRepository = inject(SettingRepository);
+	private readonly settingStore = inject(SettingStore);
 
 	private readonly mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
 	private updateTheme?: (e: MediaQueryListEvent | MediaQueryList) => void;
@@ -30,7 +30,15 @@ export class ThemeService implements OnDestroy {
 	constructor() {
 		this.addMediaQueryEventListener();
 
-		this.setThemeFromSettings();
+		const waitForSetting = effect(() => {
+			const isLoading = this.settingStore.isLoading();
+
+			if (!isLoading) {
+				this.setThemeFromSettings();
+
+				waitForSetting.destroy();
+			}
+		});
 	}
 
 	ngOnDestroy(): void {
@@ -49,17 +57,17 @@ export class ThemeService implements OnDestroy {
 		}
 
 		if (saveSetting) {
-			const currentSetting = await this.settingRepository.findByIndex('setting', 'type', 'THEME');
+			const currentSetting = this.settingStore
+				.settingEntities()
+				.find((setting) => 'THEME' === setting.type);
 
-			if (currentSetting !== undefined) {
-				Object.assign(currentSetting, { payload: theme });
-
-				await this.settingRepository.insert('setting', currentSetting);
-			} else {
-				const setting = new Setting({ type: 'THEME', payload: theme });
-
-				await this.settingRepository.insert('setting', setting);
+			if (undefined === currentSetting) {
+				return;
 			}
+
+			const updatedSetting = new Setting({ ...currentSetting, payload: theme });
+
+			this.settingStore.update(updatedSetting);
 		}
 	}
 
@@ -77,13 +85,13 @@ export class ThemeService implements OnDestroy {
 		this.mediaQuery.addEventListener('change', this.updateTheme);
 	}
 
-	private setThemeFromSettings(): void {
-		void this.settingRepository.findByIndex('setting', 'type', 'THEME').then((setting) => {
-			if (setting !== undefined) {
-				void this.updateSelectedTheme(setting.payload as Theme, false);
-			} else {
-				void this.updateSelectedTheme('system');
-			}
-		});
+	private setThemeFromSettings() {
+		const setting = this.settingStore.settingEntities().find((setting) => 'THEME' === setting.type);
+
+		if (setting !== undefined) {
+			void this.updateSelectedTheme(setting.payload as Theme, false);
+		} else {
+			void this.updateSelectedTheme('system');
+		}
 	}
 }

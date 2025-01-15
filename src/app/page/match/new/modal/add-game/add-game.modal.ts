@@ -60,6 +60,6 @@ export class AddGameModal extends Modal {
 		const game = new Game(this.form.getRawValue());
 
 		this.close();
-		this.gameStore.addGame(game.forRepository());
+		this.gameStore.addGame(game.toObject());
 	}
 }

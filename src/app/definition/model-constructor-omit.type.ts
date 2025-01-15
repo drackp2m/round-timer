@@ -1,4 +1,4 @@
-export type ModelConstructorOmit<T> = Omit<
+export type ModelConstructorOmit<T, K extends string = never> = Omit<
 	T,
-	'uuid' | 'status' | 'createdAt' | 'updatedAt' | 'computed' | 'forRepository'
+	'uuid' | 'createdAt' | 'updatedAt' | 'toObject' | 'with' | K
 >;
