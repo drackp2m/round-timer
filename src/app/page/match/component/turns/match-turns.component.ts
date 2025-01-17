@@ -22,7 +22,7 @@ export class MatchTurnsComponent {
 
 	readonly turns = viewChild<ElementRef<HTMLDivElement>>('turns');
 
-	readonly players = this.playerStore.items;
+	readonly players = this.playerStore.playerEntities;
 	readonly playerByUuid = computed(
 		() => new Map(this.players()?.map((player) => [player.uuid, player])),
 	);

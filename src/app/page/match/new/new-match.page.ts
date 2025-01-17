@@ -1,4 +1,4 @@
-import { Component, effect, inject, linkedSignal, signal } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
@@ -39,7 +39,20 @@ export class NewMatchPage {
 	readonly games = this.gameStore.items;
 	readonly gamesStoreIsLoading = this.gameStore.isLoading;
 
-	readonly players = linkedSignal(this.playerStore.items);
+	readonly players = this.playerStore.playerEntities;
+	readonly playersList = computed(() => {
+		const selectedPlayers = this.playerStore.selectedEntities();
+		const unselectedPlayers = this.playerStore.unselectedEntities();
+		const players = this.players();
+
+		return [
+			...Object.values(selectedPlayers),
+			...Object.values(unselectedPlayers),
+			...players.filter(
+				(player) => !(player.uuid in selectedPlayers) && !(player.uuid in unselectedPlayers),
+			),
+		];
+	});
 	readonly playerStoreIsLoading = this.playerStore.isLoading;
 
 	readonly formPlayersLoaded = signal(false);
@@ -58,14 +71,16 @@ export class NewMatchPage {
 
 	constructor() {
 		const fillFormPlayersEffectRef = effect(() => {
+			if (this.playerStoreIsLoading()) {
+				return;
+			}
+
+			fillFormPlayersEffectRef.destroy();
+
 			const players = this.players();
 
-			if (null !== players) {
-				fillFormPlayersEffectRef.destroy();
-
-				this.fillFormPlayers(players);
-				this.formPlayersLoaded.set(true);
-			}
+			this.fillFormPlayers(players);
+			this.formPlayersLoaded.set(true);
 		});
 	}
 
@@ -77,33 +92,16 @@ export class NewMatchPage {
 		void this.modalStore.open(AddPlayerModal);
 	}
 
-	sortPlayers(event: Event): void {
+	toggleSelection(event: Event): void {
+		const players = this.players();
 		const target = event.target as HTMLInputElement;
 		const playerUuid = target.value;
-		const checked = target.checked;
 
-		const checkedElements = Object.values(this.form.controls.players.value).filter(
-			(value) => value,
-		).length;
+		const player = players.find((player) => player.uuid === playerUuid);
 
-		this.players.update((originalPlayers) => {
-			const players = [...(originalPlayers ?? [])];
-
-			const playerIndex = players.findIndex((player) => player.uuid === playerUuid);
-			const [removePlayer] = players.splice(playerIndex, 1);
-
-			if (removePlayer === undefined) {
-				return null;
-			}
-
-			if (checked) {
-				players.splice(checkedElements - 1, 0, removePlayer);
-			} else {
-				players.splice(checkedElements, 0, removePlayer);
-			}
-
-			return players;
-		});
+		if (player !== undefined) {
+			this.playerStore.toggleSelection(player);
+		}
 	}
 
 	async createMatch(): Promise<void> {

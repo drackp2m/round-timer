@@ -21,7 +21,7 @@ export class MatchPage {
 
 	timer = toSignal(interval(10));
 
-	readonly players = this.playerStore.items;
+	readonly players = this.playerStore.playerEntities;
 
 	readonly match = this.matchStore.match;
 	readonly events = this.matchStore.events;

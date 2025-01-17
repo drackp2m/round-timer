@@ -71,7 +71,7 @@ export class AddPlayerModal extends Modal {
 
 		// FixMe => return added player to insert in form
 		this.close();
-		this.playerStore.addPlayer(player);
+		this.playerStore.add(player);
 	}
 
 	private playerFromForm(): Player {
