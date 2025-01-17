@@ -1,3 +1,10 @@
+# v1.3.1 (2025-01-17)
+## What's Changed
+### 🎨 Styles
+* add colors to list ([7d84e35](https://github.com/drackp2m/round-timer/commit/7d84e35ba6bbfd4bf43e327a93ac834ccbfa8ee8)) by Marc Jovaní González
+
+**Full Changelog**: https://github.com/drackp2m/round-timer/compare/v1.3.0...v1.3.1
+
 # v1.3.0 (2025-01-17)
 ## What's Changed
 ### ✨ Features
