@@ -81,7 +81,7 @@ export class ModalOutletComponent implements AfterViewInit {
 		return this.modalContent();
 	}
 
-	async open<T extends Modal>(component: Type<T>): Promise<ComponentRef<T>> {
+	async open<T>(component: Type<Modal<T>>): Promise<ComponentRef<Modal<T>>> {
 		this.modalState.set('transitioning');
 
 		await Async.waitForFrames();

@@ -45,7 +45,7 @@ export class ModalStore extends signalStore({ protectedState: false }, withState
 		this.containerInitResolve();
 	}
 
-	async open<T extends Modal>(component: Type<T>): Promise<ComponentRef<T>> {
+	async open<T>(component: Type<Modal<T>>): Promise<ComponentRef<Modal<T>>> {
 		if (this.initializeError) {
 			return Promise.reject(
 				new Error(

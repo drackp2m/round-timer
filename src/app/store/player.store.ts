@@ -39,8 +39,6 @@ export class PlayerStore extends signalStore(
 		this.fetchData();
 	}
 
-	// FixMe => sort elements according to checkboxes
-	// FixMe => remove model data thats not present in the schema (schema maybe should use a different model)
 	add(player: Player): void {
 		void this.playerRepository.insert('player', player).then((player) => {
 			patchState(this, addEntity(player, playerConfig));
@@ -66,7 +64,7 @@ export class PlayerStore extends signalStore(
 		patchState(this, { isLoading: true });
 
 		void this.playerRepository.findAll('player').then((items) => {
-			items.sort((a, b) => a.updatedAt.getDate() - b.updatedAt.getDate());
+			items.sort((a, b) => a.updatedAt.getTime() - b.updatedAt.getTime());
 			patchState(this, setAllEntities(items, playerConfig));
 
 			patchState(this, { isLoading: false });

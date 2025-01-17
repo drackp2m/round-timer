@@ -1,4 +1,4 @@
-import { Component, Signal, computed, inject } from '@angular/core';
+import { Component, OnDestroy, Signal, computed } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
@@ -10,7 +10,6 @@ import { InputDirective } from '@app/directive/input.directive';
 import { SelectDirective } from '@app/directive/select.directive';
 import { Modal } from '@app/model/modal.model';
 import { Player } from '@app/model/player.model';
-import { PlayerStore } from '@app/store/player.store';
 import { Enum } from '@app/util/enum';
 
 @Component({
@@ -24,10 +23,8 @@ import { Enum } from '@app/util/enum';
 		PlayerBadgeComponent,
 	],
 })
-export class AddPlayerModal extends Modal {
+export class AddPlayerModal extends Modal<Player> implements OnDestroy {
 	readonly TITLE = 'Add Player';
-
-	private readonly playerStore = inject(PlayerStore);
 
 	readonly colors = Enum.toSelectOptions(PlayerColor);
 	readonly icons = Enum.toSelectOptions(PlayerIcon);
@@ -62,6 +59,10 @@ export class AddPlayerModal extends Modal {
 		return this.playerFromForm();
 	});
 
+	ngOnDestroy(): void {
+		console.log('se destruye');
+	}
+
 	onSubmit(): void {
 		const player = this.player();
 
@@ -69,9 +70,7 @@ export class AddPlayerModal extends Modal {
 			return;
 		}
 
-		// FixMe => return added player to insert in form
-		this.close();
-		this.playerStore.add(player);
+		this.close(player);
 	}
 
 	private playerFromForm(): Player {

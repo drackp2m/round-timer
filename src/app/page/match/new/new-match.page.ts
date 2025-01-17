@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { Component, computed, effect, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -27,6 +28,7 @@ import { AddPlayerModal } from './modal/add-player/add-player.modal';
 		SvgComponent,
 		ReactiveFormsModule,
 		RadioCheckboxDirective,
+		DatePipe,
 	],
 })
 export class NewMatchPage {
@@ -39,11 +41,10 @@ export class NewMatchPage {
 	readonly games = this.gameStore.items;
 	readonly gamesStoreIsLoading = this.gameStore.isLoading;
 
-	readonly players = this.playerStore.playerEntities;
 	readonly playersList = computed(() => {
+		const players = this.playerStore.playerEntities();
 		const selectedPlayers = this.playerStore.selectedEntities();
 		const unselectedPlayers = this.playerStore.unselectedEntities();
-		const players = this.players();
 
 		return [
 			...Object.values(selectedPlayers),
@@ -77,7 +78,7 @@ export class NewMatchPage {
 
 			fillFormPlayersEffectRef.destroy();
 
-			const players = this.players();
+			const players = this.playersList();
 
 			this.fillFormPlayers(players);
 			this.formPlayersLoaded.set(true);
@@ -88,12 +89,22 @@ export class NewMatchPage {
 		void this.modalStore.open(AddGameModal);
 	}
 
-	addPlayer(): void {
-		void this.modalStore.open(AddPlayerModal);
+	async addPlayer(): Promise<void> {
+		const component = await this.modalStore.open(AddPlayerModal);
+
+		component.instance.onClose$.subscribe((player) => {
+			console.log('se cierra');
+			this.form.controls.players.addControl(
+				player.uuid,
+				new FormControl<boolean>(true, { nonNullable: true }),
+			);
+			this.playerStore.add(player);
+			this.playerStore.toggleSelection(player);
+		});
 	}
 
 	toggleSelection(event: Event): void {
-		const players = this.players();
+		const players = this.playersList();
 		const target = event.target as HTMLInputElement;
 		const playerUuid = target.value;
 
@@ -129,9 +140,9 @@ export class NewMatchPage {
 
 	private getPlayersFromForm(matchUuid: string): MatchPlayer[] {
 		return (
-			this.players()
-				?.filter((player) => this.form.controls.players.get(player.uuid)?.value)
-				.map(({ uuid }) => new MatchPlayer({ matchUuid, playerUuid: uuid }).toObject()) ?? []
+			this.playersList()
+				?.filter((player) => true === this.form.controls.players.get(player.uuid)?.value)
+				.map(({ uuid: playerUuid }) => new MatchPlayer({ matchUuid, playerUuid }).toObject()) ?? []
 		);
 	}
 }
