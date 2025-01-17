@@ -1,3 +1,10 @@
+# v1.3.0 (2025-01-17)
+## What's Changed
+### ✨ Features
+* add option to emit value when modal close, improve create user / match ([d79d009](https://github.com/drackp2m/round-timer/commit/d79d0095e0ebfd9df58770122c8422a8a6cd44c0)) by Marc Jovaní González
+
+**Full Changelog**: https://github.com/drackp2m/round-timer/compare/v1.2.0...v1.3.0
+
 # v1.2.0 (2025-01-17)
 ## What's Changed
 ### ✨ Features
