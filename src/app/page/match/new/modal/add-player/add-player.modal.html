@@ -1,10 +1,4 @@
 <section class="flex-col px-4 pt-4 gap-4">
-	<!-- <ul>
-		@for (colorValue of colorValues; track $index) {
-			<li [attr.style]="'background-color: ' + colorValue + ';'">&nbsp;</li>
-		}
-	</ul> -->
-
 	<app-player-badge [player]="player()" />
 
 	<form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex-col gap-4">

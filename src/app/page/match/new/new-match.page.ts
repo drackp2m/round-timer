@@ -1,4 +1,3 @@
-import { DatePipe } from '@angular/common';
 import { Component, computed, effect, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -28,7 +27,6 @@ import { AddPlayerModal } from './modal/add-player/add-player.modal';
 		SvgComponent,
 		ReactiveFormsModule,
 		RadioCheckboxDirective,
-		DatePipe,
 	],
 })
 export class NewMatchPage {
@@ -93,7 +91,6 @@ export class NewMatchPage {
 		const component = await this.modalStore.open(AddPlayerModal);
 
 		component.instance.onClose$.subscribe((player) => {
-			console.log('se cierra');
 			this.form.controls.players.addControl(
 				player.uuid,
 				new FormControl<boolean>(true, { nonNullable: true }),

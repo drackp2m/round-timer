@@ -1,4 +1,4 @@
-import { Component, OnDestroy, Signal, computed } from '@angular/core';
+import { Component, Signal, computed } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
@@ -23,14 +23,11 @@ import { Enum } from '@app/util/enum';
 		PlayerBadgeComponent,
 	],
 })
-export class AddPlayerModal extends Modal<Player> implements OnDestroy {
+export class AddPlayerModal extends Modal<Player> {
 	readonly TITLE = 'Add Player';
 
 	readonly colors = Enum.toSelectOptions(PlayerColor);
 	readonly icons = Enum.toSelectOptions(PlayerIcon);
-
-	// ToDo => remove this when stop tests
-	readonly colorValues = Object.values(PlayerColor);
 
 	readonly form = new FormGroup({
 		name: new FormControl<string>('', {
@@ -58,10 +55,6 @@ export class AddPlayerModal extends Modal<Player> implements OnDestroy {
 
 		return this.playerFromForm();
 	});
-
-	ngOnDestroy(): void {
-		console.log('se destruye');
-	}
 
 	onSubmit(): void {
 		const player = this.player();

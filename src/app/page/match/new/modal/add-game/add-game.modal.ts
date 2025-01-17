@@ -3,7 +3,10 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 
 import { GameTurnOrder, GameTurnOrderKey } from '@app/definition/model/game/game-turn-order.enum';
 import { GameTurnType, GameTurnTypeKey } from '@app/definition/model/game/game-turn-type.enum';
-import { GameVictoryType, GameVictoryTypeKey } from '@app/definition/model/game/game-victory-type.enum';
+import {
+	GameVictoryType,
+	GameVictoryTypeKey,
+} from '@app/definition/model/game/game-victory-type.enum';
 import { ButtonDirective } from '@app/directive/button.directive';
 import { InputDirective } from '@app/directive/input.directive';
 import { SelectDirective } from '@app/directive/select.directive';
@@ -25,10 +28,7 @@ export class AddGameModal extends Modal {
 	readonly turnTypes = Enum.toSelectOptions(GameTurnType);
 	readonly disabledTurnTypes: (keyof typeof GameTurnType)[] = ['PASS_ONCE', 'PASS_SOME'];
 	readonly turnOrders = Enum.toSelectOptions(GameTurnOrder);
-	readonly disabledTurnOrders: (keyof typeof GameTurnOrder)[] = [
-		'FIXED_PER_STAGE',
-		'EACH_ROUND_DIFFERENT',
-	];
+	readonly disabledTurnOrders: (keyof typeof GameTurnOrder)[] = ['FIXED_PER_STAGE'];
 	readonly victoryTypes = Enum.toSelectOptions(GameVictoryType);
 
 	readonly randomGameName = GameUtil.getRandomName();
