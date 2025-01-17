@@ -1,3 +1,10 @@
+# v1.2.0 (2025-01-17)
+## What's Changed
+### ✨ Features
+* set Player store to Entity Signal Store ([fd16ac7](https://github.com/drackp2m/round-timer/commit/fd16ac7fa70e6230361a5ed8a24617a0d1479b49)) by Marc Jovaní González
+
+**Full Changelog**: https://github.com/drackp2m/round-timer/compare/v1.1.1...v1.2.0
+
 # v1.1.1 (2025-01-15)
 ## What's Changed
 ### ♻️ Code Refactoring
