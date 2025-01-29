@@ -10,11 +10,11 @@ describe('CalculateMatchTurns', () => {
 	const MATCH_UUID = 'test-match-uuid';
 	let currentUuid = 0;
 
-		beforeEach(() => {
-			TestBed.configureTestingModule({
-				providers: [provideExperimentalZonelessChangeDetection(), CalculateMatchTurns],
-			});
-			service = TestBed.inject(CalculateMatchTurns);
+	beforeEach(() => {
+		TestBed.configureTestingModule({
+			providers: [provideExperimentalZonelessChangeDetection(), CalculateMatchTurns],
+		});
+		service = TestBed.inject(CalculateMatchTurns);
 
 		Object.defineProperty(global.crypto, 'randomUUID', {
 			value: () => `test-uuid-${++currentUuid}`,
