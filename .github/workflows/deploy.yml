@@ -52,18 +52,17 @@ jobs:
         with:
           node-version: '22'
 
-      - name: Cache dependencies
-        id: cache-dependencies
+      - name: Reuse deps cache
+        id: deps-cache
         uses: actions/cache@v3
         with:
-          path: |
-            node_modules
+          path: node_modules
           key: ${{ runner.os }}-build-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-build-
 
       - name: Install dependencies if cache missed
-        if: steps.cache-dependencies.outputs.cache-hit != 'true'
+        if: steps.deps-cache.outputs.cache-hit != 'true'
         run: npm ci
 
       - name: Run lint
@@ -81,19 +80,17 @@ jobs:
         with:
           node-version: '22'
 
-      - name: Cache dependencies
-        id: cache-dependencies
+      - name: Reuse deps cache
+        id: deps-cache
         uses: actions/cache@v3
         with:
-          path: |
-            node_modules
+          path: node_modules
           key: ${{ runner.os }}-build-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-build-
 
-      # Same as above: typically, no need for full install unless cache was missed
       - name: Install dependencies if cache missed
-        if: steps.cache-dependencies.outputs.cache-hit != 'true'
+        if: steps.deps-cache.outputs.cache-hit != 'true'
         run: npm ci
 
       - name: Run tests
@@ -112,7 +109,17 @@ jobs:
           node-version: '22'
           cache: 'npm'
 
-      - name: Install dependencies
+      - name: Reuse deps cache
+        id: deps-cache
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-build-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-
+
+      - name: Install dependencies if cache missed
+        if: steps.deps-cache.outputs.cache-hit != 'true'
         run: npm ci
 
       - name: Import GPG key
@@ -156,7 +163,17 @@ jobs:
           node-version: '22'
           cache: 'npm'
 
-      - name: Install dependencies
+      - name: Reuse deps cache
+        id: deps-cache
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-build-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-
+
+      - name: Install dependencies if cache missed
+        if: steps.deps-cache.outputs.cache-hit != 'true'
         run: npm ci
 
       - name: Build application
