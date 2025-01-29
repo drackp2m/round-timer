@@ -7,6 +7,7 @@ import { ShowMillisecondsComponent } from '@app/component/show-milliseconds/show
 import { MatchEventType } from '@app/definition/model/match/match-event-type.enum';
 import { MatchButtonsComponent } from '@app/page/match/component/buttons/match-buttons.component';
 import { MatchTurnsComponent } from '@app/page/match/component/turns/match-turns.component';
+import { GameStore } from '@app/store/game.store';
 import { MatchStore } from '@app/store/match.store';
 import { PlayerStore } from '@app/store/player.store';
 
@@ -17,6 +18,7 @@ import { PlayerStore } from '@app/store/player.store';
 })
 export class MatchPage {
 	private readonly matchStore = inject(MatchStore);
+	private readonly gameStore = inject(GameStore);
 	private readonly playerStore = inject(PlayerStore);
 
 	timer = toSignal(interval(10));
@@ -24,6 +26,9 @@ export class MatchPage {
 	readonly players = this.playerStore.playerEntities;
 
 	readonly match = this.matchStore.match;
+	readonly game = computed(() =>
+		this.gameStore.items()?.find((game) => game.uuid === this.match()?.gameUuid),
+	);
 	readonly events = this.matchStore.events;
 	readonly lastEvent = computed(() => {
 		const events = this.events();
@@ -75,11 +80,8 @@ export class MatchPage {
 		),
 	);
 
-	getPlayerByUuid(uuid: string) {
-		return this.players()?.find((player) => player.uuid === uuid);
-	}
-
 	dispatch(eventType: MatchEventType): void {
-		void this.matchStore.dispatchEvent(eventType);
+		console.log(eventType);
+		// void this.matchStore.dispatchEvent(eventType);
 	}
 }

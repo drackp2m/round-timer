@@ -13,5 +13,7 @@ import { LoadInitialDataUseCase } from 'src/app/use-case/load-initial-data.use-c
 export class AppComponent {
 	private readonly loadInitialData = inject(LoadInitialDataUseCase);
 
+	title = 'round-timer';
+
 	readonly loading = this.loadInitialData.execute();
 }

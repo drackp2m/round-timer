@@ -16,13 +16,8 @@ export abstract class UpdatableModel<T extends object> extends BaseModel<T> {
 		instance: M,
 		changes: Partial<T>,
 	): M {
-		const updated = Object.assign(
-			Object.create(Object.getPrototypeOf(instance)),
-			instance,
-			changes,
-			{ updatedAt: new Date() },
-		);
-
-		return updated;
+		return Object.assign(Object.create(Object.getPrototypeOf(instance)), instance, changes, {
+			updatedAt: new Date(),
+		});
 	}
 }

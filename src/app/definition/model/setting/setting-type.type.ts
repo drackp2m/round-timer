@@ -1,4 +1,3 @@
-import { SettingType as SettingTypeEnum } from '@app/definition/model/setting/setting-type.enum';
 import { Theme } from '@app/definition/theme.type';
 
 export interface SettingType {

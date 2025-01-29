@@ -3,7 +3,6 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { Theme } from '@app/definition/theme.type';
-import { InputDirective } from '@app/directive/input.directive';
 import { RadioCheckboxDirective } from '@app/directive/radio-checkbox.directive';
 import { version } from '@app/package';
 import { ThemeService } from '@app/service/theme.service';
@@ -17,6 +16,8 @@ export class SettingPage {
 	readonly VERSION = version;
 
 	private readonly themeService = inject(ThemeService);
+
+	private firstChangeIgnored = false;
 
 	readonly form = new FormGroup({
 		appearance: new FormControl<Theme | 'system'>(this.themeService.selectedTheme(), {
@@ -34,7 +35,11 @@ export class SettingPage {
 		effect(() => {
 			const newTheme = this.appearanceChange();
 
-			void this.themeService.updateSelectedTheme(newTheme);
+			if (this.firstChangeIgnored) {
+				void this.themeService.updateSelectedTheme(newTheme);
+			} else {
+				this.firstChangeIgnored = true;
+			}
 		});
 	}
 }

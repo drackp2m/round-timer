@@ -1,6 +1,7 @@
 import { Injectable, OnDestroy, computed, effect, inject, signal } from '@angular/core';
 
 import { Theme } from '@app/definition/theme.type';
+import { Setting } from '@app/model/setting.model';
 import { SettingStore } from '@app/store/setting.store';
 
 @Injectable({
@@ -30,9 +31,10 @@ export class ThemeService implements OnDestroy {
 		this.addMediaQueryEventListener();
 
 		const waitForSetting = effect(() => {
+			const entities = this.settingStore.settingEntities();
 			const isLoading = this.settingStore.isLoading();
 
-			if (!isLoading) {
+			if (!isLoading && 0 < entities.length) {
 				this.setThemeFromSettings();
 
 				waitForSetting.destroy();
@@ -56,13 +58,20 @@ export class ThemeService implements OnDestroy {
 		}
 
 		if (saveSetting) {
-			const newSetting = this.settingStore
-				.settingEntities()
-				.find((setting) => 'THEME' === setting.type)
-				?.with({ payload: theme });
+			try {
+				const newSetting = this.settingStore
+					.settingEntities()
+					.find((setting) => 'THEME' === setting.type)
+					?.with({ payload: theme });
 
-			if (undefined !== newSetting) {
-				this.settingStore.update(newSetting);
+				if (undefined !== newSetting) {
+					this.settingStore.update(newSetting);
+				} else {
+					this.settingStore.add(new Setting({ type: 'THEME', payload: theme }));
+				}
+			} catch {
+				// FixMe => Why need this for prevent Uncaught (in promise) TypeError:
+				// this.settingStore.settingEntities().find(...).with is not a function
 			}
 		}
 	}

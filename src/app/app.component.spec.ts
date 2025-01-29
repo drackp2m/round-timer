@@ -1,30 +1,32 @@
-import { TestBed } from '@angular/core/testing';
+import { provideExperimentalZonelessChangeDetection, signal } from '@angular/core';
+import { render } from '@testing-library/angular';
 
 import { AppComponent } from './app.component';
 
+import { LoadInitialDataUseCase } from 'src/app/use-case/load-initial-data.use-case';
+
 describe('AppComponent', () => {
-	beforeEach(async () => {
-		await TestBed.configureTestingModule({
-			imports: [AppComponent],
-		}).compileComponents();
+	const setup = async () => {
+		return render(AppComponent, {
+			providers: [provideExperimentalZonelessChangeDetection()],
+			componentProviders: [
+				{
+					provide: LoadInitialDataUseCase,
+					useValue: {
+						execute: () => signal(false),
+					},
+				},
+			],
+		});
+	};
+
+	it(`should have the 'round-timer' title in the component`, async () => {
+		const { fixture } = await setup();
+		expect(fixture.componentInstance.title).toBe('round-timer');
 	});
 
-	it('should create the app', () => {
-		const fixture = TestBed.createComponent(AppComponent);
-		const app = fixture.componentInstance;
-		expect(app).toBeTruthy();
-	});
-
-	it(`should have the 'round-timer' title`, () => {
-		const fixture = TestBed.createComponent(AppComponent);
-		const app = fixture.componentInstance;
-		expect(app.title).toEqual('round-timer');
-	});
-
-	it('should render title', () => {
-		const fixture = TestBed.createComponent(AppComponent);
-		fixture.detectChanges();
-		const compiled = fixture.nativeElement as HTMLElement;
-		expect(compiled.querySelector('h1')?.textContent).toContain('Hello, round-timer');
+	it('should render router-outlet', async () => {
+		const { container } = await setup();
+		expect(container.querySelector('router-outlet')).toBeTruthy();
 	});
 });

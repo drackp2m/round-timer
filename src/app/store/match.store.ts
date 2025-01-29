@@ -1,11 +1,14 @@
 import { Injectable, computed, inject } from '@angular/core';
 import { patchState, signalStore, withState } from '@ngrx/signals';
+import { StoreNames } from 'idb';
 
 import { MatchEventType } from '@app/definition/model/match/match-event-type.enum';
 import { MatchEventPayload } from '@app/definition/model/match/match-event-type.type';
 import { MatchEvent } from '@app/model/match-event.model';
 import { MatchPlayer } from '@app/model/match-player.model';
 import { Match } from '@app/model/match.model';
+import { MatchSchema } from '@app/repository/definition/match-schema.interface';
+import { GameRepository } from '@app/repository/game.repository';
 import { MatchRepository } from '@app/repository/match.repository';
 import { Enum } from '@app/util/enum';
 
@@ -30,6 +33,7 @@ const initialState: MatchStoreProps = {
 })
 export class MatchStore extends signalStore({ protectedState: false }, withState(initialState)) {
 	private readonly matchRepository = inject(MatchRepository);
+	private readonly gameRepository = inject(GameRepository);
 	private readonly calculateMatchTurns = inject(CalculateMatchTurns);
 
 	readonly matchTurns = computed(() => {
@@ -90,27 +94,36 @@ export class MatchStore extends signalStore({ protectedState: false }, withState
 
 		const event = new MatchEvent({ matchUuid: match.uuid, type: typeKey, payload });
 
-		// await this.matchRepository.insert('match_event', event.forRepository());
+		await this.matchRepository.insert('match_event', event.toObject());
 
 		patchState(this, { events: [...events, event] });
 	}
 
 	async createMatch(match: Match, matchPlayers: MatchPlayer[]): Promise<void> {
 		const playerUuids = matchPlayers.map(({ playerUuid }) => playerUuid);
+		const game = await this.gameRepository.find('game', match.gameUuid);
 
-		const matchEvent = new MatchEvent<MatchEventType.SET_TURN_ORDER>({
-			matchUuid: match.uuid,
-			type: 'SET_TURN_ORDER',
-			payload: playerUuids,
-		});
-
-		await this.matchRepository.beginTransaction(['match', 'match_player', 'match_event']);
+		const eachRoundDifferentTurnOrder = 'EACH_ROUND_DIFFERENT' === game?.turnOrder;
+		const matchEvent = eachRoundDifferentTurnOrder
+			? undefined
+			: new MatchEvent<MatchEventType.SET_TURN_ORDER>({
+					matchUuid: match.uuid,
+					type: 'SET_TURN_ORDER',
+					payload: playerUuids,
+				});
+		const repositories: StoreNames<MatchSchema>[] =
+			matchEvent !== undefined
+				? ['match', 'match_player']
+				: ['match', 'match_player', 'match_event'];
+		await this.matchRepository.beginTransaction(repositories);
 		await this.matchRepository.insert('match', match.toObject());
 		await this.matchRepository.batchInsert('match_player', matchPlayers);
-		await this.matchRepository.insert('match_event', matchEvent.toObject());
+		if (matchEvent !== undefined) {
+			await this.matchRepository.insert('match_event', matchEvent.toObject());
+		}
 		await this.matchRepository.commitTransaction();
 
-		patchState(this, { match, playerUuids, events: [matchEvent] });
+		patchState(this, { match, playerUuids, events: matchEvent !== undefined ? [matchEvent] : [] });
 	}
 
 	private fetchDataAsync(): void {

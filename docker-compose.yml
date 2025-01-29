@@ -14,8 +14,9 @@ services:
       - .:/usr/src/app
       - /usr/src/app/node_modules
     environment:
-      NG_HMR_TEMPLATES: 1
       PATH: $PATH:/usr/src/app/node_modules/.bin
+      NODE_OPTIONS: --max-old-space-size=4096
+      NG_HMR_TEMPLATES: 1
       TZ: UTC
     restart: unless-stopped
     stdin_open: true

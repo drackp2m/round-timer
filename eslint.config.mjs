@@ -3,10 +3,10 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import eslint from '@eslint/js';
-import json from '@eslint/json';
 import tsParser from '@typescript-eslint/parser';
 import angular from 'angular-eslint';
 import eslintImport from 'eslint-plugin-import';
+import eslintPluginJsonc from 'eslint-plugin-jsonc';
 import prettier from 'eslint-plugin-prettier';
 import rxjs from 'eslint-plugin-rxjs-updated';
 import sonarjs from 'eslint-plugin-sonarjs';
@@ -29,9 +29,10 @@ function eslintErrorsToWarnings(rules) {
 }
 
 const eslintConfig = tseslint.config(
+	...eslintPluginJsonc.configs['flat/recommended-with-jsonc'],
 	{
 		plugins: {
-			json,
+			eslintPluginJsonc,
 			prettier,
 			sonarjs,
 			rxjs,
@@ -217,7 +218,13 @@ const eslintConfig = tseslint.config(
 		},
 	},
 	{
-		files: ['**/*.ts', '**/*.mts', '**/*.js', '**/*.mjs', '**/*.json', '**/*.html'],
+		files: ['**/*.json'],
+		rules: {
+			'prettier/prettier': 'warn',
+		},
+	},
+	{
+		files: ['**/*.ts', '**/*.mts', '**/*.js', '**/*.mjs', '**/*.html'],
 		rules: {
 			'prettier/prettier': 'warn',
 		},

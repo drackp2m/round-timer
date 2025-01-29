@@ -11,5 +11,15 @@ export class Match extends UpdatableModel<Match> {
 		super();
 
 		Object.assign(this, model);
+
+		this.setInitialValues();
+	}
+
+	private setInitialValues(): void {
+		const values: Partial<Match> = {
+			status: 'IN_PROGRESS',
+		};
+
+		Object.assign(this, values);
 	}
 }
