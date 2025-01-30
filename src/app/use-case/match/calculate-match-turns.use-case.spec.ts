@@ -1,6 +1,4 @@
-import { provideExperimentalZonelessChangeDetection } from '@angular/core';
-import { TestBed } from '@angular/core/testing';
-
+import { MatchEventTypeKey } from '@app/definition/model/match/match-event-type.enum';
 import { MatchEvent } from '@app/model/match-event.model';
 
 import { CalculateMatchTurns } from './calculate-match-turns.use-case';
@@ -11,18 +9,15 @@ describe('CalculateMatchTurns', () => {
 	let currentUuid = 0;
 
 	beforeEach(() => {
-		TestBed.configureTestingModule({
-			providers: [provideExperimentalZonelessChangeDetection(), CalculateMatchTurns],
-		});
-		service = TestBed.inject(CalculateMatchTurns);
+		service = new CalculateMatchTurns();
 
 		Object.defineProperty(global.crypto, 'randomUUID', {
-			value: () => `test-uuid-${++currentUuid}`,
+			value: () => `test-uuid-${(++currentUuid).toString()}`,
 			configurable: true,
 		});
 
 		jest.useFakeTimers();
-		jest.setSystemTime(new Date('2025-01-29T11:16:38Z'));
+		jest.setSystemTime(new Date('2025-01-29T11:00:00Z'));
 	});
 
 	afterEach(() => {
@@ -34,41 +29,43 @@ describe('CalculateMatchTurns', () => {
 	});
 
 	it('should calculate turns with SET_TURN_ORDER and NEXT_TURN events', () => {
-		const event1 = new MatchEvent({
-			type: 'SET_TURN_ORDER',
-			payload: ['player1', 'player2'],
-			matchUuid: MATCH_UUID,
-		});
+		service.addEvent(
+			new MatchEvent({
+				type: 'SET_TURN_ORDER',
+				payload: ['player1', 'player2', 'player3'],
+				matchUuid: MATCH_UUID,
+			}),
+		);
 
 		jest.advanceTimersByTime(1000);
 
-		const event2 = new MatchEvent({
-			type: 'NEXT_TURN',
-			payload: undefined,
-			matchUuid: MATCH_UUID,
-		});
+		service.addEvent(createEvent('NEXT_TURN'));
 
 		jest.advanceTimersByTime(2000);
 
-		const event3 = new MatchEvent({
-			type: 'NEXT_TURN',
-			payload: undefined,
-			matchUuid: MATCH_UUID,
-		});
+		service.addEvent(createEvent('NEXT_TURN'));
 
 		jest.advanceTimersByTime(5000);
 
-		const event4 = new MatchEvent({
-			type: 'PAUSE',
-			payload: undefined,
-			matchUuid: MATCH_UUID,
-		});
+		service.addEvent(createEvent('NEXT_TURN'));
 
-		const result = service.execute([event1, event2, event3, event4]);
+		jest.advanceTimersByTime(4500);
+
+		const result = service.addEvent(createEvent('NEXT_TURN'));
 
 		expect(result).toEqual([
 			{ playerUuid: 'player1', time: 2000 },
 			{ playerUuid: 'player2', time: 5000 },
+			{ playerUuid: 'player3', time: 4500 },
+			{ playerUuid: 'player1', time: 0 },
 		]);
 	});
+
+	function createEvent(type: MatchEventTypeKey) {
+		return new MatchEvent({
+			type,
+			payload: undefined,
+			matchUuid: MATCH_UUID,
+		});
+	}
 });

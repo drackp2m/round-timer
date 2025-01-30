@@ -1,9 +1,7 @@
 import { Injectable, computed, inject } from '@angular/core';
-import { patchState, signalStore, withState } from '@ngrx/signals';
-import { StoreNames } from 'idb';
-
 import { MatchEventType } from '@app/definition/model/match/match-event-type.enum';
 import { MatchEventPayload } from '@app/definition/model/match/match-event-type.type';
+import { MatchTurn } from '@app/definition/page/match/match-turn.interface';
 import { MatchEvent } from '@app/model/match-event.model';
 import { MatchPlayer } from '@app/model/match-player.model';
 import { Match } from '@app/model/match.model';
@@ -11,7 +9,8 @@ import { MatchSchema } from '@app/repository/definition/match-schema.interface';
 import { GameRepository } from '@app/repository/game.repository';
 import { MatchRepository } from '@app/repository/match.repository';
 import { Enum } from '@app/util/enum';
-
+import { patchState, signalStore, withState } from '@ngrx/signals';
+import { StoreNames } from 'idb';
 import { CalculateMatchTurns } from 'src/app/use-case/match/calculate-match-turns.use-case';
 
 interface MatchStoreProps {
@@ -34,12 +33,18 @@ const initialState: MatchStoreProps = {
 export class MatchStore extends signalStore({ protectedState: false }, withState(initialState)) {
 	private readonly matchRepository = inject(MatchRepository);
 	private readonly gameRepository = inject(GameRepository);
-	private readonly calculateMatchTurns = inject(CalculateMatchTurns);
+	private readonly calculateMatchTurns = new CalculateMatchTurns();
 
 	readonly matchTurns = computed(() => {
 		const events = this.events() ?? [];
 
-		return this.calculateMatchTurns.execute(events);
+		let matchTurns: MatchTurn[] = [];
+
+		events.forEach((event) => {
+			matchTurns = this.calculateMatchTurns.addEvent(event);
+		});
+
+		return matchTurns;
 	});
 
 	readonly turn = computed(() => (0 !== this.matchTurns().length ? this.matchTurns().length : 1));
@@ -71,7 +76,7 @@ export class MatchStore extends signalStore({ protectedState: false }, withState
 		const playersOrder = this.currentPlayersOrder();
 		const turn = this.turn();
 
-		return playersOrder?.at((turn - 1) % playersOrder.length);
+		return playersOrder.at((turn - 1) % playersOrder.length);
 	});
 
 	constructor() {
@@ -80,9 +85,9 @@ export class MatchStore extends signalStore({ protectedState: false }, withState
 		this.fetchDataAsync();
 	}
 
-	async dispatchEvent<T extends MatchEventType = MatchEventType>(
+	async dispatchEvent(
 		type: MatchEventType,
-		payload?: MatchEventPayload[T],
+		payload?: MatchEventPayload[MatchEventType],
 	): Promise<void> {
 		const match = this.match();
 		const events = this.events() ?? [];

@@ -1,46 +1,35 @@
-import { Injectable } from '@angular/core';
-
+import { MatchTurn } from '@app/definition/page/match/match-turn.interface';
 import { MatchEvent } from '@app/model/match-event.model';
 import { Check } from '@app/util/check';
 
-interface MatchTurn {
-	playerUuid: string;
-	time: number;
-}
-
-@Injectable({
-	providedIn: 'root',
-})
 export class CalculateMatchTurns {
-	private events!: MatchEvent[];
-	private eventCheckingIndex!: number;
-	private turns!: MatchTurn[];
-	private turnOrder!: string[];
-	private currentTurn!: number;
+	private readonly events: MatchEvent[] = [];
+	private readonly turns: MatchTurn[] = [];
+	private turnOrder: string[] = [];
+	private currentTurn = -1;
 
-	execute(events: MatchEvent[]) {
-		this.events = events;
-		this.turns = [];
-		this.turnOrder = [];
-		this.currentTurn = -1;
+	constructor() {
+		console.log('CalculateMatchTurns created');
+	}
 
-		for (const [index, event] of events.entries()) {
-			this.eventCheckingIndex = index;
-			console.log(`Checking event #${index} ${event.type}...`);
+	addEvent(event: MatchEvent) {
+		this.events.push(event);
 
-			if (Check.isEventType(event, 'SET_TURN_ORDER')) {
-				this.turnOrder = event.payload;
-				continue;
-			}
+		console.log(`Checking event #${this.events.length} ${event.type}...`);
 
-			switch (event.type) {
-				case 'NEXT_TURN':
-					this.dispatchNextTurnEvent();
-					break;
-				case 'PAUSE':
-					this.dispatchPauseEvent();
-					break;
-			}
+		if (Check.isEventType(event, 'SET_TURN_ORDER')) {
+			this.turnOrder = event.payload;
+
+			return this.turns;
+		}
+
+		switch (event.type) {
+			case 'NEXT_TURN':
+				this.dispatchNextTurnEvent();
+				break;
+			case 'PAUSE':
+				this.dispatchPauseEvent();
+				break;
 		}
 
 		return this.turns;
@@ -71,12 +60,12 @@ export class CalculateMatchTurns {
 	}
 
 	private addTimeToCurrentTurn(isNextEvent = true): void {
-		const currentEventDate = new Date(this.events[this.eventCheckingIndex]?.createdAt ?? 0);
-		const previousEventDate = new Date(this.events[this.eventCheckingIndex - 1]?.createdAt ?? 0);
+		const currentEventDate = new Date(this.events[this.events.length - 1]?.createdAt ?? 0);
+		const previousEventDate = new Date(this.events[this.events.length - 2]?.createdAt ?? 0);
 		const time = currentEventDate.getTime() - previousEventDate.getTime();
 
-		const currentEventType = this.events[this.eventCheckingIndex]?.type;
-		const previousEventType = this.events[this.eventCheckingIndex - 1]?.type;
+		const currentEventType = this.events[this.events.length - 1]?.type;
+		const previousEventType = this.events[this.events.length - 2]?.type;
 
 		const currentTurn = this.turns[this.currentTurn - (isNextEvent ? 1 : 0)];
 

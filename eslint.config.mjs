@@ -1,38 +1,66 @@
 /* eslint-disable max-lines */
-import { dirname, join } from 'node:path';
-import { fileURLToPath } from 'node:url';
-
 import eslint from '@eslint/js';
-import tsParser from '@typescript-eslint/parser';
 import angular from 'angular-eslint';
 import eslintImport from 'eslint-plugin-import';
-import eslintPluginJsonc from 'eslint-plugin-jsonc';
+import jsonc from 'eslint-plugin-jsonc';
 import prettier from 'eslint-plugin-prettier';
 import rxjs from 'eslint-plugin-rxjs-updated';
 import sonarjs from 'eslint-plugin-sonarjs';
 import unusedImports from 'eslint-plugin-unused-imports';
 import tseslint from 'typescript-eslint';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
 function eslintErrorsToWarnings(rules) {
 	return Object.fromEntries(
 		Object.entries(rules).map(([ruleName, ruleValue]) => {
-			ruleValue =
-				'string' === typeof ruleValue
-					? ruleValue?.replace('error', 'warn')
-					: ruleValue[0]?.replace('error', 'warn');
+			if (Array.isArray(ruleValue)) {
+				ruleValue[0] = ruleValue[0]?.replace('error', 'warn');
+			} else {
+				ruleValue = ruleValue?.replace('error', 'warn');
+			}
 
 			return [ruleName, ruleValue];
 		}),
 	);
 }
 
+function transformEslintConfigs(config) {
+	if (Array.isArray(config)) {
+		return config.map((item) => transformEslintConfigs(item));
+	}
+
+	if (config && 'object' === typeof config) {
+		return Object.fromEntries(
+			Object.entries(config).map(([key, value]) => {
+				if ('rules' === key) {
+					return [key, eslintErrorsToWarnings(value)];
+				} else {
+					return [key, value];
+				}
+			}),
+		);
+	}
+
+	return config;
+}
+
 const eslintConfig = tseslint.config(
-	...eslintPluginJsonc.configs['flat/recommended-with-jsonc'],
+	...jsonc.configs['flat/recommended-with-jsonc'],
+	transformEslintConfigs(eslint.configs.recommended),
+	transformEslintConfigs(tseslint.configs.recommendedTypeChecked),
+	transformEslintConfigs(tseslint.configs.strictTypeChecked),
+	transformEslintConfigs(tseslint.configs.stylisticTypeChecked),
+	transformEslintConfigs(angular.configs.tsRecommended),
+	{
+		languageOptions: {
+			parserOptions: {
+				projectService: true,
+				tsconfigRootDir: import.meta.dirname,
+			},
+		},
+	},
 	{
 		plugins: {
-			eslintPluginJsonc,
+			jsonc,
 			prettier,
 			sonarjs,
 			rxjs,
@@ -42,29 +70,6 @@ const eslintConfig = tseslint.config(
 	},
 	{
 		files: ['**/*.ts', '**/*.mts', '**/*.js', '**/*.mjs'],
-		languageOptions: {
-			parser: tsParser,
-			ecmaVersion: 2024,
-			sourceType: 'module',
-			parserOptions: {
-				project: join(__dirname, './tsconfig.json'),
-			},
-		},
-		settings: {
-			'import/ignore': ['node_modules'],
-			'import/resolver': {
-				node: true,
-				typescript: {
-					project: 'tsconfig.json',
-				},
-			},
-		},
-		extends: [
-			eslint.configs.recommended,
-			...tseslint.configs.recommended,
-			...tseslint.configs.stylistic,
-			...angular.configs.tsRecommended,
-		],
 		processor: angular.processInlineTemplates,
 		rules: {
 			...eslintErrorsToWarnings(rxjs.configs.recommended.rules),
@@ -92,13 +97,14 @@ const eslintConfig = tseslint.config(
 				},
 			],
 			'sonarjs/no-unused-vars': 'off',
+			'sonarjs/no-dead-store': 'off',
 			'sonarjs/todo-tag': 'off',
 			'sonarjs/fixme-tag': 'off',
 			'sonarjs/unused-import': 'off',
 			'unused-imports/no-unused-imports': 'warn',
 			'no-unused-private-class-members': 'warn',
 			'@typescript-eslint/no-unused-vars': [
-				'off',
+				'warn',
 				{
 					argsIgnorePattern: '^_',
 					varsIgnorePattern: '^_',
@@ -219,6 +225,8 @@ const eslintConfig = tseslint.config(
 	},
 	{
 		files: ['**/*.json'],
+		...jsonc.configs['flat/recommended-with-jsonc'],
+		parser: 'jsonc-eslint-parser',
 		rules: {
 			'prettier/prettier': 'warn',
 		},

@@ -4,12 +4,12 @@
 	"assetGroups": [
 		{
 			"name": "app",
-			"installMode": "prefetch",
-			"updateMode": "prefetch",
-			"resources": {
-				"files": [
-					"/index.html",
-					"/favicon.ico",
+					"installMode": "prefetch",
+					"updateMode": "prefetch",
+						"resources": {
+							"files": [
+								"/index.html",
+								"/favicon.ico",
 					"/favicon.svg",
 					"/manifest.webmanifest",
 					"/*.js",
