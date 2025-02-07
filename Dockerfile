@@ -24,7 +24,7 @@ USER node
 
 COPY package.json package-lock.json* ./
 
-RUN npm i
+RUN npm ci
 
 
 
@@ -48,11 +48,7 @@ RUN git config --global --add safe.directory /usr/src/app
 RUN mkdir /home/node/.gnupg \
 			&& chmod 700 /home/node/.gnupg
 
-RUN npm install -g pm2
-
-COPY ecosystem.config.js ./
-
-CMD ["sh", "-c", "pm2-runtime start ecosystem.config.js && pm2 logs --raw --lines 100 app"]
+CMD ["sh", "-c", "tail -f /dev/null"]
 
 
 

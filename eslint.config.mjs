@@ -1,44 +1,28 @@
 /* eslint-disable max-lines */
-import { dirname, join } from 'node:path';
-import { fileURLToPath } from 'node:url';
-
 import eslint from '@eslint/js';
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-import tsParser from '@typescript-eslint/parser';
-=======
 import tseslint from 'typescript-eslint';
->>>>>>> Stashed changes
-=======
-import tseslint from 'typescript-eslint';
->>>>>>> Stashed changes
 import angular from 'angular-eslint';
 import eslintImport from 'eslint-plugin-import';
-import eslintPluginJsonc from 'eslint-plugin-jsonc';
+import jsonc from 'eslint-plugin-jsonc';
 import prettier from 'eslint-plugin-prettier';
 import rxjs from 'eslint-plugin-rxjs-updated';
 import sonarjs from 'eslint-plugin-sonarjs';
 import unusedImports from 'eslint-plugin-unused-imports';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
 function eslintErrorsToWarnings(rules) {
 	return Object.fromEntries(
 		Object.entries(rules).map(([ruleName, ruleValue]) => {
-			ruleValue =
-				'string' === typeof ruleValue
-					? ruleValue?.replace('error', 'warn')
-					: ruleValue[0]?.replace('error', 'warn');
+			if (Array.isArray(ruleValue)) {
+				ruleValue[0] = ruleValue[0]?.replace('error', 'warn');
+			} else {
+				ruleValue = ruleValue?.replace('error', 'warn');
+			}
 
 			return [ruleName, ruleValue];
 		}),
 	);
 }
 
-<<<<<<< Updated upstream
-const eslintConfig = tseslint.config(
-	...eslintPluginJsonc.configs['flat/recommended-with-jsonc'],
-=======
 function transformEslintConfigs(config) {
 	if (Array.isArray(config)) {
 		return config.map((item) => transformEslintConfigs(item));
@@ -61,54 +45,6 @@ function transformEslintConfigs(config) {
 
 export default tseslint.config(
 	...jsonc.configs['flat/recommended-with-jsonc'],
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-	{
-		plugins: {
-			eslintPluginJsonc,
-			prettier,
-			sonarjs,
-			rxjs,
-			import: eslintImport,
-			'unused-imports': unusedImports,
-		},
-		settings: {
-			'import/internal-regex': '^@app/',
-		},
-		languageOptions: {
-			parserOptions: {
-				projectService: true,
-				tsconfigRootDir: import.meta.dirname,
-			},
-		},
-	},
-	{
-<<<<<<< Updated upstream
-		files: ['**/*.ts', '**/*.mts', '**/*.js', '**/*.mjs'],
-		languageOptions: {
-			parser: tsParser,
-			ecmaVersion: 2024,
-			sourceType: 'module',
-			parserOptions: {
-				project: join(__dirname, './tsconfig.json'),
-			},
-		},
-		settings: {
-			'import/ignore': ['node_modules'],
-			'import/resolver': {
-				node: true,
-				typescript: {
-					project: 'tsconfig.json',
-				},
-			},
-		},
-		extends: [
-			eslint.configs.recommended,
-			...tseslint.configs.recommended,
-			...tseslint.configs.stylistic,
-			...angular.configs.tsRecommended,
-=======
-=======
 	{
 		plugins: {
 			jsonc,
@@ -129,7 +65,6 @@ export default tseslint.config(
 		},
 	},
 	{
->>>>>>> Stashed changes
 		name: 'TypeScript',
 		files: ['**/*.ts'],
 		extends: [
@@ -139,10 +74,6 @@ export default tseslint.config(
 			transformEslintConfigs(tseslint.configs.stylisticTypeChecked),
 			transformEslintConfigs(rxjs.configs.recommended),
 			transformEslintConfigs(angular.configs.tsRecommended),
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 		],
 		processor: angular.processInlineTemplates,
 		rules: {
@@ -172,13 +103,14 @@ export default tseslint.config(
 				},
 			],
 			'sonarjs/no-unused-vars': 'off',
+			'sonarjs/no-dead-store': 'off',
 			'sonarjs/todo-tag': 'off',
 			'sonarjs/fixme-tag': 'off',
 			'sonarjs/unused-import': 'off',
 			'unused-imports/no-unused-imports': 'warn',
 			'no-unused-private-class-members': 'warn',
 			'@typescript-eslint/no-unused-vars': [
-				'off',
+				'warn',
 				{
 					argsIgnorePattern: '^_',
 					varsIgnorePattern: '^_',
@@ -280,31 +212,8 @@ export default tseslint.config(
 		},
 	},
 	{
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-		files: ['**/*.ts/1_inline-template-app.component.ts-1.component.html'],
-		rules: {
-			'sonarjs/no-element-overwrite': 'off',
-			'sonarjs/no-same-line-conditional': 'off',
-			'sonarjs/no-unenclosed-multiline-block': 'off',
-		},
-	},
-	{
-		files: ['**/*.json'],
-		rules: {
-			'prettier/prettier': 'warn',
-		},
-	},
-	{
-		files: ['**/*.ts', '**/*.mts', '**/*.js', '**/*.mjs', '**/*.html'],
-=======
 		name: 'Prettier',
 		files: ['**/*.ts', '**/*.mts', '**/*.js', '**/*.mjs', '**/*.json'],
->>>>>>> Stashed changes
-=======
-		name: 'Prettier',
-		files: ['**/*.ts', '**/*.mts', '**/*.js', '**/*.mjs', '**/*.json'],
->>>>>>> Stashed changes
 		rules: {
 			'prettier/prettier': 'warn',
 		},
