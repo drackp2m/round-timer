@@ -25,16 +25,16 @@ export class PlayerBadgeComponent implements AfterViewInit {
 	readonly player = input.required<Player>();
 	readonly debug = input(false, { transform: Check.isFalseAsStringOrTrue });
 
-	private readonly elementRef: ElementRef<Element> = inject(ElementRef);
+	private readonly elementRef = inject<ElementRef<Element>>(ElementRef);
 
-	readonly icon = computed(() => PlayerIcon[this.player().icon] ?? 'user-plus');
-	readonly color = computed(() => PlayerColor[this.player().color] ?? 'var(--color-contrast-mid)');
+	readonly icon = computed(() => PlayerIcon[this.player().icon]);
+	readonly color = computed(() => PlayerColor[this.player().color]);
 
 	readonly backgroundColor = signal('var(--color-primary)');
 
 	readonly UUID = crypto.randomUUID();
 	readonly size = signal(72);
-	readonly viewBox = computed(() => `0 0 ${this.size()} ${this.size()}`);
+	readonly viewBox = computed(() => `0 0 ${this.size().toString()} ${this.size().toString()}`);
 	readonly fontSize = signal(0);
 	readonly createTopCircle = computed(() => {
 		const size = this.size();

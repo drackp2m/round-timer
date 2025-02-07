@@ -1,11 +1,10 @@
 import { Component, ElementRef, computed, effect, inject, input, viewChild } from '@angular/core';
+import { ShowMillisecondsPipe } from 'src/app/pipe/show-milliseconds.pipe';
 
 import { SvgComponent } from '@app/component/svg.component';
 import { MatchTurn } from '@app/definition/page/match/match-turn.interface';
 import { PlayerStore } from '@app/store/player.store';
 import { Async } from '@app/util/async';
-
-import { ShowMillisecondsPipe } from 'src/app/pipe/show-milliseconds.pipe';
 
 @Component({
 	selector: 'app-match-turns',
@@ -24,7 +23,7 @@ export class MatchTurnsComponent {
 
 	readonly players = this.playerStore.playerEntities;
 	readonly playerByUuid = computed(
-		() => new Map(this.players()?.map((player) => [player.uuid, player])),
+		() => new Map(this.players().map((player) => [player.uuid, player])),
 	);
 	readonly fasterTurn = computed(() =>
 		this.matchTurns().reduce(

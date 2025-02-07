@@ -1,7 +1,7 @@
+import { CalculateMatchTurns } from './calculate-match-turns.use-case';
+
 import { MatchEventTypeKey } from '@app/definition/model/match/match-event-type.enum';
 import { MatchEvent } from '@app/model/match-event.model';
-
-import { CalculateMatchTurns } from './calculate-match-turns.use-case';
 
 describe('CalculateMatchTurns', () => {
 	let service: CalculateMatchTurns;

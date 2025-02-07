@@ -36,7 +36,7 @@ export class SettingPage {
 			const newTheme = this.appearanceChange();
 
 			if (this.firstChangeIgnored) {
-				void this.themeService.updateSelectedTheme(newTheme);
+				this.themeService.updateSelectedTheme(newTheme);
 			} else {
 				this.firstChangeIgnored = true;
 			}

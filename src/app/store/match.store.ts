@@ -1,4 +1,7 @@
 import { Injectable, computed, inject } from '@angular/core';
+import { patchState, signalStore, withState } from '@ngrx/signals';
+import { StoreNames } from 'idb';
+
 import { MatchEventType } from '@app/definition/model/match/match-event-type.enum';
 import { MatchEventPayload } from '@app/definition/model/match/match-event-type.type';
 import { MatchTurn } from '@app/definition/page/match/match-turn.interface';
@@ -8,10 +11,8 @@ import { Match } from '@app/model/match.model';
 import { MatchSchema } from '@app/repository/definition/match-schema.interface';
 import { GameRepository } from '@app/repository/game.repository';
 import { MatchRepository } from '@app/repository/match.repository';
+import { CalculateMatchTurns } from '@app/use-case/match/calculate-match-turns.use-case';
 import { Enum } from '@app/util/enum';
-import { patchState, signalStore, withState } from '@ngrx/signals';
-import { StoreNames } from 'idb';
-import { CalculateMatchTurns } from 'src/app/use-case/match/calculate-match-turns.use-case';
 
 interface MatchStoreProps {
 	match: Match | null;

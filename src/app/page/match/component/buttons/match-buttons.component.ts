@@ -42,9 +42,9 @@ export class MatchButtonsComponent {
 		const timerIsRunning = this.timerIsRunning();
 
 		if (0 === matchTurnsLength && !timerIsRunning) {
-			return this.buttonPressed.emit(MatchEventType.NEXT_TURN);
+			this.buttonPressed.emit(MatchEventType.NEXT_TURN);
 		} else if (timerIsRunning) {
-			return this.buttonPressed.emit(MatchEventType.PAUSE);
+			this.buttonPressed.emit(MatchEventType.PAUSE);
 		} else {
 			this.buttonPressed.emit(MatchEventType.RESUME);
 		}

@@ -15,7 +15,7 @@ export class CalculateMatchTurns {
 	addEvent(event: MatchEvent) {
 		this.events.push(event);
 
-		console.log(`Checking event #${this.events.length} ${event.type}...`);
+		console.log(`Checking event #${this.events.length.toString()} ${event.type}...`);
 
 		if (Check.isEventType(event, 'SET_TURN_ORDER')) {
 			this.turnOrder = event.payload;

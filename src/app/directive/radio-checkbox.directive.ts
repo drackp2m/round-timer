@@ -1,5 +1,7 @@
 import { Directive, ElementRef, OnInit, Renderer2, effect, inject, input } from '@angular/core';
 
+import { createTypedElement } from '@app/util/renderer';
+
 @Directive({
 	selector: 'input[appInput][type=radio], input[appInput][type=checkbox]',
 })
@@ -7,14 +9,17 @@ export class RadioCheckboxDirective implements OnInit {
 	readonly type = input.required<string>();
 	readonly label = input.required<string | HTMLElement>();
 
-	private readonly elementRef: ElementRef<HTMLInputElement> = inject(ElementRef);
+	private readonly elementRef = inject<ElementRef<HTMLInputElement>>(ElementRef);
 	private readonly renderer2 = inject(Renderer2);
 
 	private wrapperElement?: HTMLDivElement;
 	private labelElement?: HTMLLabelElement;
 
 	constructor() {
-		effect(() => this.fillLabel(this.label()));
+		effect(() => {
+			const label = this.label();
+			this.fillLabel(label);
+		});
 	}
 
 	ngOnInit() {
@@ -48,7 +53,7 @@ export class RadioCheckboxDirective implements OnInit {
 
 	private createWrapper(): HTMLDivElement {
 		const type = this.type();
-		const container = this.renderer2.createElement('div');
+		const container = createTypedElement(this.renderer2, 'div');
 
 		this.renderer2.addClass(container, `app-${type}`);
 
@@ -56,11 +61,11 @@ export class RadioCheckboxDirective implements OnInit {
 	}
 
 	private createLabel(): HTMLLabelElement {
-		const label = this.renderer2.createElement('label');
+		const label = createTypedElement(this.renderer2, 'label');
 		const labelInput = this.label();
 
 		if ('string' === typeof labelInput) {
-			const span = this.renderer2.createElement('span');
+			const span = createTypedElement(this.renderer2, 'span');
 			this.renderer2.addClass(span, 'label');
 
 			this.renderer2.appendChild(label, span);

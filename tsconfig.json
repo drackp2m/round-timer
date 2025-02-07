@@ -27,9 +27,11 @@
 			"@app/layout/*": ["src/app/layout/*"],
 			"@app/model/*": ["src/app/model/*"],
 			"@app/page/*": ["src/app/page/*"],
+			"@app/pipe/*": ["src/app/pipe/*"],
 			"@app/repository/*": ["src/app/repository/*"],
 			"@app/service/*": ["src/app/service/*"],
 			"@app/store/*": ["src/app/store/*"],
+			"@app/use-case/*": ["src/app/use-case/*"],
 			"@app/util/*": ["src/app/util/*"]
 		}
 	},

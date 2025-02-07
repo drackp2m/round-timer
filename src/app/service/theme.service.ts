@@ -48,7 +48,7 @@ export class ThemeService implements OnDestroy {
 		}
 	}
 
-	async updateSelectedTheme(theme: Theme | 'system', saveSetting = true): Promise<void> {
+	updateSelectedTheme(theme: Theme | 'system', saveSetting = true): void {
 		this.theme.set(theme);
 
 		if ('system' !== theme) {
@@ -94,9 +94,9 @@ export class ThemeService implements OnDestroy {
 		const setting = this.settingStore.settingEntities().find((setting) => 'THEME' === setting.type);
 
 		if (setting !== undefined) {
-			void this.updateSelectedTheme(setting.payload as Theme, false);
+			this.updateSelectedTheme(setting.payload as Theme, false);
 		} else {
-			void this.updateSelectedTheme('system');
+			this.updateSelectedTheme('system');
 		}
 	}
 }

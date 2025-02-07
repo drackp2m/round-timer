@@ -10,6 +10,8 @@ import {
 	input,
 } from '@angular/core';
 
+import { createTypedElement } from '@app/util/renderer';
+
 type InputDirectiveType = 'email' | 'number' | 'password' | 'search' | 'tel' | 'text' | 'url';
 
 @Directive({
@@ -22,7 +24,7 @@ export class InputDirective implements OnInit, AfterViewInit {
 	readonly label = input('');
 	readonly placeholder = input('');
 
-	private readonly elementRef: ElementRef<HTMLInputElement> = inject(ElementRef);
+	private readonly elementRef = inject<ElementRef<HTMLInputElement>>(ElementRef);
 	private readonly renderer2 = inject(Renderer2);
 
 	private readonly wrapperElement: HTMLDivElement = this.createWrapper();
@@ -33,8 +35,14 @@ export class InputDirective implements OnInit, AfterViewInit {
 	private readonly placeholderElement: HTMLSpanElement = this.createPlaceholderSpan();
 
 	constructor() {
-		effect(() => this.fillLabel(this.label()));
-		effect(() => this.fillPlaceholder(this.placeholder()));
+		effect(() => {
+			const label = this.label();
+			this.fillLabel(label);
+		});
+		effect(() => {
+			const placeholder = this.placeholder();
+			this.fillPlaceholder(placeholder);
+		});
 	}
 
 	@HostListener('focus')
@@ -64,17 +72,17 @@ export class InputDirective implements OnInit, AfterViewInit {
 	}
 
 	ngAfterViewInit() {
-		const labelWidth = this.labelElement.querySelector('span')?.offsetWidth;
+		const labelWidth = this.labelElement.querySelector('span')?.offsetWidth ?? '';
 		const inputHeight = this.wrapperElement.offsetHeight;
 
-		this.setCSSVariable('--label-width', `${labelWidth}px`);
-		this.setCSSVariable('--input-height', `${inputHeight}px`);
+		this.setCSSVariable('--label-width', `${labelWidth.toString()}px`);
+		this.setCSSVariable('--input-height', `${inputHeight.toString()}px`);
 
 		this.onInput();
 	}
 
 	private setCSSVariable(name: string, value: string) {
-		this.wrapperElement?.style.setProperty(name, value);
+		this.wrapperElement.style.setProperty(name, value);
 	}
 
 	private prepareWrapper() {
@@ -100,7 +108,7 @@ export class InputDirective implements OnInit, AfterViewInit {
 	}
 
 	private createWrapper(): HTMLDivElement {
-		const container = this.renderer2.createElement('div');
+		const container = createTypedElement(this.renderer2, 'div');
 
 		this.renderer2.addClass(container, 'app-input');
 
@@ -108,8 +116,8 @@ export class InputDirective implements OnInit, AfterViewInit {
 	}
 
 	private createLabel(): HTMLLabelElement {
-		const label = this.renderer2.createElement('label');
-		const span = this.renderer2.createElement('span');
+		const label = createTypedElement(this.renderer2, 'label');
+		const span = createTypedElement(this.renderer2, 'span');
 
 		this.renderer2.appendChild(label, span);
 
@@ -117,7 +125,7 @@ export class InputDirective implements OnInit, AfterViewInit {
 	}
 
 	private createFakeLabel(): HTMLSpanElement {
-		const fakeLabel = this.renderer2.createElement('p');
+		const fakeLabel = createTypedElement(this.renderer2, 'p') as HTMLSpanElement;
 
 		this.renderer2.addClass(fakeLabel, 'label');
 
@@ -125,7 +133,7 @@ export class InputDirective implements OnInit, AfterViewInit {
 	}
 
 	private createBorderContainer(): HTMLDivElement {
-		const element = this.renderer2.createElement('div');
+		const element = createTypedElement(this.renderer2, 'div');
 
 		this.renderer2.addClass(element, 'border-container');
 
@@ -133,7 +141,7 @@ export class InputDirective implements OnInit, AfterViewInit {
 	}
 
 	private creteLabelContainer(): HTMLDivElement {
-		const element = this.renderer2.createElement('div');
+		const element = createTypedElement(this.renderer2, 'div');
 
 		this.renderer2.addClass(element, 'label-container');
 
@@ -141,7 +149,7 @@ export class InputDirective implements OnInit, AfterViewInit {
 	}
 
 	private createPlaceholderSpan(): HTMLSpanElement {
-		const element = this.renderer2.createElement('span');
+		const element = createTypedElement(this.renderer2, 'span');
 
 		this.renderer2.addClass(element, 'placeholder');
 

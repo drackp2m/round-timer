@@ -46,15 +46,19 @@ export class PlayerStore extends signalStore(
 	}
 
 	toggleSelection(entity: Player): void {
-		const selectedEntities = { ...this.selectedEntities() };
+		let selectedEntities = { ...this.selectedEntities() };
 		let unselectedEntities = { ...this.unselectedEntities() };
 
 		if (entity.uuid in selectedEntities) {
-			delete selectedEntities[entity.uuid];
+			selectedEntities = Object.fromEntries(
+				Object.entries(selectedEntities).filter(([uuid]) => uuid !== entity.uuid),
+			);
 			unselectedEntities = { [entity.uuid]: entity, ...unselectedEntities };
 		} else {
 			selectedEntities[entity.uuid] = entity;
-			delete unselectedEntities[entity.uuid];
+			unselectedEntities = Object.fromEntries(
+				Object.entries(unselectedEntities).filter(([uuid]) => uuid !== entity.uuid),
+			);
 		}
 
 		patchState(this, { selectedEntities, unselectedEntities });

@@ -49,7 +49,7 @@ export class GenericRepository<T extends DBSchema> {
 				const result = await this.waitForTransactionWithTimeout(timeout);
 
 				if (!result.success) {
-					return Promise.reject(result.error);
+					return Promise.reject(new Error(result.error ?? ''));
 				}
 			} else {
 				console.warn(
@@ -89,7 +89,9 @@ export class GenericRepository<T extends DBSchema> {
 				tx.abort();
 
 				return Promise.reject(
-					`Error inserting data in \`${storeName}\`: ${JSON.stringify(value)}\n${error}`,
+					new Error(
+						`Error inserting data in \`${storeName as string}\`: ${JSON.stringify(value)}\n${(error as Error).message}`,
+					),
 				);
 			}
 		});
@@ -109,10 +111,10 @@ export class GenericRepository<T extends DBSchema> {
 		}
 
 		const results = await Promise.all(values.map((value) => this.insert(storeName, value))).catch(
-			(error) => {
+			(error: unknown) => {
 				this.transaction?.abort();
 
-				return Promise.reject(`Batch insert failed: ${error}`);
+				return Promise.reject(new Error(`Batch insert failed: ${(error as Error).message}`));
 			},
 		);
 
@@ -165,7 +167,7 @@ export class GenericRepository<T extends DBSchema> {
 		});
 	}
 
-	async clear<K extends StoreNames<T>>(storeName: K): Promise<void> {
+	async clear(storeName: StoreNames<T>): Promise<void> {
 		await this.withTransaction([storeName], 'readwrite', async (tx) => {
 			await tx.objectStore(storeName).clear();
 		});
@@ -211,7 +213,7 @@ export class GenericRepository<T extends DBSchema> {
 					this.transaction = null;
 					resolve({
 						success: false,
-						error: `Transaction wait timeout after ${timeout}ms`,
+						error: `Transaction wait timeout after ${timeout.toString()}ms`,
 					});
 				}, timeout);
 			}),

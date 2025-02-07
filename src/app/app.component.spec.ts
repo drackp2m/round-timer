@@ -3,7 +3,7 @@ import { render } from '@testing-library/angular';
 
 import { AppComponent } from './app.component';
 
-import { LoadInitialDataUseCase } from 'src/app/use-case/load-initial-data.use-case';
+import { LoadInitialDataUseCase } from '@app/use-case/load-initial-data.use-case';
 
 describe('AppComponent', () => {
 	const setup = async () => {

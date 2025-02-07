@@ -11,13 +11,14 @@ import {
 } from '@angular/core';
 
 import { SvgComponent } from '@app/component/svg.component';
+import { createTypedElement } from '@app/util/renderer';
 
 @Directive({
 	selector: 'select[appSelect]',
 })
 // ToDo => add default label as "Select an option"
 export class SelectDirective implements OnInit, AfterViewInit {
-	private readonly elementRef: ElementRef<HTMLSelectElement> = inject(ElementRef);
+	private readonly elementRef = inject<ElementRef<HTMLSelectElement>>(ElementRef);
 	private readonly renderer2 = inject(Renderer2);
 	private readonly viewContainerRef = inject(ViewContainerRef);
 
@@ -54,15 +55,15 @@ export class SelectDirective implements OnInit, AfterViewInit {
 	}
 
 	ngAfterViewInit() {
-		const labelWidth = this.labelElement.querySelector('span')?.offsetWidth;
+		const labelWidth = this.labelElement.querySelector('span')?.offsetWidth ?? '';
 		const inputHeight = this.wrapperElement.offsetHeight;
 
-		this.setCSSVariable('--label-width', `${labelWidth}px`);
-		this.setCSSVariable('--input-height', `${inputHeight}px`);
+		this.setCSSVariable('--label-width', `${labelWidth.toString()}px`);
+		this.setCSSVariable('--input-height', `${inputHeight.toString()}px`);
 	}
 
 	private setCSSVariable(name: string, value: string) {
-		this.wrapperElement?.style.setProperty(name, value);
+		this.wrapperElement.style.setProperty(name, value);
 	}
 
 	private prepareWrapper() {
@@ -94,7 +95,7 @@ export class SelectDirective implements OnInit, AfterViewInit {
 	}
 
 	private createWrapper(): HTMLDivElement {
-		const container = this.renderer2.createElement('div');
+		const container = createTypedElement(this.renderer2, 'div');
 
 		this.renderer2.addClass(container, 'app-select');
 
@@ -102,8 +103,8 @@ export class SelectDirective implements OnInit, AfterViewInit {
 	}
 
 	private createLabel(): HTMLLabelElement {
-		const label = this.renderer2.createElement('label');
-		const span = this.renderer2.createElement('span');
+		const label = createTypedElement(this.renderer2, 'label');
+		const span = createTypedElement(this.renderer2, 'span');
 
 		this.renderer2.appendChild(label, span);
 
@@ -111,7 +112,7 @@ export class SelectDirective implements OnInit, AfterViewInit {
 	}
 
 	private createFakeLabel(): HTMLSpanElement {
-		const fakeLabel = this.renderer2.createElement('p');
+		const fakeLabel = createTypedElement(this.renderer2, 'p');
 
 		this.renderer2.addClass(fakeLabel, 'label');
 
@@ -119,7 +120,7 @@ export class SelectDirective implements OnInit, AfterViewInit {
 	}
 
 	private createBorderContainer(): HTMLDivElement {
-		const borderBox = this.renderer2.createElement('div');
+		const borderBox = createTypedElement(this.renderer2, 'div');
 
 		this.renderer2.addClass(borderBox, 'border-container');
 		this.renderer2.addClass(borderBox, 'flex-row');
@@ -130,7 +131,7 @@ export class SelectDirective implements OnInit, AfterViewInit {
 	}
 
 	private creteLabelContainer(): HTMLDivElement {
-		const element = this.renderer2.createElement('div');
+		const element = createTypedElement(this.renderer2, 'div');
 
 		this.renderer2.addClass(element, 'label-container');
 

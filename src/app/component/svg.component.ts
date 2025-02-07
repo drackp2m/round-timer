@@ -45,7 +45,7 @@ import { Check } from '@app/util/check';
 export class SvgComponent {
 	readonly icon = input.required<string, string>({ transform: this.getIcon });
 	readonly flip = input(false, { transform: Check.isFalseAsStringOrTrue });
-	readonly size = input<string, number>('24px', { transform: (size) => `${size}px` });
+	readonly size = input<string, number>('24px', { transform: (size) => `${size.toString()}px` });
 
 	readonly color = signal('surface-contrast');
 	readonly hexColor = signal('surface-contrast');
