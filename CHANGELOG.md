@@ -1,3 +1,18 @@
+# v1.3.2 (2025-02-07)
+## What's Changed
+### 🧪 Tests
+* using testing library and jest, create CalculateMatchTurnUseCase spec ([dc949b9](https://github.com/drackp2m/round-timer/commit/dc949b9c917c91e090ed32d67463be296435068e)) by Marc Jovaní González
+### ♻️ Code Refactoring
+* add new eslint rules and apply fixes ([678bcb7](https://github.com/drackp2m/round-timer/commit/678bcb74e0ca21451de7b65e94b1639e14195ece)) by Marc Jovaní González
+* add new eslint rules, apply eslint fixes ([3f20ef4](https://github.com/drackp2m/round-timer/commit/3f20ef412f78fda99dac7ae05b4a58f4b709e707)) by Marc Jovaní González
+### 🚀 Performance Improvements
+* try to improve eslint performance ([de6e5b3](https://github.com/drackp2m/round-timer/commit/de6e5b3ff4ebf2c9e070590c685fabb92d6be5d1)) by Marc Jovaní González
+### 💻 Continuous Integration
+* add step install to avoid installing node modules several times in parallel ([16a698c](https://github.com/drackp2m/round-timer/commit/16a698c11d3936ecd538cff88c55d01ebf81b1fb)) by Marc Jovaní González
+* use cache in all steps ([cc0543e](https://github.com/drackp2m/round-timer/commit/cc0543e86b67d839a1fe72b4d41f8cb848508048)) by Marc Jovaní González
+
+**Full Changelog**: https://github.com/drackp2m/round-timer/compare/v1.3.1...v1.3.2
+
 # v1.3.1 (2025-01-17)
 ## What's Changed
 ### 🎨 Styles
