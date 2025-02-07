@@ -1,17 +1,18 @@
-import { Component, computed, input } from '@angular/core';
+import { Component, computed, inject, input } from '@angular/core';
 
-import { ShowMillisecondsPipe } from 'src/app/pipe/show-milliseconds.pipe';
+import { ShowMillisecondsPipe } from '@app/pipe/show-milliseconds.pipe';
 
 @Component({
 	selector: 'app-show-milliseconds',
 	templateUrl: './show-milliseconds.component.html',
 	styleUrl: './show-milliseconds.component.scss',
+	providers: [ShowMillisecondsPipe],
 })
 export class ShowMillisecondsComponent {
 	readonly time = input.required<number>();
 	readonly decimals = input(2);
 
-	private readonly showMillisecondsPipe = new ShowMillisecondsPipe();
+	private readonly showMillisecondsPipe = inject(ShowMillisecondsPipe);
 
 	readonly parts = computed(() => {
 		const time = this.time();
@@ -24,13 +25,13 @@ export class ShowMillisecondsComponent {
 		const parts = this.parts();
 		const decimals = this.decimals();
 
-		return parts[1] + (0 === decimals ? 's' : '');
+		return (parts[1] ?? '') + (0 === decimals ? 's' : '');
 	});
 
 	readonly milliseconds = computed(() => {
 		const parts = this.parts();
 		const decimals = this.decimals();
 
-		return 0 !== decimals ? '.' + parts[0] + 's' : '';
+		return 0 !== decimals ? '.' + (parts[0] ?? '') + 's' : '';
 	});
 }

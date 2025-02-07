@@ -1,10 +1,22 @@
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import { provideExperimentalZonelessChangeDetection } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 
-import { MatchEvent } from '@app/model/match-event.model';
-
+=======
 import { CalculateMatchTurns } from './calculate-match-turns.use-case';
 
+import { MatchEventTypeKey } from '@app/definition/model/match/match-event-type.enum';
+>>>>>>> Stashed changes
+import { MatchEvent } from '@app/model/match-event.model';
+
+=======
+import { CalculateMatchTurns } from './calculate-match-turns.use-case';
+
+import { MatchEventTypeKey } from '@app/definition/model/match/match-event-type.enum';
+import { MatchEvent } from '@app/model/match-event.model';
+
+>>>>>>> Stashed changes
 describe('CalculateMatchTurns', () => {
 	let service: CalculateMatchTurns;
 	const MATCH_UUID = 'test-match-uuid';

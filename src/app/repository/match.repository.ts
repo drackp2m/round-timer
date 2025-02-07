@@ -4,8 +4,7 @@ import { MatchEvent } from '@app/model/match-event.model';
 import { MatchPlayer } from '@app/model/match-player.model';
 import { Match } from '@app/model/match.model';
 import { MatchSchema } from '@app/repository/definition/match-schema.interface';
-
-import { GenericRepository } from './generic.repository';
+import { GenericRepository } from '@app/repository/generic.repository';
 
 @Injectable({
 	providedIn: 'root',

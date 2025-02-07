@@ -28,10 +28,18 @@ export class CalculateMatchTurns {
 			this.eventCheckingIndex = index;
 			console.log(`Checking event #${index} ${event.type}...`);
 
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
 			if (Check.isEventType(event, 'SET_TURN_ORDER')) {
 				this.turnOrder = event.payload;
 				continue;
 			}
+=======
+		console.log(`Checking event #${this.events.length.toString()} ${event.type}...`);
+>>>>>>> Stashed changes
+=======
+		console.log(`Checking event #${this.events.length.toString()} ${event.type}...`);
+>>>>>>> Stashed changes
 
 			switch (event.type) {
 				case 'NEXT_TURN':

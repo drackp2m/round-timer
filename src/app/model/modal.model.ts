@@ -14,6 +14,6 @@ export abstract class Modal<T = void> {
 	close(value: T): void {
 		this.onClose.next(value);
 		this.onClose.complete();
-		void this.modalStore.close();
+		this.modalStore.close();
 	}
 }

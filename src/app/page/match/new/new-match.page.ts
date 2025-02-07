@@ -2,6 +2,8 @@ import { Component, computed, effect, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
+import { AddPlayerModal } from './modal/add-player/add-player.modal';
+
 import { SvgComponent } from '@app/component/svg.component';
 import { ButtonDirective } from '@app/directive/button.directive';
 import { InputDirective } from '@app/directive/input.directive';
@@ -15,8 +17,6 @@ import { GameStore } from '@app/store/game.store';
 import { MatchStore } from '@app/store/match.store';
 import { ModalStore } from '@app/store/modal.store';
 import { PlayerStore } from '@app/store/player.store';
-
-import { AddPlayerModal } from './modal/add-player/add-player.modal';
 
 @Component({
 	templateUrl: './new-match.page.html',
@@ -136,10 +136,8 @@ export class NewMatchPage {
 	}
 
 	private getPlayersFromForm(matchUuid: string): MatchPlayer[] {
-		return (
-			this.playersList()
-				?.filter((player) => true === this.form.controls.players.get(player.uuid)?.value)
-				.map(({ uuid: playerUuid }) => new MatchPlayer({ matchUuid, playerUuid }).toObject()) ?? []
-		);
+		return this.playersList()
+			.filter((player) => true === this.form.controls.players.get(player.uuid)?.value)
+			.map(({ uuid: playerUuid }) => new MatchPlayer({ matchUuid, playerUuid }).toObject());
 	}
 }

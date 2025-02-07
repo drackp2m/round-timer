@@ -52,8 +52,9 @@ import { Async } from '@app/util/async';
 })
 export class ModalOutletComponent implements AfterViewInit {
 	// Fixme => solve error when modal content change his height
-	private readonly modalContainer = viewChild.required('modalContainer', { read: ElementRef });
-	private readonly modalContent = viewChild.required('modalContent', { read: ViewContainerRef });
+	private readonly modalContainer =
+		viewChild.required<ElementRef<HTMLDivElement>>('modalContainer');
+	private readonly modalContent = viewChild.required<ViewContainerRef>('modalContent');
 
 	private readonly modalStore = inject(ModalStore);
 	private readonly renderer2 = inject(Renderer2);
@@ -92,7 +93,7 @@ export class ModalOutletComponent implements AfterViewInit {
 		const modalState = this.modalState();
 
 		if (!animationInProgress && 'visible' === modalState) {
-			return Promise.reject('Modal is already open');
+			return Promise.reject(new Error('Modal is already open'));
 		}
 
 		this.isInTransition.set(true);
@@ -115,7 +116,7 @@ export class ModalOutletComponent implements AfterViewInit {
 		return componentRef;
 	}
 
-	async close(): Promise<void> {
+	close(): void {
 		const modalState = this.modalState();
 
 		if ('visible' === modalState) {
@@ -136,7 +137,7 @@ export class ModalOutletComponent implements AfterViewInit {
 		const modalContent = this.modalContent();
 
 		if (null !== this.activeComponentRef) {
-			this.activeComponentRef?.destroy();
+			this.activeComponentRef.destroy();
 			this.activeComponentRef = null;
 		}
 

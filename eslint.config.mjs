@@ -3,7 +3,15 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import eslint from '@eslint/js';
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import tsParser from '@typescript-eslint/parser';
+=======
+import tseslint from 'typescript-eslint';
+>>>>>>> Stashed changes
+=======
+import tseslint from 'typescript-eslint';
+>>>>>>> Stashed changes
 import angular from 'angular-eslint';
 import eslintImport from 'eslint-plugin-import';
 import eslintPluginJsonc from 'eslint-plugin-jsonc';
@@ -11,7 +19,6 @@ import prettier from 'eslint-plugin-prettier';
 import rxjs from 'eslint-plugin-rxjs-updated';
 import sonarjs from 'eslint-plugin-sonarjs';
 import unusedImports from 'eslint-plugin-unused-imports';
-import tseslint from 'typescript-eslint';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -28,8 +35,34 @@ function eslintErrorsToWarnings(rules) {
 	);
 }
 
+<<<<<<< Updated upstream
 const eslintConfig = tseslint.config(
 	...eslintPluginJsonc.configs['flat/recommended-with-jsonc'],
+=======
+function transformEslintConfigs(config) {
+	if (Array.isArray(config)) {
+		return config.map((item) => transformEslintConfigs(item));
+	}
+
+	if (config && 'object' === typeof config) {
+		return Object.fromEntries(
+			Object.entries(config).map(([key, value]) => {
+				if ('rules' === key) {
+					return [key, eslintErrorsToWarnings(value)];
+				} else {
+					return [key, value];
+				}
+			}),
+		);
+	}
+
+	return config;
+}
+
+export default tseslint.config(
+	...jsonc.configs['flat/recommended-with-jsonc'],
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
 	{
 		plugins: {
 			eslintPluginJsonc,
@@ -39,8 +72,18 @@ const eslintConfig = tseslint.config(
 			import: eslintImport,
 			'unused-imports': unusedImports,
 		},
+		settings: {
+			'import/internal-regex': '^@app/',
+		},
+		languageOptions: {
+			parserOptions: {
+				projectService: true,
+				tsconfigRootDir: import.meta.dirname,
+			},
+		},
 	},
 	{
+<<<<<<< Updated upstream
 		files: ['**/*.ts', '**/*.mts', '**/*.js', '**/*.mjs'],
 		languageOptions: {
 			parser: tsParser,
@@ -64,11 +107,48 @@ const eslintConfig = tseslint.config(
 			...tseslint.configs.recommended,
 			...tseslint.configs.stylistic,
 			...angular.configs.tsRecommended,
+=======
+=======
+	{
+		plugins: {
+			jsonc,
+			prettier,
+			sonarjs,
+			rxjs,
+			import: eslintImport,
+			'unused-imports': unusedImports,
+		},
+		settings: {
+			'import/internal-regex': '^@app/',
+		},
+		languageOptions: {
+			parserOptions: {
+				projectService: true,
+				tsconfigRootDir: import.meta.dirname,
+			},
+		},
+	},
+	{
+>>>>>>> Stashed changes
+		name: 'TypeScript',
+		files: ['**/*.ts'],
+		extends: [
+			transformEslintConfigs(eslint.configs.recommended),
+			transformEslintConfigs(tseslint.configs.recommendedTypeChecked),
+			transformEslintConfigs(tseslint.configs.strictTypeChecked),
+			transformEslintConfigs(tseslint.configs.stylisticTypeChecked),
+			transformEslintConfigs(rxjs.configs.recommended),
+			transformEslintConfigs(angular.configs.tsRecommended),
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 		],
 		processor: angular.processInlineTemplates,
 		rules: {
-			...eslintErrorsToWarnings(rxjs.configs.recommended.rules),
 			...eslintErrorsToWarnings(sonarjs.configs.recommended.rules),
+			'@typescript-eslint/no-extraneous-class': 'off',
+			'@typescript-eslint/unbound-method': 'off',
 			'@angular-eslint/directive-selector': [
 				'warn',
 				{
@@ -140,13 +220,6 @@ const eslintConfig = tseslint.config(
 					alphabetize: {
 						order: 'asc',
 					},
-					pathGroups: [
-						{
-							pattern: '@app/**',
-							group: 'external',
-							position: 'after',
-						},
-					],
 				},
 			],
 			'sort-imports': [
@@ -178,8 +251,6 @@ const eslintConfig = tseslint.config(
 			yoda: ['warn', 'always'],
 			'no-implicit-coercion': ['warn', { boolean: true }],
 			'no-extra-boolean-cast': 'warn',
-			'@typescript-eslint/no-floating-promises': 'warn',
-			'@typescript-eslint/no-misused-promises': 'warn',
 			'@typescript-eslint/no-unnecessary-boolean-literal-compare': 'warn',
 			'@typescript-eslint/strict-boolean-expressions': [
 				'warn',
@@ -192,24 +263,25 @@ const eslintConfig = tseslint.config(
 		},
 	},
 	{
+		name: 'JavaScript',
 		files: ['**/*.js', '**/*.mjs'],
 		rules: {
 			'@typescript-eslint/no-require-imports': 'off',
 		},
 	},
 	{
+		name: 'HTML',
 		files: ['**/*.html'],
 		extends: [...angular.configs.templateRecommended, ...angular.configs.templateAccessibility],
 		rules: {
-			'sonarjs/no-element-overwrite': 'off',
-			'sonarjs/no-same-line-conditional': 'off',
-			'sonarjs/no-unenclosed-multiline-block': 'off',
 			'prettier/prettier': 'warn',
 			'@angular-eslint/template/click-events-have-key-events': 'warn',
 			'@angular-eslint/template/interactive-supports-focus': 'warn',
 		},
 	},
 	{
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
 		files: ['**/*.ts/1_inline-template-app.component.ts-1.component.html'],
 		rules: {
 			'sonarjs/no-element-overwrite': 'off',
@@ -225,11 +297,20 @@ const eslintConfig = tseslint.config(
 	},
 	{
 		files: ['**/*.ts', '**/*.mts', '**/*.js', '**/*.mjs', '**/*.html'],
+=======
+		name: 'Prettier',
+		files: ['**/*.ts', '**/*.mts', '**/*.js', '**/*.mjs', '**/*.json'],
+>>>>>>> Stashed changes
+=======
+		name: 'Prettier',
+		files: ['**/*.ts', '**/*.mts', '**/*.js', '**/*.mjs', '**/*.json'],
+>>>>>>> Stashed changes
 		rules: {
 			'prettier/prettier': 'warn',
 		},
 	},
 	{
+		name: 'Default',
 		files: ['**/*.ts', '**/*.mts', '**/*.js', '**/*.mjs'],
 		ignores: ['**/*.spec.ts', '**/*.test.ts'],
 		rules: {
@@ -251,14 +332,13 @@ const eslintConfig = tseslint.config(
 		},
 	},
 	{
+		name: 'Tests',
 		files: ['**/*.spec.ts', '**/*.spec.js', '**/*.test.ts', '**/*.test.js'],
 		rules: {
-			'sonarjs/no-hardcoded-credentials': ['off'],
-			'sonarjs/no-hardcoded-passwords': ['off'],
-			'sonarjs/no-hardcoded-secrets': ['off'],
+			'sonarjs/no-hardcoded-credentials': 'off',
+			'sonarjs/no-hardcoded-passwords': 'off',
+			'sonarjs/no-hardcoded-secrets': 'off',
 			'sonarjs/no-skipped-tests': 'off',
 		},
 	},
 );
-
-export default eslintConfig;

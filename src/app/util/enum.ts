@@ -11,11 +11,11 @@ export abstract class Enum {
 		}));
 	}
 
-	static emptyStringAs<T>(): T {
+	static emptyStringAs<T>(_type?: T): T {
 		return '' as T;
 	}
 
-	static getEnumKeyByValue<T extends object, V extends T[keyof T]>(enumObj: T, value: V): keyof T {
+	static getEnumKeyByValue<T extends object>(enumObj: T, value: T[keyof T]): keyof T {
 		return (Object.keys(enumObj).find((key) => enumObj[key as keyof T] === value) ?? '') as keyof T;
 	}
 }

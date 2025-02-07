@@ -22,15 +22,13 @@ export class ModalStore extends signalStore({ protectedState: false }, withState
 	private modalOutletComponent: ModalOutletComponent | null = null;
 	private containerInitPromise: Promise<void>;
 	private initializeError = false;
-	private readonly timeoutPromise = firstValueFrom(timer(1000)).then(
-		(): Promise<undefined> | void => {
-			if (null === this.modalOutletComponent) {
-				this.initializeError = true;
+	private readonly timeoutPromise = firstValueFrom(timer(1000)).then((): Promise<void> | void => {
+		if (null === this.modalOutletComponent) {
+			this.initializeError = true;
 
-				return Promise.reject(new Error('Modal container initialization timeout'));
-			}
-		},
-	);
+			return Promise.reject(new Error('Modal container initialization timeout'));
+		}
+	});
 
 	constructor() {
 		super();
@@ -63,8 +61,8 @@ export class ModalStore extends signalStore({ protectedState: false }, withState
 		return this.modalOutletComponent.open(component);
 	}
 
-	async close() {
-		await this.modalOutletComponent?.close();
+	close(): void {
+		this.modalOutletComponent?.close();
 	}
 
 	private containerInitResolve: () => void = () => {

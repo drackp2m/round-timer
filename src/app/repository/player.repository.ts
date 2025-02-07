@@ -3,8 +3,7 @@ import { StoreNames, StoreValue } from 'idb';
 
 import { Player } from '@app/model/player.model';
 import { PlayerSchema } from '@app/repository/definition/player-schema.interface';
-
-import { GenericRepository } from './generic.repository';
+import { GenericRepository } from '@app/repository/generic.repository';
 
 @Injectable({
 	providedIn: 'root',

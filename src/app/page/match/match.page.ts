@@ -61,11 +61,11 @@ export class MatchPage {
 	readonly playersOrder = computed(() =>
 		this.matchStore
 			.currentPlayersOrder()
-			.map((uuid) => this.players()?.find((player) => player.uuid === uuid))
+			.map((uuid) => this.players().find((player) => player.uuid === uuid))
 			.filter((player) => player !== undefined),
 	);
 	readonly currentPlayer = computed(() =>
-		this.players()?.find((player) => player.uuid === this.matchStore.currentPlayer()),
+		this.players().find((player) => player.uuid === this.matchStore.currentPlayer()),
 	);
 	readonly fasterTurn = computed(() =>
 		this.matchTurns().reduce(

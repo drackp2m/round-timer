@@ -52,7 +52,9 @@ export abstract class Repository {
 
 		for (const migration of migrations) {
 			if (migration.version > oldVersion) {
-				console.log(`Updating to version ${migration.version}: ${migration.description}...`);
+				console.log(
+					`Updating to version ${migration.version.toString()}: ${migration.description}...`,
+				);
 
 				migration.apply({ database, oldVersion, newVersion, transaction });
 			}
@@ -69,7 +71,9 @@ export abstract class Repository {
 				if (database.name !== undefined && this.deprecatedDatabaseNames.includes(database.name)) {
 					const deletePromise = deleteDB(database.name, {
 						blocked() {
-							console.warn(`Unable to delete DataBase ${database.name}, because it is blocked`);
+							console.warn(
+								`Unable to delete DataBase ${database.name ?? ''}, because it is blocked`,
+							);
 						},
 					});
 

@@ -28,7 +28,7 @@ export class ButtonDirective implements OnInit {
 	readonly icon = input<string>();
 	readonly iconSize = input<number>(24);
 
-	private readonly elementRef: ElementRef<HTMLButtonElement> = inject(ElementRef);
+	private readonly elementRef = inject<ElementRef<HTMLButtonElement>>(ElementRef);
 	private readonly renderer2 = inject(Renderer2);
 	private readonly viewContainerRef = inject(ViewContainerRef);
 
