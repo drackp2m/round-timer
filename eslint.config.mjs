@@ -1,13 +1,13 @@
 /* eslint-disable max-lines */
 import eslint from '@eslint/js';
-import tseslint from 'typescript-eslint';
-import angular from 'angular-eslint';
-import eslintImport from 'eslint-plugin-import';
-import jsonc from 'eslint-plugin-jsonc';
-import prettier from 'eslint-plugin-prettier';
-import rxjs from 'eslint-plugin-rxjs-updated';
-import sonarjs from 'eslint-plugin-sonarjs';
-import unusedImports from 'eslint-plugin-unused-imports';
+import typescriptEslint from 'typescript-eslint';
+import angularEslint from 'angular-eslint';
+import eslintPluginImport from 'eslint-plugin-import';
+import eslintPluginPrettier from 'eslint-plugin-prettier';
+import eslintPluginRxjs from 'eslint-plugin-rxjs-updated';
+import eslintPluginSonarjs from 'eslint-plugin-sonarjs';
+import eslintPluginUnusedImports from 'eslint-plugin-unused-imports';
+import jsoncEslintParser from 'jsonc-eslint-parser';
 
 function eslintErrorsToWarnings(rules) {
 	return Object.fromEntries(
@@ -43,17 +43,8 @@ function transformEslintConfigs(config) {
 	return config;
 }
 
-export default tseslint.config(
-	...jsonc.configs['flat/recommended-with-jsonc'],
+export default typescriptEslint.config(
 	{
-		plugins: {
-			jsonc,
-			prettier,
-			sonarjs,
-			rxjs,
-			import: eslintImport,
-			'unused-imports': unusedImports,
-		},
 		settings: {
 			'import/internal-regex': '^@app/',
 		},
@@ -67,17 +58,23 @@ export default tseslint.config(
 	{
 		name: 'TypeScript',
 		files: ['**/*.ts'],
+		plugins: {
+			sonarjs: eslintPluginSonarjs,
+			rxjs: eslintPluginRxjs,
+			import: eslintPluginImport,
+			'unused-imports': eslintPluginUnusedImports,
+		},
 		extends: [
 			transformEslintConfigs(eslint.configs.recommended),
-			transformEslintConfigs(tseslint.configs.recommendedTypeChecked),
-			transformEslintConfigs(tseslint.configs.strictTypeChecked),
-			transformEslintConfigs(tseslint.configs.stylisticTypeChecked),
-			transformEslintConfigs(rxjs.configs.recommended),
-			transformEslintConfigs(angular.configs.tsRecommended),
+			transformEslintConfigs(typescriptEslint.configs.recommendedTypeChecked),
+			transformEslintConfigs(typescriptEslint.configs.strictTypeChecked),
+			transformEslintConfigs(typescriptEslint.configs.stylisticTypeChecked),
+			transformEslintConfigs(eslintPluginRxjs.configs.recommended),
+			transformEslintConfigs(angularEslint.configs.tsRecommended),
 		],
-		processor: angular.processInlineTemplates,
+		processor: angularEslint.processInlineTemplates,
 		rules: {
-			...eslintErrorsToWarnings(sonarjs.configs.recommended.rules),
+			...eslintErrorsToWarnings(eslintPluginSonarjs.configs.recommended.rules),
 			'@typescript-eslint/no-extraneous-class': 'off',
 			'@typescript-eslint/unbound-method': 'off',
 			'@angular-eslint/directive-selector': [
@@ -204,7 +201,13 @@ export default tseslint.config(
 	{
 		name: 'HTML',
 		files: ['**/*.html'],
-		extends: [...angular.configs.templateRecommended, ...angular.configs.templateAccessibility],
+		plugins: {
+			prettier: eslintPluginPrettier,
+		},
+		extends: [
+			...angularEslint.configs.templateRecommended,
+			...angularEslint.configs.templateAccessibility,
+		],
 		rules: {
 			'prettier/prettier': 'warn',
 			'@angular-eslint/template/click-events-have-key-events': 'warn',
@@ -212,8 +215,24 @@ export default tseslint.config(
 		},
 	},
 	{
+		name: 'JSON',
+		files: ['**/*.json', '**/*.jsonc', '**/*.json5'],
+		languageOptions: {
+			parser: jsoncEslintParser,
+		},
+		plugins: {
+			prettier: eslintPluginPrettier,
+		},
+		rules: {
+			'prettier/prettier': 'warn',
+		},
+	},
+	{
 		name: 'Prettier',
-		files: ['**/*.ts', '**/*.mts', '**/*.js', '**/*.mjs', '**/*.json'],
+		files: ['**/*.ts', '**/*.mts', '**/*.js', '**/*.mjs'],
+		plugins: {
+			prettier: eslintPluginPrettier,
+		},
 		rules: {
 			'prettier/prettier': 'warn',
 		},
@@ -221,7 +240,7 @@ export default tseslint.config(
 	{
 		name: 'Default',
 		files: ['**/*.ts', '**/*.mts', '**/*.js', '**/*.mjs'],
-		ignores: ['**/*.spec.ts', '**/*.test.ts'],
+		ignores: ['**/*.spec.ts', '**/*.spec.js'],
 		rules: {
 			'max-lines': [
 				'warn',

@@ -40,8 +40,10 @@ RUN addgroup node root \
 USER node
 
 RUN sudo apk add --no-cache git openssh-client gnupg vim \
-			zsh zsh-vcs alpine-zsh-config \
-			zsh-theme-powerlevel10k zsh-syntax-highlighting
+			zsh zsh-theme-powerlevel10k
+
+RUN mkdir -p ~/.local/share/zsh/plugins \
+			&& ln -s /usr/share/zsh/plugins/powerlevel10k ~/.local/share/zsh/plugins/
 
 RUN git config --global --add safe.directory /usr/src/app
 
