@@ -1,3 +1,10 @@
+# v1.3.4 (2025-02-12)
+## What's Changed
+### 🐛 Bug Fixes
+* modals now not return errors ([ba8868c](https://github.com/drackp2m/round-timer/commit/ba8868cea78163fbcb7a670838a8f8b742abd919)) by Marc Jovaní González
+
+**Full Changelog**: https://github.com/drackp2m/round-timer/compare/v1.3.3...v1.3.4
+
 # v1.3.3 (2025-02-10)
 ## What's Changed
 ### 🚀 Performance Improvements
