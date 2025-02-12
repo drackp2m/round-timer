@@ -22,13 +22,21 @@ import { Check } from '@app/util/check';
 	imports: [SvgComponent],
 })
 export class PlayerBadgeComponent implements AfterViewInit {
-	readonly player = input.required<Player>();
+	readonly player = input.required<Partial<Player>>();
 	readonly debug = input(false, { transform: Check.isFalseAsStringOrTrue });
 
 	private readonly elementRef = inject<ElementRef<Element>>(ElementRef);
 
-	readonly icon = computed(() => PlayerIcon[this.player().icon]);
-	readonly color = computed(() => PlayerColor[this.player().color]);
+	readonly icon = computed(() => {
+		const player = this.player();
+
+		return undefined !== player.icon ? PlayerIcon[player.icon] : 'user-plus';
+	});
+	readonly color = computed(() => {
+		const player = this.player();
+
+		return player.color !== undefined ? PlayerColor[player.color] : 'var(--color-contrast-mid)';
+	});
 
 	readonly backgroundColor = signal('var(--color-primary)');
 
