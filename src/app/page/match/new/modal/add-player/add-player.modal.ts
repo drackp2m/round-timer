@@ -38,11 +38,11 @@ export class AddPlayerModal extends Modal<Player> {
 			nonNullable: true,
 			validators: [Validators.required, Validators.minLength(4), Validators.maxLength(20)],
 		}),
-		color: new FormControl<PlayerColorKey>('' as PlayerColorKey, {
+		color: new FormControl<PlayerColorKey | ''>('', {
 			nonNullable: true,
 			validators: [Validators.required],
 		}),
-		icon: new FormControl<PlayerIconKey>('' as PlayerIconKey, {
+		icon: new FormControl<PlayerIconKey | ''>('', {
 			nonNullable: true,
 			validators: [Validators.required],
 		}),
@@ -50,7 +50,7 @@ export class AddPlayerModal extends Modal<Player> {
 
 	private readonly formChange = toSignal(this.form.valueChanges);
 
-	player: Signal<Player> = computed(() => {
+	player: Signal<Partial<Player>> = computed(() => {
 		this.formChange();
 
 		return this.playerFromForm();
@@ -63,10 +63,15 @@ export class AddPlayerModal extends Modal<Player> {
 			return;
 		}
 
-		this.close(player);
+		this.close(new Player(player as Player));
 	}
 
-	private playerFromForm(): Player {
-		return new Player(this.form.getRawValue() as Player);
+	private playerFromForm(): Partial<Player> {
+		return {
+			name: this.form.controls.name.value,
+			nick: this.form.controls.nick.value,
+			color: '' !== this.form.controls.color.value ? this.form.controls.color.value : undefined,
+			icon: '' !== this.form.controls.icon.value ? this.form.controls.icon.value : undefined,
+		};
 	}
 }
