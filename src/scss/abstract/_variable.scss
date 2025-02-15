@@ -55,19 +55,19 @@ $font-casual: (
 ) !default;
 
 $color: (
-	primary: #fffcf2,
-	primary-mid: #ccc5b9,
-	contrast: #252422,
-	contrast-mid: #55514c,
-	accent: #eb5e28,
+	primary: rgb(255 251 240),
+	primary-mid: rgb(204 197 185),
+	contrast: rgb(37 36 34),
+	contrast-mid: rgb(85 81 76),
+	accent: rgb(235 94 40),
 ) !default;
 
 $dark-color: (
-	primary: #252422,
-	primary-mid: #403d39,
-	contrast: #fffcf2,
-	contrast-mid: #ccc5b9,
-	accent: #eb5e28,
+	primary: rgb(37 36 34),
+	primary-mid: rgb(64 61 57),
+	contrast: rgb(255 252 242),
+	contrast-mid: rgb(204 197 185),
+	accent: rgb(235 94 40),
 ) !default;
 
 $spacing: (

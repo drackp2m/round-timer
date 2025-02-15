@@ -24,9 +24,7 @@ module.exports = {
 						'⏪': 'revert',
 					};
 
-					const match = header.match(
-						/^(.+?)\s(?<type>\w+): (?<subject>.+)$/u,
-					);
+					const match = header.match(/^(.+?)\s(?<type>\w+): (?<subject>.+)$/u);
 
 					if (null === match) {
 						return [false, 'Commit message must start with an emoji followed by type: message'];

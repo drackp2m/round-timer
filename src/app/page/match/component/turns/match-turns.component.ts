@@ -45,7 +45,7 @@ export class MatchTurnsComponent {
 
 			const turnsContainer = this.turns()?.nativeElement;
 
-			void Async.waitForFrames().then(() => {
+			void Async.waitForFrames(2).then(() => {
 				turnsContainer?.scrollTo({
 					top: turnsContainer.scrollHeight,
 					behavior: 'smooth',

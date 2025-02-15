@@ -3,10 +3,7 @@
 	"ignorePaths": [],
 	"dictionaryDefinitions": [],
 	"dictionaries": [],
-	"words": [
-		"IDBP",
-		"sonarjs"
-	],
+	"words": ["IDBP", "sonarjs"],
 	"ignoreWords": [],
 	"import": []
 }

@@ -5,7 +5,6 @@ import { ShowMillisecondsPipe } from '@app/pipe/show-milliseconds.pipe';
 @Component({
 	selector: 'app-show-milliseconds',
 	templateUrl: './show-milliseconds.component.html',
-	styleUrl: './show-milliseconds.component.scss',
 	providers: [ShowMillisecondsPipe],
 })
 export class ShowMillisecondsComponent {

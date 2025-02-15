@@ -4,7 +4,6 @@ import { StoreNames } from 'idb';
 
 import { MatchEventType } from '@app/definition/model/match/match-event-type.enum';
 import { MatchEventPayload } from '@app/definition/model/match/match-event-type.type';
-import { MatchTurn } from '@app/definition/page/match/match-turn.interface';
 import { MatchEvent } from '@app/model/match-event.model';
 import { MatchPlayer } from '@app/model/match-player.model';
 import { Match } from '@app/model/match.model';
@@ -39,13 +38,13 @@ export class MatchStore extends signalStore({ protectedState: false }, withState
 	readonly matchTurns = computed(() => {
 		const events = this.events() ?? [];
 
-		let matchTurns: MatchTurn[] = [];
+		const lastEvent = events[events.length - 1];
 
-		events.forEach((event) => {
-			matchTurns = this.calculateMatchTurns.addEvent(event);
-		});
+		if (lastEvent === undefined) {
+			return [];
+		}
 
-		return matchTurns;
+		return this.calculateMatchTurns.addEvent(lastEvent);
 	});
 
 	readonly turn = computed(() => (0 !== this.matchTurns().length ? this.matchTurns().length : 1));
@@ -125,8 +124,6 @@ export class MatchStore extends signalStore({ protectedState: false }, withState
 		await this.matchRepository.insert('match', match.toObject());
 		await this.matchRepository.batchInsert('match_player', matchPlayers);
 		if (matchEvent !== undefined) {
-			console.log(matchEvent.toObject());
-
 			await this.matchRepository.insert('match_event', matchEvent.toObject());
 		}
 		await this.matchRepository.commitTransaction();
@@ -152,6 +149,12 @@ export class MatchStore extends signalStore({ protectedState: false }, withState
 		const { match, matchEvents } = inProgressMatch;
 
 		const players = matchEvents.find((event) => 'SET_TURN_ORDER' === event.type)?.payload;
+
+		matchEvents.forEach((event, index) => {
+			if (index !== matchEvents.length - 1) {
+				this.calculateMatchTurns.addEvent(event);
+			}
+		});
 
 		patchState(this, { match, playerUuids: players, events: matchEvents, isLoading: false });
 	}
