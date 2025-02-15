@@ -7,6 +7,7 @@ import { RouterLinkDirective } from '@app/directive/router-link.directive';
 import { Game } from '@app/model/game.model';
 import { Player } from '@app/model/player.model';
 import { GameRepository } from '@app/repository/game.repository';
+import { MatchRepository } from '@app/repository/match.repository';
 import { PlayerRepository } from '@app/repository/player.repository';
 import { Generate } from '@app/util/generate';
 
@@ -17,6 +18,7 @@ import { Generate } from '@app/util/generate';
 export class DashboardPage {
 	private readonly gameRepository = inject(GameRepository);
 	private readonly playerRepository = inject(PlayerRepository);
+	private readonly matchRepository = inject(MatchRepository);
 
 	async createInitialData(): Promise<void> {
 		const game = new Game({
@@ -44,5 +46,13 @@ export class DashboardPage {
 		await Promise.all(
 			players.map((player) => this.playerRepository.insert('player', player.toObject())),
 		);
+	}
+
+	async eraseAllData(): Promise<void> {
+		await this.playerRepository.clear('player');
+		await this.gameRepository.clear('game');
+		await this.matchRepository.clear('match');
+		await this.matchRepository.clear('match_player');
+		await this.matchRepository.clear('match_event');
 	}
 }

@@ -45,6 +45,7 @@ function transformEslintConfigs(config) {
 
 export default typescriptEslint.config(
 	{
+		ignores: ['.angular/**'],
 		settings: {
 			'import/internal-regex': '^@app/',
 		},
@@ -240,7 +241,7 @@ export default typescriptEslint.config(
 	{
 		name: 'Default',
 		files: ['**/*.ts', '**/*.mts', '**/*.js', '**/*.mjs'],
-		ignores: ['**/*.spec.ts', '**/*.spec.js'],
+		ignores: ['**/*.spec.ts', '**/*.spec.js', '.angular/**'],
 		rules: {
 			'max-lines': [
 				'warn',

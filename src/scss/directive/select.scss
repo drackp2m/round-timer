@@ -29,7 +29,6 @@
 				z-index: 1;
 
 				width: 100%;
-
 				border-radius: var(--border-radius-3);
 			}
 		}
@@ -47,6 +46,9 @@
 				position: absolute;
 				inset: 0;
 
+				border: solid $border-width var(--color-contrast-mid);
+				border-radius: var(--border-radius-3);
+
 				clip-path: polygon(
 					0 0,
 					calc($input-horizontal-padding + var(--label-width) / 2) 0,
@@ -57,8 +59,6 @@
 					100% 100%,
 					0 100%
 				);
-				border: solid $border-width var(--color-contrast-mid);
-				border-radius: var(--border-radius-3);
 
 				transition: clip-path $transition-duration ease-in-out;
 			}

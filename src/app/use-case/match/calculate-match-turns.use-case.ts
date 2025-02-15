@@ -12,7 +12,7 @@ export class CalculateMatchTurns {
 		console.log('CalculateMatchTurns created');
 	}
 
-	addEvent(event: MatchEvent) {
+	addEvent(event: MatchEvent): MatchTurn[] {
 		this.events.push(event);
 
 		console.log(`Checking event #${this.events.length.toString()} ${event.type}...`);
@@ -32,7 +32,7 @@ export class CalculateMatchTurns {
 				break;
 		}
 
-		return this.turns;
+		return [...this.turns];
 	}
 
 	private dispatchNextTurnEvent(): void {

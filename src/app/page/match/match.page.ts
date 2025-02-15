@@ -81,7 +81,6 @@ export class MatchPage {
 	);
 
 	dispatch(eventType: MatchEventType): void {
-		console.log(eventType);
-		// void this.matchStore.dispatchEvent(eventType);
+		void this.matchStore.dispatchEvent(eventType);
 	}
 }
