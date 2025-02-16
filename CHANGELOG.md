@@ -1,3 +1,19 @@
+# v1.3.5 (2025-02-16)
+## What's Changed
+### 🐛 Bug Fixes
+* add events to match, linting ([f6f3f70](https://github.com/drackp2m/round-timer/commit/f6f3f70aa33679c4398715a40ae59761957cfa0f)) by Marc Jovaní González
+* now can create match ([bed45d8](https://github.com/drackp2m/round-timer/commit/bed45d88a29a3af8b8c9377f479a03fd37530087)) by Marc Jovaní González
+* pull from main on build step ([183c3cb](https://github.com/drackp2m/round-timer/commit/183c3cb23a6acf749a2660179c28bfd1042fa312)) by GitHub
+* release from branch main ([eae151b](https://github.com/drackp2m/round-timer/commit/eae151ba45240488a6485f20840ad4edb2a72bb2)) by GitHub
+* use node executor ([919f885](https://github.com/drackp2m/round-timer/commit/919f8858822bcd3df68e400dd30990740a82b84f)) by GitHub
+### 💻 Continuous Integration
+* deploy on main branch ([5d61d63](https://github.com/drackp2m/round-timer/commit/5d61d632700fed1b8e82e5d5f25e3451f05caf3d)) by Marc Jovaní González
+### 🎒 Chores
+* update all other deps ([6bf5259](https://github.com/drackp2m/round-timer/commit/6bf525937da4bc691e1676c5e79f08fc3a9484eb)) by Marc Jovaní González
+* update angular deps ([7b49e66](https://github.com/drackp2m/round-timer/commit/7b49e663e6542d37a9ae04c7921a5d1493ef9ed0)) by Marc Jovaní González
+
+**Full Changelog**: https://github.com/drackp2m/round-timer/compare/v1.3.4...v1.3.5
+
 # v1.3.4 (2025-02-12)
 ## What's Changed
 ### 🐛 Bug Fixes
