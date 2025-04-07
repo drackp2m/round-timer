@@ -12,7 +12,7 @@
 			type="text"
 		/>
 
-		<select appSelect formControlName="color">
+		<select [appSelect] formControlName="color">
 			<option value="">Color</option>
 
 			@for (color of colors; track $index) {
@@ -20,7 +20,7 @@
 			}
 		</select>
 
-		<select appSelect formControlName="icon">
+		<select [appSelect] formControlName="icon">
 			<option value="">Icon</option>
 
 			@for (icon of icons; track $index) {

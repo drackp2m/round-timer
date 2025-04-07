@@ -4,6 +4,7 @@ import { PlayerColor, PlayerColorKey } from '@app/definition/model/player/player
 import { PlayerIcon, PlayerIconKey } from '@app/definition/model/player/player-icon.enum';
 import { ButtonDirective } from '@app/directive/button.directive';
 import { RouterLinkDirective } from '@app/directive/router-link.directive';
+import { SelectDirective } from '@app/directive/select/select.directive';
 import { Game } from '@app/model/game.model';
 import { Player } from '@app/model/player.model';
 import { GameRepository } from '@app/repository/game.repository';
@@ -13,7 +14,7 @@ import { Generate } from '@app/util/generate';
 
 @Component({
 	templateUrl: './dashboard.page.html',
-	imports: [RouterLinkDirective, ButtonDirective],
+	imports: [RouterLinkDirective, ButtonDirective, SelectDirective],
 })
 export class DashboardPage {
 	private readonly gameRepository = inject(GameRepository);

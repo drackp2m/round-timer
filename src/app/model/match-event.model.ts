@@ -3,7 +3,7 @@ import {
 	MatchEventPayload,
 	MatchEventType as MatchEventTypeType,
 } from '@app/definition/model/match/match-event-type.type';
-import { ModelConstructorOmit } from '@app/definition/model-constructor-omit.type';
+import { ModelConstructorOmit } from '@app/definition/model/model-constructor-omit.type';
 import { BaseModel } from '@app/model/base.model';
 
 export class MatchEvent<T extends MatchEventType = MatchEventType> extends BaseModel<MatchEvent> {

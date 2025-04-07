@@ -7,7 +7,7 @@ import { PlayerColor, PlayerColorKey } from '@app/definition/model/player/player
 import { PlayerIcon, PlayerIconKey } from '@app/definition/model/player/player-icon.enum';
 import { ButtonDirective } from '@app/directive/button.directive';
 import { InputDirective } from '@app/directive/input.directive';
-import { SelectDirective } from '@app/directive/select.directive';
+import { SelectDirective } from '@app/directive/select/select.directive';
 import { Modal } from '@app/model/modal.model';
 import { Player } from '@app/model/player.model';
 import { Enum } from '@app/util/enum';
