@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy, computed, effect, inject, signal } from '@angular/core';
 
-import { Theme } from '@app/definition/theme.type';
+import { Theme } from '@app/definition/service/theme.type';
 import { Setting } from '@app/model/setting.model';
 import { SettingStore } from '@app/store/setting.store';
 

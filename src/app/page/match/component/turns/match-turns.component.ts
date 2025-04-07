@@ -39,16 +39,20 @@ export class MatchTurnsComponent {
 		),
 	);
 
+	private firstScrollExecuted = false;
+
 	constructor() {
 		effect(() => {
 			this.matchTurns();
 
 			const turnsContainer = this.turns()?.nativeElement;
+			const scrollBehavior: ScrollBehavior = this.firstScrollExecuted ? 'smooth' : 'instant';
+			this.firstScrollExecuted = true;
 
 			void Async.waitForFrames(2).then(() => {
 				turnsContainer?.scrollTo({
 					top: turnsContainer.scrollHeight,
-					behavior: 'smooth',
+					behavior: scrollBehavior,
 				});
 			});
 		});

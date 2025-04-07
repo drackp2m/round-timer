@@ -9,7 +9,7 @@ import {
 } from '@app/definition/model/game/game-victory-type.enum';
 import { ButtonDirective } from '@app/directive/button.directive';
 import { InputDirective } from '@app/directive/input.directive';
-import { SelectDirective } from '@app/directive/select.directive';
+import { SelectDirective } from '@app/directive/select/select.directive';
 import { Game } from '@app/model/game.model';
 import { Modal } from '@app/model/modal.model';
 import { GameStore } from '@app/store/game.store';

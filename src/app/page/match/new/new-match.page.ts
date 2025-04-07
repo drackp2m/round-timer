@@ -8,7 +8,7 @@ import { SvgComponent } from '@app/component/svg.component';
 import { ButtonDirective } from '@app/directive/button.directive';
 import { InputDirective } from '@app/directive/input.directive';
 import { RadioCheckboxDirective } from '@app/directive/radio-checkbox.directive';
-import { SelectDirective } from '@app/directive/select.directive';
+import { SelectDirective } from '@app/directive/select/select.directive';
 import { MatchPlayer } from '@app/model/match-player.model';
 import { Match } from '@app/model/match.model';
 import { Player } from '@app/model/player.model';

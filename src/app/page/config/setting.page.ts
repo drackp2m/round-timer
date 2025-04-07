@@ -2,7 +2,7 @@ import { Component, Signal, effect, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
-import { Theme } from '@app/definition/theme.type';
+import { Theme } from '@app/definition/service/theme.type';
 import { RadioCheckboxDirective } from '@app/directive/radio-checkbox.directive';
 import { version } from '@app/package';
 import { ThemeService } from '@app/service/theme.service';

@@ -1,4 +1,4 @@
-import { Theme } from '@app/definition/theme.type';
+import { Theme } from '@app/definition/service/theme.type';
 
 export interface SettingType {
 	THEME: 'THEME';

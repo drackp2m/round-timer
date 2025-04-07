@@ -8,7 +8,7 @@
 			@if (gamesValue === null || gamesValue.length === 0) {
 				<p>{{ gamesStoreIsLoading() ? 'Loading...' : 'No games' }}</p>
 			} @else {
-				<select appSelect formControlName="gameUuid">
+				<select [appSelect] formControlName="gameUuid">
 					<option value="">Select game</option>
 
 					@for (game of games(); track game.uuid) {

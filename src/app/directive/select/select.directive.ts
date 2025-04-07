@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import {
 	AfterViewInit,
 	ComponentRef,
@@ -7,26 +8,48 @@ import {
 	OnInit,
 	Renderer2,
 	ViewContainerRef,
+	effect,
 	inject,
+	input,
 } from '@angular/core';
 
 import { SvgComponent } from '@app/component/svg.component';
+import { SelectOptionsComponent } from '@app/directive/select/component/select-options.component';
+import { ViewportService } from '@app/service/viewport.service';
 import { createTypedElement } from '@app/util/renderer';
 
 @Directive({
+	standalone: true,
 	selector: 'select[appSelect]',
 })
-// ToDo => add default label as "Select an option"
+// ToDo => add default placeholder as "Select an option"
 export class SelectDirective implements OnInit, AfterViewInit {
 	private readonly elementRef = inject<ElementRef<HTMLSelectElement>>(ElementRef);
 	private readonly renderer2 = inject(Renderer2);
 	private readonly viewContainerRef = inject(ViewContainerRef);
+	private readonly viewportService = inject(ViewportService);
+
+	appSelect = input.required<undefined>();
 
 	private readonly wrapperElement: HTMLDivElement = this.createWrapper();
 	private readonly labelElement: HTMLLabelElement = this.createLabel();
 	private readonly fakeLabelElement: HTMLSpanElement = this.createFakeLabel();
 	private readonly borderContainerElement: HTMLDivElement = this.createBorderContainer();
 	private readonly labelContainerElement: HTMLDivElement = this.creteLabelContainer();
+
+	private readonly TOP_POSITION_CLASS = 'position-top';
+	private readonly BOTTOM_POSITION_CLASS = 'position-bottom';
+
+	private optionsContainer: HTMLElement | null = null;
+
+	constructor() {
+		effect(() => {
+			this.viewportService.routerOutletScroll();
+			this.viewportService.windowResized();
+
+			this.updatePositionClass();
+		});
+	}
 
 	@HostListener('focus')
 	onFocus() {
@@ -50,6 +73,42 @@ export class SelectDirective implements OnInit, AfterViewInit {
 		}
 	}
 
+	@HostListener('mousedown', ['$event'])
+	onMouseDown(event: MouseEvent) {
+		event.preventDefault();
+		this.elementRef.nativeElement.focus();
+		this.toggleCustomDropdown();
+	}
+
+	@HostListener('keydown', ['$event'])
+	onKeyDown(event: KeyboardEvent) {
+		if (
+			'Space' === event.code ||
+			'Enter' === event.code ||
+			'ArrowDown' === event.code ||
+			'ArrowUp' === event.code
+		) {
+			event.preventDefault();
+
+			if ('Space' === event.code || 'Enter' === event.code) {
+				this.toggleCustomDropdown();
+			}
+
+			// Navegar por las opciones con flechas
+			if ('ArrowDown' === event.code) {
+				this.selectNextOption();
+			}
+			if ('ArrowUp' === event.code) {
+				this.selectPreviousOption();
+			}
+		}
+
+		// También puedes implementar la búsqueda rápida por primera letra
+		if (/^[a-z0-9]$/i.test(event.key)) {
+			this.findOptionStartingWith(event.key);
+		}
+	}
+
 	ngOnInit() {
 		this.prepareWrapper();
 	}
@@ -60,6 +119,32 @@ export class SelectDirective implements OnInit, AfterViewInit {
 
 		this.setCSSVariable('--label-width', `${labelWidth.toString()}px`);
 		this.setCSSVariable('--input-height', `${inputHeight.toString()}px`);
+
+		this.updatePositionClass();
+
+		const componentRef = this.viewContainerRef.createComponent(SelectOptionsComponent);
+		this.optionsContainer = componentRef.location.nativeElement.querySelector('.options-container');
+		this.projectOptions();
+		this.renderer2.appendChild(this.wrapperElement, componentRef.location.nativeElement);
+	}
+
+	private updatePositionClass(): void {
+		const rect = this.wrapperElement.getBoundingClientRect();
+		const viewportHeight = window.innerHeight;
+
+		const viewportMidpoint = viewportHeight / 2;
+		const elementMidpoint = rect.top + rect.height / 2;
+
+		const isCloserToTop = elementMidpoint < viewportMidpoint;
+
+		this.renderer2.removeClass(this.wrapperElement, this.TOP_POSITION_CLASS);
+		this.renderer2.removeClass(this.wrapperElement, this.BOTTOM_POSITION_CLASS);
+
+		if (isCloserToTop) {
+			this.renderer2.addClass(this.wrapperElement, this.TOP_POSITION_CLASS);
+		} else {
+			this.renderer2.addClass(this.wrapperElement, this.BOTTOM_POSITION_CLASS);
+		}
 	}
 
 	private setCSSVariable(name: string, value: string) {
@@ -163,5 +248,88 @@ export class SelectDirective implements OnInit, AfterViewInit {
 	private fillLabel(value: string): void {
 		this.renderer2.setProperty(this.labelElement.querySelector('span'), 'textContent', value);
 		this.renderer2.setProperty(this.wrapperElement.querySelector('.label'), 'textContent', value);
+	}
+
+	// IA methods
+	private toggleCustomDropdown() {
+		const isOpen = this.wrapperElement.classList.contains('open');
+
+		if (isOpen) {
+			this.closeCustomDropdown();
+		} else {
+			this.openCustomDropdown();
+		}
+
+		this.updatePositionClass();
+	}
+
+	private openCustomDropdown() {
+		this.renderer2.addClass(this.wrapperElement, 'open');
+
+		setTimeout(() => {
+			window.addEventListener('mousedown', this.closeOnOutsideClick);
+		});
+	}
+
+	private closeCustomDropdown() {
+		this.renderer2.removeClass(this.wrapperElement, 'open');
+
+		window.removeEventListener('mousedown', this.closeOnOutsideClick);
+	}
+
+	private closeOnOutsideClick = (event: MouseEvent) => {
+		if (!this.wrapperElement.contains(event.target as Node)) {
+			const willCauseFocusLoss = document.activeElement === this.elementRef.nativeElement;
+
+			if (willCauseFocusLoss) {
+				event.preventDefault();
+				event.stopPropagation();
+			}
+
+			this.closeCustomDropdown();
+			this.updatePositionClass();
+		}
+	};
+
+	private selectNextOption() {
+		// Implementación para seleccionar la siguiente opción
+	}
+
+	private selectPreviousOption() {
+		// Implementación para seleccionar la opción anterior
+	}
+
+	private findOptionStartingWith(char: string) {
+		console.log('Buscando opción que comienza con:', char);
+		// Implementación para buscar opciones que comiencen con un carácter
+	}
+
+	private projectOptions(): void {
+		if (null === this.optionsContainer) {
+			return;
+		}
+
+		// while (null !== this.optionsContainer.firstChild) {
+		// 	this.optionsContainer.removeChild(this.optionsContainer.firstChild);
+		// }
+
+		Array.from(this.elementRef.nativeElement.options).forEach((option) => {
+			const optionEl = createTypedElement(this.renderer2, 'div');
+			this.renderer2.addClass(optionEl, 'option');
+
+			if (option.disabled) {
+				this.renderer2.addClass(optionEl, 'disabled');
+			}
+
+			if (option.value === this.elementRef.nativeElement.value) {
+				this.renderer2.addClass(optionEl, 'selected');
+			}
+
+			this.renderer2.setProperty(optionEl, 'textContent', option.textContent ?? '');
+
+			this.renderer2.setAttribute(optionEl, 'data-value', option.value);
+
+			this.renderer2.appendChild(this.optionsContainer, optionEl);
+		});
 	}
 }
