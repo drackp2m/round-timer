@@ -1,3 +1,22 @@
+# v1.4.0 (2025-04-07)
+## What's Changed
+### ✨ Features
+* improve select directive ([fef3430](https://github.com/drackp2m/round-timer/commit/fef3430c40c4ed9e6ca0cb2141abb3dbea4c07c4)) by Marc Jovaní González
+### ♻️ Code Refactoring
+* remove selector on `SquaredDirective` ([d2ab87b](https://github.com/drackp2m/round-timer/commit/d2ab87bb29059aae7b0808dbfd444780266c1fae)) by Marc Jovaní González
+### 🎒 Chores
+* update `@angular/core` ([f4c3b48](https://github.com/drackp2m/round-timer/commit/f4c3b485d51d58e50634076275c96b4b99544d8f)) by Marc Jovaní González
+* update `@testing-library/angular` ([4ffeb52](https://github.com/drackp2m/round-timer/commit/4ffeb5240c12cd2ab483b0f0fd41709dee82703d)) by Marc Jovaní González
+* update `angular-eslint` ([b0e9a91](https://github.com/drackp2m/round-timer/commit/b0e9a9103913b9a1eaba5115a18b72e857d86ea9)) by Marc Jovaní González
+* update all other deps ([d8c00cc](https://github.com/drackp2m/round-timer/commit/d8c00cc6ebd9efa0846b1ed2883d7af551030815)) by Marc Jovaní González
+* update all other deps ([4be5869](https://github.com/drackp2m/round-timer/commit/4be58691aaacc3b3cf45d3dffac748aec59171c2)) by Marc Jovaní González
+* update angular cli ([4cb8b96](https://github.com/drackp2m/round-timer/commit/4cb8b960b7337f3835af6e05810e460ca1e47340)) by Marc Jovaní González
+* update Angular cli, core and eslint ([dca64f2](https://github.com/drackp2m/round-timer/commit/dca64f2c41e66ce0f186ba9fa5f5faac4425a11b)) by Marc Jovaní González
+* update angular core ([8f937dc](https://github.com/drackp2m/round-timer/commit/8f937dceccb9273f56850581bbc27c3cc0118805)) by Marc Jovaní González
+* update other deps, and remove vulnerabilities ([5f8c91a](https://github.com/drackp2m/round-timer/commit/5f8c91a404434773b163822d5e2f5d8052bd878c)) by Marc Jovaní González
+
+**Full Changelog**: https://github.com/drackp2m/round-timer/compare/v1.3.5...v1.4.0
+
 # v1.3.5 (2025-02-16)
 ## What's Changed
 ### 🐛 Bug Fixes
