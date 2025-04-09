@@ -2,17 +2,17 @@
 	<app-player-badge [player]="player()" />
 
 	<form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex-col gap-4">
-		<input appInput formControlName="name" label="Name" placeholder="John Doe" type="text" />
+		<input appThemed formControlName="name" label="Name" placeholder="John Doe" type="text" />
 
 		<input
-			appInput
+			appThemed
 			formControlName="nick"
 			label="Nickname"
 			placeholder="JohnKiller69"
 			type="text"
 		/>
 
-		<select [appSelect] formControlName="color">
+		<select appThemed formControlName="color">
 			<option value="">Color</option>
 
 			@for (color of colors; track $index) {
@@ -20,7 +20,7 @@
 			}
 		</select>
 
-		<select [appSelect] formControlName="icon">
+		<select appThemed formControlName="icon">
 			<option value="">Icon</option>
 
 			@for (icon of icons; track $index) {
@@ -28,7 +28,7 @@
 			}
 		</select>
 
-		<button appButton type="submit" [disabled]="form.invalid" color="accent">
+		<button appThemed type="submit" [disabled]="form.invalid" color="accent">
 			<span class="flex-row justify-center"> Create</span>
 		</button>
 	</form>

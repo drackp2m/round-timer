@@ -20,7 +20,7 @@ import { createTypedElement } from '@app/util/renderer';
 
 @Directive({
 	standalone: true,
-	selector: 'select[appSelect]',
+	selector: 'select[appThemed]',
 })
 // ToDo => add default placeholder as "Select an option"
 export class SelectDirective implements OnInit, AfterViewInit {
@@ -28,8 +28,6 @@ export class SelectDirective implements OnInit, AfterViewInit {
 	private readonly renderer2 = inject(Renderer2);
 	private readonly viewContainerRef = inject(ViewContainerRef);
 	private readonly viewportService = inject(ViewportService);
-
-	appSelect = input.required<undefined>();
 
 	private readonly wrapperElement: HTMLDivElement = this.createWrapper();
 	private readonly labelElement: HTMLLabelElement = this.createLabel();
@@ -330,6 +328,22 @@ export class SelectDirective implements OnInit, AfterViewInit {
 			this.renderer2.setAttribute(optionEl, 'data-value', option.value);
 
 			this.renderer2.appendChild(this.optionsContainer, optionEl);
+
+			this.addEventListenersToOption(optionEl);
+		});
+	}
+
+	private addEventListenersToOption(option: HTMLDivElement) {
+		option.addEventListener('click', () => {
+			const value = option.getAttribute('data-value');
+
+			if (null !== value) {
+				this.elementRef.nativeElement.value = value;
+				this.fillLabel(option.textContent ?? '');
+				this.closeCustomDropdown();
+				// trigger select change event
+				this.elementRef.nativeElement.dispatchEvent(new Event('change', { bubbles: true }));
+			}
 		});
 	}
 }

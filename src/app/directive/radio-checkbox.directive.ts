@@ -3,7 +3,7 @@ import { Directive, ElementRef, OnInit, Renderer2, effect, inject, input } from 
 import { createTypedElement } from '@app/util/renderer';
 
 @Directive({
-	selector: 'input[appInput][type=radio], input[appInput][type=checkbox]',
+	selector: 'input[appThemed][type=radio], input[appThemed][type=checkbox]',
 })
 export class RadioCheckboxDirective implements OnInit {
 	readonly type = input.required<string>();

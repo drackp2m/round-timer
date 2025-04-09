@@ -8,7 +8,7 @@
 			@if (gamesValue === null || gamesValue.length === 0) {
 				<p>{{ gamesStoreIsLoading() ? 'Loading...' : 'No games' }}</p>
 			} @else {
-				<select [appSelect] formControlName="gameUuid">
+				<select appThemed formControlName="gameUuid">
 					<option value="">Select game</option>
 
 					@for (game of games(); track game.uuid) {
@@ -17,7 +17,7 @@
 				</select>
 			}
 
-			<button appButton class="mt-2" type="button" (click)="addGame()">
+			<button appThemed class="mt-2" (click)="addGame()">
 				<div class="flex-row gap-2 align-center">
 					<app-svg icon="grid-2-plus" [size]="16" color="surface-primary" />Add Game
 				</div>
@@ -40,7 +40,7 @@
 							{{ player.nick }} <span class="fw-sm">{{ player.name }}</span>
 						</div>
 						<input
-							appInput
+							appThemed
 							type="checkbox"
 							[label]="label"
 							[formControlName]="player.uuid"
@@ -53,7 +53,7 @@
 				}
 			</ul>
 
-			<button appButton class="mt-2" type="button" (click)="addPlayer()">
+			<button appThemed class="mt-2" (click)="addPlayer()">
 				<div class="flex-row gap-2 align-center">
 					<app-svg icon="user-plus" [size]="16" color="surface-primary" />Add player
 				</div>
@@ -64,7 +64,7 @@
 			<h4>Others</h4>
 
 			<input
-				appInput
+				appThemed
 				formControlName="name"
 				label="Match name"
 				placeholder="The gamer cousins"
@@ -72,6 +72,6 @@
 			/>
 		</div>
 
-		<button appButton type="submit" color="accent">Create Match</button>
+		<button appThemed type="submit" color="accent">Create Match</button>
 	</form>
 </section>
