@@ -2,7 +2,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 
 module.exports = {
-	branches: ['dev'],
+	branches: ['main'],
 	plugins: [
 		[
 			'@semantic-release/commit-analyzer',
