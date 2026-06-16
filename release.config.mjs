@@ -4,6 +4,11 @@ import { fileURLToPath } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
+const parserOpts = {
+	headerPattern: /^(.+?)\s(?<type>\w+): (?<subject>.+)$/u,
+	headerCorrespondence: ['emoji', 'type', 'subject'],
+};
+
 export default {
 	branches: ['main'],
 	plugins: [
@@ -20,20 +25,14 @@ export default {
 					{ type: 'revert', release: 'patch' },
 					{ type: 'BREAKING CHANGE', release: 'major' },
 				],
-				parserOpts: {
-					headerPattern: /^(.+?)\s(?<type>\w+): (?<subject>.+)$/u,
-					headerCorrespondence: ['emoji', 'type', 'subject'],
-				},
+				parserOpts,
 			},
 		],
 		[
 			'@semantic-release/release-notes-generator',
 			{
 				preset: 'conventionalcommits',
-				parserOpts: {
-					headerPattern: /^(.+?)\s(?<type>\w+): (?<subject>.+)$/u,
-					headerCorrespondence: ['emoji', 'type', 'subject'],
-				},
+				parserOpts,
 				commitsSort: ['scope', 'subject'],
 				presetConfig: {
 					types: [

@@ -1,29 +1,30 @@
+const validPairs = {
+	'✨': 'feat',
+	'🎨': 'style',
+	'🧪': 'test',
+	'♻️': 'refactor',
+	'🐛': 'fix',
+	'📚': 'docs',
+	'🚀': 'perf',
+	'🏗️': 'build',
+	'💻': 'ci',
+	'🎒': 'chore',
+	'⏪': 'revert',
+};
+
+const validTypes = Object.values(validPairs);
+
 export default {
-	// parserPreset: {
-	// 	parserOpts: {
-	// 		headerPattern:
-	// 			/^(.+?)\s(?<type>\w+): (?<subject>.+)$/u,
-	// 		headerCorrespondence: ['emoji', 'type', 'subject'],
-	// 	},
-	// },
+	parserPreset: {
+		parserOpts: {
+			headerPattern: /^(.+?)\s(?<type>\w+): (?<subject>.+)$/u,
+			headerCorrespondence: ['emoji', 'type', 'subject'],
+		},
+	},
 	plugins: [
 		{
 			rules: {
 				'header-pattern': ({ header }) => {
-					const validPairs = {
-						'✨': 'feat',
-						'🎨': 'style',
-						'🧪': 'test',
-						'♻️': 'refactor',
-						'🐛': 'fix',
-						'📚': 'docs',
-						'🚀': 'perf',
-						'🏗️': 'build',
-						'💻': 'ci',
-						'🎒': 'chore',
-						'⏪': 'revert',
-					};
-
 					const match = header.match(/^(.+?)\s(?<type>\w+): (?<subject>.+)$/u);
 
 					if (null === match) {
@@ -44,23 +45,7 @@ export default {
 	],
 	rules: {
 		'header-pattern': [2, 'always'],
-		'type-enum': [
-			2,
-			'always',
-			[
-				'feat',
-				'style',
-				'test',
-				'refactor',
-				'fix',
-				'docs',
-				'perf',
-				'build',
-				'ci',
-				'chore',
-				'revert',
-			],
-		],
+		'type-enum': [2, 'always', validTypes],
 		'subject-min-length': [2, 'always', 10],
 		'subject-max-length': [2, 'always', 75],
 		'header-max-length': [2, 'always', 100],
