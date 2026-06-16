@@ -5,10 +5,7 @@ on:
     branches:
       - main
 
-permissions:
-  contents: write
-  pages: write
-  id-token: write
+permissions: {}
 
 concurrency:
   group: 'deploy'
@@ -113,6 +110,10 @@ jobs:
   release:
     runs-on: ubuntu-24.04
     needs: [lint, test]
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -164,6 +165,8 @@ jobs:
   build:
     runs-on: ubuntu-24.04
     needs: release
+    permissions:
+      contents: read
     steps:
       - name: Setup Pages
         id: pages
@@ -199,7 +202,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build application
-        run: pnpm run build -- --base-href ${{ steps.pages.outputs.base_url }}/
+        run: pnpm run build --base-href ${{ steps.pages.outputs.base_url }}/
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
@@ -212,6 +215,9 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-24.04
     needs: build
+    permissions:
+      pages: write
+      id-token: write
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
