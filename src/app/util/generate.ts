@@ -4,7 +4,7 @@ export abstract class Generate {
 		window.crypto.getRandomValues(array);
 		const random = array[0];
 
-		if (random === undefined) {
+		if (undefined === random) {
 			return NaN;
 		}
 

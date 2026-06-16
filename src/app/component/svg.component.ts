@@ -16,6 +16,7 @@ import { Check } from '@app/util/check';
 			:host {
 				display: flex;
 				justify-content: center;
+				max-width: 100%;
 
 				&.squared {
 					aspect-ratio: 1 / 1;
@@ -23,6 +24,7 @@ import { Check } from '@app/util/check';
 
 				div {
 					height: 100%;
+					max-width: 100%;
 
 					&.flip {
 						transform: scaleX(-1);

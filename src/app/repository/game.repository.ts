@@ -5,9 +5,7 @@ import { Game } from '@app/model/game.model';
 import { GameSchema } from '@app/repository/definition/game-schema.interface';
 import { GenericRepository } from '@app/repository/generic.repository';
 
-@Injectable({
-	providedIn: 'root',
-})
+@Injectable()
 export class GameRepository extends GenericRepository<GameSchema> {
 	override async findAll<K extends StoreNames<GameSchema>>(
 		storeName: K,

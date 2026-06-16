@@ -5,14 +5,14 @@
 	"dockerComposeFile": ["../docker-compose.yml", "docker-compose.yml"],
 	"workspaceFolder": "/usr/src/app",
 	"forwardPorts": [4200],
-	// "portsAttributes": {
-	// 	"4200": {
-	// 		"label": "Round Timer App",
-	// 		"protocol": "https",
-	// 		"onAutoForward": "notify",
-	// 		"requireLocalPort": true
-	// 	}
-	// },
+	"portsAttributes": {
+		"4200": {
+			"label": "Round Timer App",
+			"protocol": "https",
+			"onAutoForward": "notify",
+			"requireLocalPort": true
+		}
+	},
 	"overrideCommand": false,
 	"customizations": {
 		"vscode": {

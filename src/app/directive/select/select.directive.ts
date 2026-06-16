@@ -10,7 +10,6 @@ import {
 	ViewContainerRef,
 	effect,
 	inject,
-	input,
 } from '@angular/core';
 
 import { SvgComponent } from '@app/component/svg.component';
@@ -19,8 +18,7 @@ import { ViewportService } from '@app/service/viewport.service';
 import { createTypedElement } from '@app/util/renderer';
 
 @Directive({
-	standalone: true,
-	selector: 'select[appSelect]',
+	selector: 'select[appThemed]',
 })
 // ToDo => add default placeholder as "Select an option"
 export class SelectDirective implements OnInit, AfterViewInit {
@@ -28,8 +26,6 @@ export class SelectDirective implements OnInit, AfterViewInit {
 	private readonly renderer2 = inject(Renderer2);
 	private readonly viewContainerRef = inject(ViewContainerRef);
 	private readonly viewportService = inject(ViewportService);
-
-	appSelect = input.required<undefined>();
 
 	private readonly wrapperElement: HTMLDivElement = this.createWrapper();
 	private readonly labelElement: HTMLLabelElement = this.createLabel();
@@ -103,7 +99,6 @@ export class SelectDirective implements OnInit, AfterViewInit {
 			}
 		}
 
-		// También puedes implementar la búsqueda rápida por primera letra
 		if (/^[a-z0-9]$/i.test(event.key)) {
 			this.findOptionStartingWith(event.key);
 		}
@@ -123,7 +118,8 @@ export class SelectDirective implements OnInit, AfterViewInit {
 		this.updatePositionClass();
 
 		const componentRef = this.viewContainerRef.createComponent(SelectOptionsComponent);
-		this.optionsContainer = componentRef.location.nativeElement.querySelector('.options-container');
+		// this.optionsContainer = componentRef.location.nativeElement.querySelector('.options-container');
+		this.optionsContainer = componentRef.instance.optionsContainer;
 		this.projectOptions();
 		this.renderer2.appendChild(this.wrapperElement, componentRef.location.nativeElement);
 	}
@@ -238,7 +234,7 @@ export class SelectDirective implements OnInit, AfterViewInit {
 
 		for (const option of options) {
 			if ('' === option.value) {
-				return option.textContent ?? defaultLabel;
+				return option.textContent;
 			}
 		}
 
@@ -309,9 +305,9 @@ export class SelectDirective implements OnInit, AfterViewInit {
 			return;
 		}
 
-		// while (null !== this.optionsContainer.firstChild) {
-		// 	this.optionsContainer.removeChild(this.optionsContainer.firstChild);
-		// }
+		while (null !== this.optionsContainer.firstChild) {
+			this.optionsContainer.removeChild(this.optionsContainer.firstChild);
+		}
 
 		Array.from(this.elementRef.nativeElement.options).forEach((option) => {
 			const optionEl = createTypedElement(this.renderer2, 'div');
@@ -325,11 +321,27 @@ export class SelectDirective implements OnInit, AfterViewInit {
 				this.renderer2.addClass(optionEl, 'selected');
 			}
 
-			this.renderer2.setProperty(optionEl, 'textContent', option.textContent ?? '');
+			this.renderer2.setProperty(optionEl, 'textContent', option.textContent);
 
 			this.renderer2.setAttribute(optionEl, 'data-value', option.value);
 
 			this.renderer2.appendChild(this.optionsContainer, optionEl);
+
+			this.addEventListenersToOption(optionEl);
+		});
+	}
+
+	private addEventListenersToOption(option: HTMLDivElement) {
+		option.addEventListener('click', () => {
+			const value = option.getAttribute('data-value');
+
+			if (null !== value) {
+				this.elementRef.nativeElement.value = value;
+				this.fillLabel(option.textContent);
+				this.closeCustomDropdown();
+				// trigger select change event
+				this.elementRef.nativeElement.dispatchEvent(new Event('change', { bubbles: true }));
+			}
 		});
 	}
 }

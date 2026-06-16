@@ -15,10 +15,10 @@ import { TitleService } from '@app/service/title.service';
 		</button>
 
 		<div class="flex-row gap-2 align-center">
-			<button appButton type="button" appRouterLink="/match" icon="dice">
+			<button appThemed appRouterLink="/match" icon="dice">
 				<!---->
 			</button>
-			<button appButton type="button" appRouterLink="/settings" icon="gear">
+			<button appThemed appRouterLink="/settings" icon="gear">
 				<!---->
 			</button>
 		</div>

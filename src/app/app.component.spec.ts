@@ -1,32 +1,32 @@
-import { provideExperimentalZonelessChangeDetection, signal } from '@angular/core';
-import { render } from '@testing-library/angular';
+import { TestBed } from '@angular/core/testing';
 
 import { AppComponent } from './app.component';
 
-import { LoadInitialDataUseCase } from '@app/use-case/load-initial-data.use-case';
+import { GameRepository } from '@app/repository/game.repository';
+import { MatchRepository } from '@app/repository/match.repository';
+
+const mockRepository = {
+	findInProgressMatch: vi.fn().mockResolvedValue(undefined),
+};
 
 describe('AppComponent', () => {
-	const setup = async () => {
-		return render(AppComponent, {
-			providers: [provideExperimentalZonelessChangeDetection()],
-			componentProviders: [
-				{
-					provide: LoadInitialDataUseCase,
-					useValue: {
-						execute: () => signal(false),
-					},
-				},
+	beforeEach(async () => {
+		await TestBed.configureTestingModule({
+			imports: [AppComponent],
+			providers: [
+				{ provide: MatchRepository, useValue: mockRepository },
+				{ provide: GameRepository, useValue: mockRepository },
 			],
-		});
-	};
-
-	it(`should have the 'round-timer' title in the component`, async () => {
-		const { fixture } = await setup();
-		expect(fixture.componentInstance.title).toBe('round-timer');
+		}).compileComponents();
 	});
 
-	it('should render router-outlet', async () => {
-		const { container } = await setup();
-		expect(container.querySelector('router-outlet')).toBeTruthy();
+	it('should create the app', () => {
+		const fixture = TestBed.createComponent(AppComponent);
+		expect(fixture.componentInstance).toBeTruthy();
+	});
+
+	it(`should have the 'round-timer' title`, () => {
+		const fixture = TestBed.createComponent(AppComponent);
+		expect(fixture.componentInstance.title).toBe('round-timer');
 	});
 });

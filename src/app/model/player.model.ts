@@ -1,6 +1,6 @@
+import { ModelConstructorOmit } from '@app/definition/model/model-constructor-omit.type';
 import { PlayerColor, PlayerColorKey } from '@app/definition/model/player/player-color.enum';
 import { PlayerIcon, PlayerIconKey } from '@app/definition/model/player/player-icon.enum';
-import { ModelConstructorOmit } from '@app/definition/model/model-constructor-omit.type';
 import { UpdatableModel } from '@app/model/updatable.model';
 
 interface Computed {

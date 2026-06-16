@@ -3,9 +3,9 @@
 {
 	"extends": "./tsconfig.json",
 	"compilerOptions": {
+		"rootDir": "./src",
 		"outDir": "./out-tsc/spec",
-		"types": ["jest", "@testing-library/jest-dom", "node"],
-		"esModuleInterop": true
+		"types": ["vitest/globals"]
 	},
-	"include": ["src/**/*.spec.ts", "src/**/*.d.ts"]
+	"include": ["src/**/*.d.ts", "src/**/*.spec.ts"]
 }

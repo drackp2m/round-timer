@@ -1,4 +1,4 @@
-<div id="modal-outlet" [class.hidden]="modalState() === 'hidden' && !isInTransition()">
+<div id="modal-outlet" [class.hidden]="'hidden' === modalState() && false === isInTransition()">
 	<div class="overlay" [@fadeAnimation]="{ value: modalState(), params: animationParams() }"></div>
 
 	<div class="wrapper">
@@ -13,7 +13,7 @@
 					<h4 class="color-contrast-mid">{{ title() }}</h4>
 
 					<button
-						appButton
+						appThemed
 						type="button"
 						color="contrast-mid"
 						icon="xmark"

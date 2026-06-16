@@ -3,7 +3,6 @@ import { RouterLink, RouterLinkActive, RouterLinkWithHref } from '@angular/route
 
 @Directive({
 	selector: '[appRouterLink]',
-	standalone: true,
 	hostDirectives: [
 		RouterLink,
 		{

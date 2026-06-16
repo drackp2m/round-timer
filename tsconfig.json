@@ -3,42 +3,55 @@
 {
 	"compileOnSave": false,
 	"compilerOptions": {
-		"baseUrl": ".",
-		"outDir": "./dist/out-tsc",
+		// Strictness
 		"strict": true,
 		"noUncheckedIndexedAccess": true,
+		"exactOptionalPropertyTypes": true,
 		"noImplicitOverride": true,
-		"noPropertyAccessFromIndexSignature": true,
 		"noImplicitReturns": true,
+		"noPropertyAccessFromIndexSignature": true,
 		"noFallthroughCasesInSwitch": true,
-		"skipLibCheck": true,
-		"isolatedModules": true,
-		"esModuleInterop": true,
-		"experimentalDecorators": true,
-		"moduleResolution": "bundler",
+
+		// Module & target
+		"target": "ES2022",
+		"module": "preserve",
+		"lib": ["ES2023", "DOM"],
 		"importHelpers": true,
-		"target": "ES2023",
-		"module": "ES2022",
+		"isolatedModules": true,
+		"experimentalDecorators": true,
+		"skipLibCheck": true,
+
+		// Paths
 		"paths": {
-			"@app/package": ["package.json"],
-			"@app/component/*": ["src/app/component/*"],
-			"@app/definition/*": ["src/app/definition/*"],
-			"@app/directive/*": ["src/app/directive/*"],
-			"@app/layout/*": ["src/app/layout/*"],
-			"@app/model/*": ["src/app/model/*"],
-			"@app/page/*": ["src/app/page/*"],
-			"@app/pipe/*": ["src/app/pipe/*"],
-			"@app/repository/*": ["src/app/repository/*"],
-			"@app/service/*": ["src/app/service/*"],
-			"@app/store/*": ["src/app/store/*"],
-			"@app/use-case/*": ["src/app/use-case/*"],
-			"@app/util/*": ["src/app/util/*"]
+			"@app/package": ["./package.json"],
+			"@app/component/*": ["./src/app/component/*"],
+			"@app/definition/*": ["./src/app/definition/*"],
+			"@app/directive/*": ["./src/app/directive/*"],
+			"@app/layout/*": ["./src/app/layout/*"],
+			"@app/model/*": ["./src/app/model/*"],
+			"@app/page/*": ["./src/app/page/*"],
+			"@app/pipe/*": ["./src/app/pipe/*"],
+			"@app/repository/*": ["./src/app/repository/*"],
+			"@app/service/*": ["./src/app/service/*"],
+			"@app/store/*": ["./src/app/store/*"],
+			"@app/use-case/*": ["./src/app/use-case/*"],
+			"@app/util/*": ["./src/app/util/*"]
 		}
 	},
 	"angularCompilerOptions": {
 		"enableI18nLegacyMessageIdFormat": false,
 		"strictInjectionParameters": true,
 		"strictInputAccessModifiers": true,
-		"strictTemplates": true
-	}
+		"strictTemplates": true,
+		"strictStandalone": true
+	},
+	"files": [],
+	"references": [
+		{
+			"path": "./tsconfig.app.json"
+		},
+		{
+			"path": "./tsconfig.spec.json"
+		}
+	]
 }

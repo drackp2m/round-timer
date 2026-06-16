@@ -1,5 +1,11 @@
 import { Component, computed, effect, inject, signal } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+	FormBuilder,
+	FormControl,
+	FormGroup,
+	ReactiveFormsModule,
+	Validators,
+} from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { AddPlayerModal } from './modal/add-player/add-player.modal';
@@ -35,6 +41,7 @@ export class NewMatchPage {
 	private readonly matchStore = inject(MatchStore);
 	private readonly modalStore = inject(ModalStore);
 	private readonly router = inject(Router);
+	private readonly formBuilder = inject(FormBuilder);
 
 	readonly games = this.gameStore.items;
 	readonly gamesStoreIsLoading = this.gameStore.isLoading;

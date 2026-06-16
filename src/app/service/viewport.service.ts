@@ -34,12 +34,13 @@ export class ViewportService implements OnDestroy {
 
 	ngOnDestroy() {
 		this.eventListeners.forEach((listener, key) => {
-			const [elementId, eventType] = key.split('.');
+			const [elementId, eventType] = key.split('.') as [string, string];
 
 			if ('resize' === eventType && 'window' === elementId) {
 				window.removeEventListener('resize', listener);
 			} else if ('scroll' === eventType) {
-				const element = document.getElementById(elementId ?? '');
+				const element = document.getElementById(elementId);
+
 				if (null !== element) {
 					element.removeEventListener('scroll', listener);
 				}

@@ -16,8 +16,6 @@
 		}
 
 		select {
-			cursor: pointer;
-
 			position: absolute;
 			z-index: 1;
 			top: 0;
@@ -39,10 +37,7 @@
 
 			select {
 				user-select: none;
-
 				position: relative;
-				z-index: 1;
-
 				width: 100%;
 				border-radius: var(--border-radius-3);
 			}
@@ -122,9 +117,22 @@
 		}
 
 		.options-container {
-			z-index: 1;
+			z-index: 2;
+
+			overflow: hidden;
+
+			padding: var(--spacing-1) 0;
 			border-radius: var(--border-radius-3);
+
 			background: var(--color-primary);
+
+			.option {
+				padding: var(--spacing-1) var(--spacing-3);
+
+				&:hover {
+					background-color: var(--color-primary-mid);
+				}
+			}
 		}
 
 		&:not(.filled) {

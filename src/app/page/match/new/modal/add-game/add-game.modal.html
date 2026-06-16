@@ -1,7 +1,7 @@
 <section class="flex-col px-4 pt-4 gap-4">
 	<form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex-col gap-4">
 		<input
-			appInput
+			appThemed
 			formControlName="name"
 			label="Name"
 			[placeholder]="randomGameName"
@@ -9,14 +9,14 @@
 		/>
 
 		<input
-			appInput
+			appThemed
 			formControlName="maxPlayers"
 			label="Maximum number of players"
 			placeholder="Number between 2 and 20"
 			type="number"
 		/>
 
-		<select [appSelect] formControlName="turnType">
+		<select appThemed formControlName="turnType">
 			<option value="">Turn type</option>
 
 			@for (turnType of turnTypes; track $index) {
@@ -29,7 +29,7 @@
 			}
 		</select>
 
-		<select [appSelect] formControlName="turnOrder">
+		<select appThemed formControlName="turnOrder">
 			<option value="">Turn order</option>
 
 			@for (turnOrder of turnOrders; track $index) {
@@ -42,7 +42,7 @@
 			}
 		</select>
 
-		<select [appSelect] formControlName="victoryType">
+		<select appThemed formControlName="victoryType">
 			<option value="">Victory type</option>
 
 			@for (victoryType of victoryTypes; track $index) {
@@ -52,6 +52,6 @@
 			}
 		</select>
 
-		<button appButton type="submit" [disabled]="form.invalid" color="accent">Create</button>
+		<button appThemed type="submit" [disabled]="form.invalid" color="accent">Create</button>
 	</form>
 </section>

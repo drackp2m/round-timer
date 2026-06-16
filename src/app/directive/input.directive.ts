@@ -13,10 +13,17 @@ import {
 import { createTypedElement } from '@app/util/renderer';
 
 type InputDirectiveType = 'email' | 'number' | 'password' | 'search' | 'tel' | 'text' | 'url';
+const selector =
+	'input[appThemed][type=email],' +
+	'input[appThemed][type=number],' +
+	'input[appThemed][type=password],' +
+	'input[appThemed][type=search],' +
+	'input[appThemed][type=tel],' +
+	'input[appThemed][type=text],' +
+	'input[appThemed][type=url]';
 
 @Directive({
-	selector:
-		'input[appInput][type=email], input[appInput][type=number], input[appInput][type=password], input[appInput][type=search], input[appInput][type=tel], input[appInput][type=text], input[appInput][type=url]',
+	selector,
 })
 export class InputDirective implements OnInit, AfterViewInit {
 	// FixMe => input are not filled when write text on type number

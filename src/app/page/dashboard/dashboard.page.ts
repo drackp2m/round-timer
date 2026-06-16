@@ -56,4 +56,10 @@ export class DashboardPage {
 		await this.matchRepository.clear('match_player');
 		await this.matchRepository.clear('match_event');
 	}
+
+	show(message: Event): void {
+		const target = message.target as HTMLInputElement;
+
+		alert(target.value);
+	}
 }

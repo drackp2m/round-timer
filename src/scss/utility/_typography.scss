@@ -55,18 +55,21 @@
 	@font-face {
 		font-family: Recursive;
 		font-style: normal;
+
 		src: url('/font/recursive/latin_basic.woff2') format('woff2-variations');
 	}
 
 	@font-face {
 		font-family: 'Helvetica Now';
 		font-style: normal;
+
 		src: url('/font/helvetica-now/regular.woff2') format('woff2');
 	}
 
 	@font-face {
 		font-family: 'Helvetica Now';
 		font-style: italic;
+
 		src: url('/font/helvetica-now/italic.woff2') format('woff2');
 	}
 
@@ -74,6 +77,7 @@
 		font-family: 'Helvetica Now Text';
 		font-weight: 100;
 		font-style: normal;
+
 		src: url('/font/helvetica-now-text/HelveticaNowText-Thin.woff2') format('woff2');
 	}
 
@@ -81,6 +85,7 @@
 		font-family: 'Helvetica Now Text';
 		font-weight: 100;
 		font-style: italic;
+
 		src: url('/font/helvetica-now-text/HelveticaNowText-ThinItalic.woff2') format('woff2');
 	}
 
@@ -88,6 +93,7 @@
 		font-family: 'Helvetica Now Text';
 		font-weight: 200;
 		font-style: normal;
+
 		src: url('/font/helvetica-now-text/HelveticaNowText-ExtraLight.woff2') format('woff2');
 	}
 
@@ -95,6 +101,7 @@
 		font-family: 'Helvetica Now Text';
 		font-weight: 200;
 		font-style: italic;
+
 		src: url('/font/helvetica-now-text/HelveticaNowText-ExtLtIta.woff2') format('woff2');
 	}
 
@@ -102,6 +109,7 @@
 		font-family: 'Helvetica Now Text';
 		font-weight: 300;
 		font-style: normal;
+
 		src: url('/font/helvetica-now-text/HelveticaNowText-Light.woff2') format('woff2');
 	}
 
@@ -109,6 +117,7 @@
 		font-family: 'Helvetica Now Text';
 		font-weight: 300;
 		font-style: italic;
+
 		src: url('/font/helvetica-now-text/HelveticaNowText-LightItalic.woff2') format('woff2');
 	}
 
@@ -116,6 +125,7 @@
 		font-family: 'Helvetica Now Text';
 		font-weight: 400;
 		font-style: normal;
+
 		src: url('/font/helvetica-now-text/HelveticaNowText-Regular.woff2') format('woff2');
 	}
 
@@ -123,6 +133,7 @@
 		font-family: 'Helvetica Now Text';
 		font-weight: 400;
 		font-style: italic;
+
 		src: url('/font/helvetica-now-text/HelveticaNowText-RegIta.woff2') format('woff2');
 	}
 
@@ -130,6 +141,7 @@
 		font-family: 'Helvetica Now Text';
 		font-weight: 500;
 		font-style: normal;
+
 		src: url('/font/helvetica-now-text/HelveticaNowText-Medium.woff2') format('woff2');
 	}
 
@@ -137,6 +149,7 @@
 		font-family: 'Helvetica Now Text';
 		font-weight: 500;
 		font-style: italic;
+
 		src: url('/font/helvetica-now-text/HelveticaNowText-MediumItalic.woff2') format('woff2');
 	}
 
@@ -144,6 +157,7 @@
 		font-family: 'Helvetica Now Text';
 		font-weight: 700;
 		font-style: normal;
+
 		src: url('/font/helvetica-now-text/HelveticaNowText-Bold.woff2') format('woff2');
 	}
 
@@ -151,6 +165,7 @@
 		font-family: 'Helvetica Now Text';
 		font-weight: 700;
 		font-style: italic;
+
 		src: url('/font/helvetica-now-text/HelveticaNowText-BoldItalic.woff2') format('woff2');
 	}
 
@@ -158,6 +173,7 @@
 		font-family: 'Helvetica Now Text';
 		font-weight: 800;
 		font-style: normal;
+
 		src: url('/font/helvetica-now-text/HelveticaNowText-ExtraBold.woff2') format('woff2');
 	}
 
@@ -165,6 +181,7 @@
 		font-family: 'Helvetica Now Text';
 		font-weight: 800;
 		font-style: italic;
+
 		src: url('/font/helvetica-now-text/HelveticaNowText-ExtraLight.woff2') format('woff2');
 	}
 
@@ -172,6 +189,7 @@
 		font-family: 'Simply Mono';
 		font-weight: 400;
 		font-style: normal;
+
 		src: url('/font/simply-mono/SimplyMono-Regular.woff2') format('woff2');
 	}
 
@@ -179,6 +197,7 @@
 		font-family: 'Simply Mono';
 		font-weight: 400;
 		font-style: italic;
+
 		src: url('/font/simply-mono/SimplyMono-RegularOblique.woff2') format('woff2');
 	}
 
@@ -186,6 +205,7 @@
 		font-family: 'Simply Mono';
 		font-weight: 700;
 		font-style: normal;
+
 		src: url('/font/simply-mono/SimplyMono-Bold.woff2') format('woff2');
 	}
 
@@ -193,6 +213,7 @@
 		font-family: 'Simply Mono';
 		font-weight: 700;
 		font-style: italic;
+
 		src: url('/font/simply-mono/SimplyMono-BoldOblique.woff2') format('woff2');
 	}
 
@@ -200,6 +221,7 @@
 		font-family: 'Fira Code';
 		font-weight: 300;
 		font-style: normal;
+
 		src: url('/font/fira-code/FiraCode-Light.woff2') format('woff2');
 	}
 
@@ -207,6 +229,7 @@
 		font-family: 'Fira Code';
 		font-weight: 400;
 		font-style: normal;
+
 		src: url('/font/fira-code/FiraCode-Regular.woff2') format('woff2');
 	}
 
@@ -214,6 +237,7 @@
 		font-family: 'Fira Code';
 		font-weight: 500;
 		font-style: normal;
+
 		src: url('/font/fira-code/FiraCode-Medium.woff2') format('woff2');
 	}
 
@@ -221,6 +245,7 @@
 		font-family: 'Fira Code';
 		font-weight: 600;
 		font-style: normal;
+
 		src: url('/font/fira-code/FiraCode-SemiBold.woff2') format('woff2');
 	}
 
@@ -228,6 +253,7 @@
 		font-family: 'Fira Code';
 		font-weight: 700;
 		font-style: normal;
+
 		src: url('/font/fira-code/FiraCode-Bold.woff2') format('woff2');
 	}
 }

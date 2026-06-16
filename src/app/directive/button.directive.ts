@@ -12,19 +12,15 @@ import {
 import { SvgComponent } from '@app/component/svg.component';
 
 type ButtonDirectiveType = 'button' | 'menu' | 'reset' | 'submit';
-const selector =
-	`button[appButton][type=button]` +
-	`, button[appButton][type=menu]` +
-	`, button[appButton][type=reset]` +
-	`, button[appButton][type=submit]`;
+type ButtonDirectiveColor = 'primary' | 'primary-mid' | 'contrast' | 'contrast-mid' | 'accent';
 
 @Directive({
-	selector,
+	selector: 'button[appThemed]',
 })
 export class ButtonDirective implements OnInit {
 	// Fixme => when create empty button @angular/eslint error occurs
 	readonly type = input<ButtonDirectiveType>('button');
-	readonly color = input('contrast-mid');
+	readonly color = input<ButtonDirectiveColor>('contrast-mid');
 	readonly icon = input<string>();
 	readonly iconSize = input<number>(24);
 
@@ -56,16 +52,13 @@ export class ButtonDirective implements OnInit {
 
 		this.renderer2.addClass(buttonElement, `surface-${color}`);
 		this.renderer2.addClass(buttonElement, this.getContrastColor(color));
-		this.renderer2.addClass(buttonElement, 'color-primary');
 	}
 	private getContrastColor(color: string): string {
 		switch (color) {
 			case 'primary':
-				return `color-contrast`;
 			case 'primary-mid':
 				return `color-contrast`;
 			case 'contrast':
-				return `color-primary`;
 			case 'contrast-mid':
 				return `color-primary`;
 			case 'accent':

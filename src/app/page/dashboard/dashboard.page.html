@@ -1,11 +1,11 @@
 <section class="flex-col gap-4">
 	<h4>Previous statistics</h4>
 
-	<button appButton type="button" color="accent" appRouterLink="/match/new">New match</button>
+	<button appThemed color="accent" appRouterLink="/match/new">New match</button>
 
-	<button appButton type="button" (click)="createInitialData()">Insert Game and Players</button>
+	<button appThemed (click)="createInitialData()">Insert Game and Players</button>
 
-	<button appButton type="button" (click)="eraseAllData()">Erase all Indexed Data Base data</button>
+	<button appThemed (click)="eraseAllData()">Erase all Indexed Data Base data</button>
 
 	<p>
 		Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse error consequuntur distinctio
@@ -27,21 +27,21 @@
 		suscipit magni magnam dolorem, alias sequi! Cupiditate, laudantium?
 	</p>
 
-	<select [appSelect]>
+	<select appThemed>
 		<option value="">Select a number</option>
 		<option value="one">one</option>
 		<option value="two">two</option>
 		<option value="three">three</option>
 	</select>
 
-	<select [appSelect]>
+	<select appThemed>
 		<option value="">Select a number</option>
 		<option value="one">one</option>
 		<option value="two">two</option>
 		<option value="three">three</option>
 	</select>
 
-	<select>
+	<select (change)="show($event)">
 		<option value="">Select a number</option>
 		<option value="one">one</option>
 		<option value="two">two</option>
