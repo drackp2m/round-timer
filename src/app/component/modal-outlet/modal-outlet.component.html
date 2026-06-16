@@ -1,4 +1,4 @@
-<div id="modal-outlet" [class.hidden]="modalState() === 'hidden' && !isInTransition()">
+<div id="modal-outlet" [class.hidden]="'hidden' === modalState() && false === isInTransition()">
 	<div class="overlay" [@fadeAnimation]="{ value: modalState(), params: animationParams() }"></div>
 
 	<div class="wrapper">

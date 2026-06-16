@@ -6,7 +6,7 @@ export abstract class Enum {
 		enumObj: T,
 	): EnumSelectOptions<T> {
 		return Object.keys(enumObj).map((key) => ({
-			value: key as keyof T,
+			value: key,
 			name: Text.fromUpperCaseToSentenceCase(key),
 		}));
 	}

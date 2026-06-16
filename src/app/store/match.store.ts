@@ -1,4 +1,4 @@
-import { Injectable, computed, inject } from '@angular/core';
+import { computed, inject, Injectable } from '@angular/core';
 import { patchState, signalStore, withState } from '@ngrx/signals';
 import { StoreNames } from 'idb';
 
@@ -40,7 +40,7 @@ export class MatchStore extends signalStore({ protectedState: false }, withState
 
 		const lastEvent = events[events.length - 1];
 
-		if (lastEvent === undefined) {
+		if (undefined === lastEvent) {
 			return [];
 		}
 
@@ -148,7 +148,7 @@ export class MatchStore extends signalStore({ protectedState: false }, withState
 
 		const { match, matchEvents } = inProgressMatch;
 
-		const players = matchEvents.find((event) => 'SET_TURN_ORDER' === event.type)?.payload;
+		const players = matchEvents.find((event) => 'SET_TURN_ORDER' === event.type)?.payload ?? null;
 
 		matchEvents.forEach((event, index) => {
 			if (index !== matchEvents.length - 1) {

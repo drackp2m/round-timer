@@ -1,13 +1,12 @@
-/* eslint-disable max-lines */
 import eslint from '@eslint/js';
-import typescriptEslint from 'typescript-eslint';
 import angularEslint from 'angular-eslint';
-import eslintPluginImport from 'eslint-plugin-import';
+import eslintPluginImportX from 'eslint-plugin-import-x';
 import eslintPluginPrettier from 'eslint-plugin-prettier';
 import eslintPluginRxjs from 'eslint-plugin-rxjs-updated';
 import eslintPluginSonarjs from 'eslint-plugin-sonarjs';
 import eslintPluginUnusedImports from 'eslint-plugin-unused-imports';
-import jsoncEslintParser from 'jsonc-eslint-parser';
+import * as jsoncEslintParser from 'jsonc-eslint-parser';
+import typescriptEslint from 'typescript-eslint';
 
 function eslintErrorsToWarnings(rules) {
 	return Object.fromEntries(
@@ -44,10 +43,11 @@ function transformEslintConfigs(config) {
 }
 
 export default typescriptEslint.config(
+	// ── Global ignores & settings ──────────────────────────────────────────────
 	{
 		ignores: ['.angular/**'],
 		settings: {
-			'import/internal-regex': '^@app/',
+			'import-x/internal-regex': '^@app/',
 		},
 		languageOptions: {
 			parserOptions: {
@@ -56,14 +56,68 @@ export default typescriptEslint.config(
 			},
 		},
 	},
+
+	// ── Base: shared rules for TS + JS ─────────────────────────────────────────
+	{
+		name: 'Base',
+		files: ['**/*.ts', '**/*.mts', '**/*.js', '**/*.mjs'],
+		plugins: {
+			'import-x': eslintPluginImportX,
+			'unused-imports': eslintPluginUnusedImports,
+			prettier: eslintPluginPrettier,
+		},
+		rules: {
+			// Imports
+			'import-x/no-duplicates': 'warn',
+			'import-x/order': [
+				'warn',
+				{
+					'newlines-between': 'always',
+					alphabetize: {
+						order: 'asc',
+					},
+				},
+			],
+			'unused-imports/no-unused-imports': 'warn',
+
+			// Format
+			'prettier/prettier': 'warn',
+			'no-multiple-empty-lines': ['warn', { max: 1 }],
+			'space-before-blocks': ['warn', 'always'],
+			'newline-before-return': 'warn',
+			'padding-line-between-statements': [
+				'warn',
+				{ blankLine: 'always', next: 'export', prev: '*' },
+			],
+
+			// General style
+			curly: ['warn', 'all'],
+			eqeqeq: ['warn', 'always'],
+			yoda: ['warn', 'always'],
+			'no-empty': 'warn',
+			'no-implicit-coercion': ['warn', { boolean: true }],
+			'no-extra-boolean-cast': 'warn',
+			'no-restricted-imports': [
+				'warn',
+				{
+					patterns: [
+						{
+							group: ['../*'],
+							message: 'Use path aliases instead of relative imports',
+						},
+					],
+				},
+			],
+		},
+	},
+
+	// ── TypeScript ─────────────────────────────────────────────────────────────
 	{
 		name: 'TypeScript',
-		files: ['**/*.ts'],
+		files: ['**/*.ts', '**/*.mts'],
 		plugins: {
 			sonarjs: eslintPluginSonarjs,
 			rxjs: eslintPluginRxjs,
-			import: eslintPluginImport,
-			'unused-imports': eslintPluginUnusedImports,
 		},
 		extends: [
 			transformEslintConfigs(eslint.configs.recommended),
@@ -76,46 +130,34 @@ export default typescriptEslint.config(
 		processor: angularEslint.processInlineTemplates,
 		rules: {
 			...eslintErrorsToWarnings(eslintPluginSonarjs.configs.recommended.rules),
-			'@typescript-eslint/no-extraneous-class': 'off',
-			'@typescript-eslint/unbound-method': 'off',
+
+			// Angular
 			'@angular-eslint/directive-selector': [
 				'warn',
-				{
-					type: 'attribute',
-					prefix: 'app',
-					style: 'camelCase',
-				},
+				{ type: 'attribute', prefix: 'app', style: 'camelCase' },
 			],
 			'@angular-eslint/component-selector': [
 				'warn',
-				{
-					type: 'element',
-					prefix: 'app',
-					style: 'kebab-case',
-				},
+				{ type: 'element', prefix: 'app', style: 'kebab-case' },
 			],
 			'@angular-eslint/component-class-suffix': [
 				'warn',
-				{
-					suffixes: ['Layout', 'Page', 'Modal', 'Component'],
-				},
+				{ suffixes: ['Layout', 'Page', 'Modal', 'Component'] },
 			],
-			'sonarjs/no-unused-vars': 'off',
-			'sonarjs/no-dead-store': 'off',
-			'sonarjs/todo-tag': 'off',
-			'sonarjs/fixme-tag': 'off',
-			'sonarjs/unused-import': 'off',
-			'unused-imports/no-unused-imports': 'warn',
-			'no-unused-private-class-members': 'warn',
-			'@typescript-eslint/no-unused-vars': [
+
+			// TypeScript
+			'@typescript-eslint/no-extraneous-class': 'off',
+			'@typescript-eslint/unbound-method': 'off',
+			'@typescript-eslint/no-inferrable-types': 'warn',
+			'@typescript-eslint/no-unnecessary-boolean-literal-compare': 'warn',
+			'@typescript-eslint/strict-boolean-expressions': [
 				'warn',
 				{
-					argsIgnorePattern: '^_',
-					varsIgnorePattern: '^_',
-					caughtErrorsIgnorePattern: '^_',
+					allowNullableObject: false,
+					allowNumber: false,
+					allowString: false,
 				},
 			],
-			'@typescript-eslint/no-inferrable-types': 'warn',
 			'@typescript-eslint/member-ordering': [
 				'warn',
 				{
@@ -132,73 +174,33 @@ export default typescriptEslint.config(
 					],
 				},
 			],
-			'no-restricted-imports': [
+			'@typescript-eslint/no-unused-vars': [
 				'warn',
 				{
-					patterns: [
-						{
-							group: ['../*'],
-							message: 'Use path aliases instead of relative imports',
-						},
-					],
+					argsIgnorePattern: '^_',
+					varsIgnorePattern: '^_',
+					caughtErrorsIgnorePattern: '^_',
 				},
 			],
-			'import/order': [
-				'warn',
-				{
-					'newlines-between': 'always',
-					alphabetize: {
-						order: 'asc',
-					},
-				},
-			],
-			'sort-imports': [
-				'warn',
-				{
-					ignoreDeclarationSort: true,
-				},
-			],
-			'padding-line-between-statements': [
-				'warn',
-				{
-					blankLine: 'always',
-					next: 'export',
-					prev: '*',
-				},
-			],
-			'no-empty': 'warn',
-			'no-duplicate-imports': 'warn',
-			'no-multiple-empty-lines': [
-				'warn',
-				{
-					max: 1,
-				},
-			],
-			'space-before-blocks': ['warn', 'always'],
-			'newline-before-return': 'warn',
-			curly: ['warn', 'all'],
-			eqeqeq: ['warn', 'always'],
-			yoda: ['warn', 'always'],
-			'no-implicit-coercion': ['warn', { boolean: true }],
-			'no-extra-boolean-cast': 'warn',
-			'@typescript-eslint/no-unnecessary-boolean-literal-compare': 'warn',
-			'@typescript-eslint/strict-boolean-expressions': [
-				'warn',
-				{
-					allowNullableObject: false,
-					allowNumber: false,
-					allowString: false,
-				},
-			],
+
+			'sonarjs/no-unused-vars': 'off',
+			'sonarjs/unused-import': 'off',
+			'sonarjs/no-dead-store': 'off',
+			'sonarjs/todo-tag': 'off',
+			'sonarjs/fixme-tag': 'off',
+			'sonarjs/deprecation': 'off',
+			'no-unused-private-class-members': 'warn',
 		},
 	},
+
+	// ── JavaScript ─────────────────────────────────────────────────────────────
 	{
 		name: 'JavaScript',
 		files: ['**/*.js', '**/*.mjs'],
-		rules: {
-			'@typescript-eslint/no-require-imports': 'off',
-		},
+		extends: [transformEslintConfigs(eslint.configs.recommended)],
 	},
+
+	// ── HTML ───────────────────────────────────────────────────────────────────
 	{
 		name: 'HTML',
 		files: ['**/*.html'],
@@ -215,6 +217,8 @@ export default typescriptEslint.config(
 			'@angular-eslint/template/interactive-supports-focus': 'warn',
 		},
 	},
+
+	// ── JSON ───────────────────────────────────────────────────────────────────
 	{
 		name: 'JSON',
 		files: ['**/*.json', '**/*.jsonc', '**/*.json5'],
@@ -228,46 +232,30 @@ export default typescriptEslint.config(
 			'prettier/prettier': 'warn',
 		},
 	},
-	{
-		name: 'Prettier',
-		files: ['**/*.ts', '**/*.mts', '**/*.js', '**/*.mjs'],
-		plugins: {
-			prettier: eslintPluginPrettier,
-		},
-		rules: {
-			'prettier/prettier': 'warn',
-		},
-	},
-	{
-		name: 'Default',
-		files: ['**/*.ts', '**/*.mts', '**/*.js', '**/*.mjs'],
-		ignores: ['**/*.spec.ts', '**/*.spec.js', '.angular/**'],
-		rules: {
-			'max-lines': [
-				'warn',
-				{
-					max: 250,
-					skipComments: true,
-				},
-			],
-			'max-lines-per-function': [
-				'warn',
-				{
-					max: 75,
-					skipComments: true,
-					IIFEs: true,
-				},
-			],
-		},
-	},
+
+	// ── Tests ──────────────────────────────────────────────────────────────────
 	{
 		name: 'Tests',
 		files: ['**/*.spec.ts', '**/*.spec.js', '**/*.test.ts', '**/*.test.js'],
 		rules: {
+			'@typescript-eslint/no-unsafe-call': 'off',
+			'@typescript-eslint/no-unsafe-assignment': 'off',
+			'@typescript-eslint/no-unsafe-member-access': 'off',
 			'sonarjs/no-hardcoded-credentials': 'off',
 			'sonarjs/no-hardcoded-passwords': 'off',
 			'sonarjs/no-hardcoded-secrets': 'off',
 			'sonarjs/no-skipped-tests': 'off',
+		},
+	},
+
+	// ── Complexity ─────────────────────────────────────────────────────────────
+	{
+		name: 'Complexity',
+		files: ['**/*.ts', '**/*.mts', '**/*.js', '**/*.mjs'],
+		ignores: ['**/*.spec.ts', '**/*.spec.js', '.angular/**'],
+		rules: {
+			'max-lines': ['warn', { max: 250, skipComments: true }],
+			'max-lines-per-function': ['warn', { max: 75, skipComments: true, IIFEs: true }],
 		},
 	},
 );

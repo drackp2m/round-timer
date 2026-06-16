@@ -1,8 +1,8 @@
 import { Component, ElementRef, computed, effect, inject, input, viewChild } from '@angular/core';
-import { ShowMillisecondsPipe } from 'src/app/pipe/show-milliseconds.pipe';
 
 import { SvgComponent } from '@app/component/svg.component';
 import { MatchTurn } from '@app/definition/page/match/match-turn.interface';
+import { ShowMillisecondsPipe } from '@app/pipe/show-milliseconds.pipe';
 import { PlayerStore } from '@app/store/player.store';
 import { Async } from '@app/util/async';
 

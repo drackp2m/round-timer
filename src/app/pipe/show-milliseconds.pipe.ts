@@ -33,13 +33,13 @@ export class ShowMillisecondsPipe implements PipeTransform {
 				milliseconds = '';
 				break;
 			case 1:
-				milliseconds = '10' === milliseconds ? '0' : milliseconds.toString();
+				milliseconds = '10' === milliseconds ? '0' : milliseconds;
 				break;
 			case 2:
-				milliseconds = '100' === milliseconds ? '00' : milliseconds.toString().padStart(2, '0');
+				milliseconds = '100' === milliseconds ? '00' : milliseconds.padStart(2, '0');
 				break;
 			default:
-				milliseconds = milliseconds.toString().padStart(3, '0');
+				milliseconds = milliseconds.padStart(3, '0');
 		}
 
 		return [milliseconds, extraSeconds];

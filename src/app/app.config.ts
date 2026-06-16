@@ -1,22 +1,24 @@
-import {
-	ApplicationConfig,
-	inject,
-	isDevMode,
-	provideAppInitializer,
-	provideExperimentalCheckNoChangesForDebug,
-	provideExperimentalZonelessChangeDetection,
-} from '@angular/core';
+import { ApplicationConfig, inject, isDevMode, provideAppInitializer } from '@angular/core';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { TitleStrategy, provideRouter, withHashLocation, withRouterConfig } from '@angular/router';
 import { provideServiceWorker } from '@angular/service-worker';
-import { APP_ROUTES } from 'src/app/app.routes';
-import { TemplatePageTitleStrategy } from 'src/app/strategy/template-file-title.strategy';
 
+import { APP_ROUTES } from './app.routes';
+import { TemplatePageTitleStrategy } from './strategy/template-file-title.strategy';
+
+import { GameRepository } from '@app/repository/game.repository';
+import { MatchRepository } from '@app/repository/match.repository';
+import { PlayerRepository } from '@app/repository/player.repository';
+import { SettingRepository } from '@app/repository/setting.repository';
 import { ThemeService } from '@app/service/theme.service';
 
 export const appConfig: ApplicationConfig = {
 	providers: [
-		ThemeService,
+		GameRepository,
+		MatchRepository,
+		PlayerRepository,
+		SettingRepository,
+		provideAnimations(),
 		provideAppInitializer(() => {
 			const _themeService = inject(ThemeService);
 		}),
@@ -29,12 +31,6 @@ export const appConfig: ApplicationConfig = {
 			}),
 		),
 		{ provide: TitleStrategy, useClass: TemplatePageTitleStrategy },
-		provideAnimations(),
-		provideExperimentalZonelessChangeDetection(),
-		provideExperimentalCheckNoChangesForDebug({
-			interval: 50,
-			exhaustive: true,
-		}),
 		provideServiceWorker('ngsw-worker.js', {
 			enabled: !isDevMode(),
 			scope: '/',

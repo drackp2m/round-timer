@@ -5,9 +5,7 @@ import { Setting } from '@app/model/setting.model';
 import { SettingSchema } from '@app/repository/definition/setting-schema.interface';
 import { GenericRepository } from '@app/repository/generic.repository';
 
-@Injectable({
-	providedIn: 'root',
-})
+@Injectable()
 export class SettingRepository extends GenericRepository<SettingSchema> {
 	override async findAll<K extends StoreNames<SettingSchema>>(
 		storeName: K,

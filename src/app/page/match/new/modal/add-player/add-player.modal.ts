@@ -70,8 +70,8 @@ export class AddPlayerModal extends Modal<Player> {
 		return {
 			name: this.form.controls.name.value,
 			nick: this.form.controls.nick.value,
-			color: '' !== this.form.controls.color.value ? this.form.controls.color.value : undefined,
-			icon: '' !== this.form.controls.icon.value ? this.form.controls.icon.value : undefined,
+			...('' !== this.form.controls.color.value && { color: this.form.controls.color.value }),
+			...('' !== this.form.controls.icon.value && { icon: this.form.controls.icon.value }),
 		};
 	}
 }

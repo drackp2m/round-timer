@@ -11,17 +11,17 @@ describe('CalculateMatchTurns', () => {
 	beforeEach(() => {
 		service = new CalculateMatchTurns();
 
-		Object.defineProperty(global.crypto, 'randomUUID', {
+		Object.defineProperty(globalThis.crypto, 'randomUUID', {
 			value: () => `test-uuid-${(++currentUuid).toString()}`,
 			configurable: true,
 		});
 
-		jest.useFakeTimers();
-		jest.setSystemTime(new Date('2025-01-29T11:00:00Z'));
+		vi.useFakeTimers();
+		vi.setSystemTime(new Date('2025-01-29T11:00:00Z'));
 	});
 
 	afterEach(() => {
-		jest.useRealTimers();
+		vi.useRealTimers();
 	});
 
 	it('should be created', () => {
@@ -37,19 +37,19 @@ describe('CalculateMatchTurns', () => {
 			}),
 		);
 
-		jest.advanceTimersByTime(1000);
+		vi.advanceTimersByTime(1000);
 
 		service.addEvent(createEvent('NEXT_TURN'));
 
-		jest.advanceTimersByTime(2000);
+		vi.advanceTimersByTime(2000);
 
 		service.addEvent(createEvent('NEXT_TURN'));
 
-		jest.advanceTimersByTime(5000);
+		vi.advanceTimersByTime(5000);
 
 		service.addEvent(createEvent('NEXT_TURN'));
 
-		jest.advanceTimersByTime(4500);
+		vi.advanceTimersByTime(4500);
 
 		const result = service.addEvent(createEvent('NEXT_TURN'));
 

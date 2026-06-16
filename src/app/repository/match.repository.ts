@@ -6,9 +6,7 @@ import { Match } from '@app/model/match.model';
 import { MatchSchema } from '@app/repository/definition/match-schema.interface';
 import { GenericRepository } from '@app/repository/generic.repository';
 
-@Injectable({
-	providedIn: 'root',
-})
+@Injectable()
 export class MatchRepository extends GenericRepository<MatchSchema> {
 	async findInProgressMatch(): Promise<
 		{ match: Match; matchPlayers: MatchPlayer[]; matchEvents: MatchEvent[] } | undefined

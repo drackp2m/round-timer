@@ -9,7 +9,7 @@ export class LoadInitialDataUseCase {
 	private readonly router = inject(Router);
 
 	execute(): Signal<boolean> {
-		this.redirectToMatchIfMatchIsInProgress();
+		// this.redirectToMatchIfMatchIsInProgress();
 
 		return this.matchStore.isLoading;
 	}
