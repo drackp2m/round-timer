@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import eslint from '@eslint/js';
 import angularEslint from 'angular-eslint';
 import eslintPluginImportX from 'eslint-plugin-import-x';
@@ -183,6 +184,7 @@ export default typescriptEslint.config(
 				},
 			],
 
+			// SonarJS
 			'sonarjs/no-unused-vars': 'off',
 			'sonarjs/unused-import': 'off',
 			'sonarjs/no-dead-store': 'off',
@@ -198,6 +200,9 @@ export default typescriptEslint.config(
 		name: 'JavaScript',
 		files: ['**/*.js', '**/*.mjs'],
 		extends: [transformEslintConfigs(eslint.configs.recommended)],
+		rules: {
+			'@typescript-eslint/no-require-imports': 'off',
+		},
 	},
 
 	// ── HTML ───────────────────────────────────────────────────────────────────

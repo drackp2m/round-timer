@@ -6,7 +6,6 @@
 			"skipQuestions": [
 				"scope",
 				"body",
-				"breaking",
 				"issues"
 			],
 			"subjectMaxLength": 75,

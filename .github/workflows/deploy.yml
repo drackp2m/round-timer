@@ -59,7 +59,7 @@ jobs:
       - name: Set up pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: 11
+          version: 11.6.0
 
       - name: Reuse deps cache
         id: deps-cache
@@ -92,7 +92,7 @@ jobs:
       - name: Set up pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: 11
+          version: 11.6.0
 
       - name: Reuse deps cache
         id: deps-cache
@@ -125,7 +125,7 @@ jobs:
       - name: Set up pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: 11
+          version: 11.6.0
 
       - name: Reuse deps cache
         id: deps-cache
@@ -183,7 +183,7 @@ jobs:
       - name: Set up pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: 11
+          version: 11.6.0
 
       - name: Reuse deps cache
         id: deps-cache

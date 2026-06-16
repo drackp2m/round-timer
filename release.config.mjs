@@ -1,7 +1,15 @@
-const fs = require('node:fs');
-const path = require('node:path');
+import fs from 'node:fs';
+import path, { dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-module.exports = {
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
+const parserOpts = {
+	headerPattern: /^(.+?)\s(?<type>\w+): (?<subject>.+)$/u,
+	headerCorrespondence: ['emoji', 'type', 'subject'],
+};
+
+export default {
 	branches: ['main'],
 	plugins: [
 		[
@@ -17,20 +25,14 @@ module.exports = {
 					{ type: 'revert', release: 'patch' },
 					{ type: 'BREAKING CHANGE', release: 'major' },
 				],
-				parserOpts: {
-					headerPattern: /^(.+?)\s(?<type>\w+): (?<subject>.+)$/u,
-					headerCorrespondence: ['emoji', 'type', 'subject'],
-				},
+				parserOpts,
 			},
 		],
 		[
 			'@semantic-release/release-notes-generator',
 			{
 				preset: 'conventionalcommits',
-				parserOpts: {
-					headerPattern: /^(.+?)\s(?<type>\w+): (?<subject>.+)$/u,
-					headerCorrespondence: ['emoji', 'type', 'subject'],
-				},
+				parserOpts,
 				commitsSort: ['scope', 'subject'],
 				presetConfig: {
 					types: [
