@@ -1,3 +1,17 @@
+# v1.4.1 (2026-06-16)
+## What's Changed
+### ♻️ Code Refactoring
+* update project to Angular 22 ([381afd1](https://github.com/drackp2m/round-timer/commit/381afd17c68f2eae00b38a9b2179adf4403ba531)) by Marc Jovaní González
+### 🐛 Bug Fixes
+* improve select, fix button icon, refactor directive selectors ([0b5a341](https://github.com/drackp2m/round-timer/commit/0b5a341e0dcd514f721421f3b54789d6d336c3f1)) by Marc Jovaní González
+### 💻 Continuous Integration
+* fix error on release command ([f90b232](https://github.com/drackp2m/round-timer/commit/f90b232f206003dc96dc0bedb55cce64399d4bef)) by Marc Jovaní González
+* improve commitlint, commitizen, semantic-release, etc. ([2a14f33](https://github.com/drackp2m/round-timer/commit/2a14f33b5b5bde900fd34fc68f263c9cfcd92f70)) by Marc Jovaní González
+* use node 11.6.0 on all deploy steps ([93d5c7c](https://github.com/drackp2m/round-timer/commit/93d5c7c2c77ac76976b4bf6da4aef7cae0b9f36f)) by Marc Jovaní González
+* use pnpm and node 26 on github deploy ([17c39dc](https://github.com/drackp2m/round-timer/commit/17c39dc2205de6abaf3c153d80bf0e2ee019521e)) by Marc Jovaní González
+
+**Full Changelog**: https://github.com/drackp2m/round-timer/compare/v1.4.0...v1.4.1
+
 # v1.4.0 (2025-04-07)
 ## What's Changed
 ### ✨ Features
