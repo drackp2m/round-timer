@@ -36,12 +36,12 @@ export default {
 				commitsSort: ['scope', 'subject'],
 				presetConfig: {
 					types: [
-						{ type: 'feat', section: '✨ Features' },
+						{ type: 'feat', section: '✨ Features', hidden: false },
 						{ type: 'style', section: '🎨 Styles', hidden: false },
 						{ type: 'test', section: '🧪 Tests', hidden: false },
 						{ type: 'refactor', section: '♻️ Code Refactoring', hidden: false },
-						{ type: 'fix', section: '🐛 Bug Fixes' },
-						{ type: 'docs', section: '📚 Documentation' },
+						{ type: 'fix', section: '🐛 Bug Fixes', hidden: false },
+						{ type: 'docs', section: '📚 Documentation', hidden: false },
 						{ type: 'perf', section: '🚀 Performance Improvements', hidden: false },
 						{ type: 'build', section: '🏗️‍ Build System', hidden: false },
 						{ type: 'ci', section: '💻 Continuous Integration', hidden: false },
@@ -66,12 +66,12 @@ export default {
 		],
 		[
 			'@semantic-release/github',
-			{
-				assets: [
-					{ path: 'dist/*.zip', label: 'Build' },
-					{ path: 'dist/*.tar.gz', label: 'Source code (tar.gz)' },
-				],
-			},
+			// {
+			// 	assets: [
+			// 		{ path: 'dist/*.zip', label: 'Build' },
+			// 		{ path: 'dist/*.tar.gz', label: 'Source code (tar.gz)' },
+			// 	],
+			// },
 		],
 		[
 			'@semantic-release/git',
