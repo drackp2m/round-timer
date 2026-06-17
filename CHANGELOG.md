@@ -1,3 +1,17 @@
+# v1.4.2 (2026-06-17)
+## What's Changed
+### ♻️ Code Refactoring
+* buttons can be empty, type button as default on all buttons ([b7429dc](https://github.com/drackp2m/round-timer/commit/b7429dc4912e2712235a5b21e9608fa07d4183a7)) by Marc Jovaní González
+### 🐛 Bug Fixes
+* icons now show on Safari ([d98cae4](https://github.com/drackp2m/round-timer/commit/d98cae40c35caabbb79f301bf367654d39d6c045)) by Marc Jovaní González
+### 💻 Continuous Integration
+* fix build step ([93dc5b0](https://github.com/drackp2m/round-timer/commit/93dc5b05c00b120cc0cba18de219a9bacceeee41)) by Marc Jovaní González
+* force node 24 on github actions ([28d3de8](https://github.com/drackp2m/round-timer/commit/28d3de8605d7d22522bbccfc94f92639264b0eda)) by Marc Jovaní González
+* try to remove github actions warnings ([d420dd3](https://github.com/drackp2m/round-timer/commit/d420dd397d575606d816e420313545f34425edc7)) by Marc Jovaní González
+* up pnpm to 11.7.0, script to sync dev with master after release ([988c4e4](https://github.com/drackp2m/round-timer/commit/988c4e497a92bbea6a73b58bf898317a31019cb6)) by Marc Jovaní González
+
+**Full Changelog**: https://github.com/drackp2m/round-timer/compare/v1.4.1...v1.4.2
+
 # v1.4.1 (2026-06-16)
 ## What's Changed
 ### ♻️ Code Refactoring
