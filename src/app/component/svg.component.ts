@@ -1,30 +1,28 @@
-import { Component, computed, input, signal } from '@angular/core';
+import { Component, computed, input } from '@angular/core';
 
-import { SquaredDirective } from '@app/directive/squared.directive';
 import { Check } from '@app/util/check';
 
 @Component({
 	selector: 'app-svg',
 	template: `<div
 		[attr.class]="class()"
+		[style.mask-image]="icon()"
 		[style.aspect-ratio]="aspectRatio()"
-		[style.mask]="icon()"
-		[style.background-color]="'currentColor'"
+		[style.width]="aspectRatioValue() >= 1 ? '100%' : 'auto'"
+		[style.height]="aspectRatioValue() <= 1 ? '100%' : 'auto'"
 	></div>`,
 	styles: [
 		`
 			:host {
 				display: flex;
 				justify-content: center;
-				max-width: 100%;
-
-				&.squared {
-					aspect-ratio: 1 / 1;
-				}
+				align-items: center;
 
 				div {
-					height: 100%;
-					max-width: 100%;
+					background-color: currentColor;
+					mask-repeat: no-repeat;
+					mask-position: center;
+					mask-size: contain;
 
 					&.flip {
 						transform: scaleX(-1);
@@ -33,38 +31,36 @@ import { Check } from '@app/util/check';
 			}
 		`,
 	],
-	hostDirectives: [
-		{
-			directive: SquaredDirective,
-			inputs: ['squared'],
-		},
-	],
 	host: {
 		'[style.height]': 'size()',
+		'[style.aspect-ratio]': 'squared() ? "1 / 1" : aspectRatio()',
 	},
 })
-// ToDo => try to inherit color from parent text color
 export class SvgComponent {
 	readonly icon = input.required<string, string>({ transform: this.getIcon });
-	readonly flip = input(false, { transform: Check.isFalseAsStringOrTrue });
 	readonly size = input<string, number>('24px', { transform: (size) => `${size.toString()}px` });
+	readonly color = input<string>();
+	readonly squared = input(false, { transform: Check.isFalseAsStringOrTrue });
+	readonly flip = input(false, { transform: Check.isFalseAsStringOrTrue });
 
-	readonly color = signal('surface-contrast');
-	readonly hexColor = signal('surface-contrast');
+	private readonly aspectRatioTuple = computed<[number, number]>(() => this.getAspectRatio());
+	readonly aspectRatio = computed(() => this.aspectRatioTuple().join(' / '));
+	readonly aspectRatioValue = computed(
+		() => this.aspectRatioTuple()[0] / this.aspectRatioTuple()[1],
+	);
 
-	readonly aspectRatio = computed(() => this.getAspectRatio());
 	readonly class = computed(() => {
 		const color = this.color();
 		const flip = this.flip();
 
-		return color + (flip ? ' flip' : '');
+		return (flip ? 'flip' : '') + (color !== undefined ? ` ${color}` : '');
 	});
 
 	getIcon(value: string): string {
-		return `url(svg/${value}-solid.svg) no-repeat center`;
+		return `url(svg/${value}-solid.svg)`;
 	}
 
-	private getAspectRatio(): string {
+	private getAspectRatio(): [number, number] {
 		const icon = this.icon();
 
 		const iconNameRegex = /svg\/(.+)-solid.svg/;
@@ -79,24 +75,24 @@ export class SvgComponent {
 			case 'chevron-right':
 			case 'forward-step':
 			case 'pause':
-				return '320 / 512';
+				return [320, 512];
 			case 'ghost':
 			case 'play':
 			case 'stop':
 			case 'xmark':
-				return '384 / 512';
+				return [384, 512];
 			case 'rabbit':
 			case 'trash':
-				return '448 / 512';
+				return [448, 512];
 			case 'turtle':
-				return '512 / 398';
+				return [512, 398];
 			case 'delete-left':
-				return '576 / 512';
+				return [576, 512];
 			case 'dice':
 			case 'user-plus':
-				return '640 / 512';
+				return [640, 512];
 			default:
-				return '1 / 1';
+				return [1, 1];
 		}
 	}
 }

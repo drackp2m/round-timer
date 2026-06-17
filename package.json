@@ -3,7 +3,7 @@
 	"version": "1.4.1",
 	"author": "Marc Jovaní González",
 	"private": true,
-	"packageManager": "pnpm@11.6.0",
+	"packageManager": "pnpm@11.7.0",
 	"scripts": {
 		"ng": "ng",
 		"start": "ng serve",
@@ -13,7 +13,8 @@
 		"test": "ng test",
 		"release": "semantic-release",
 		"update:check": "pnpm outdated",
-		"update": "pnpm up --latest"
+		"update": "pnpm up --latest",
+		"sync": "sh scripts/sync-with-main.sh"
 	},
 	"dependencies": {
 		"@angular/animations": "^22.0.1",

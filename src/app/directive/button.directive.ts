@@ -16,9 +16,11 @@ type ButtonDirectiveColor = 'primary' | 'primary-mid' | 'contrast' | 'contrast-m
 
 @Directive({
 	selector: 'button[appThemed]',
+	host: {
+		'[attr.type]': 'type()',
+	},
 })
 export class ButtonDirective implements OnInit {
-	// Fixme => when create empty button @angular/eslint error occurs
 	readonly type = input<ButtonDirectiveType>('button');
 	readonly color = input<ButtonDirectiveColor>('contrast-mid');
 	readonly icon = input<string>();
