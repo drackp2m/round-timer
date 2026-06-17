@@ -15,12 +15,8 @@ import { TitleService } from '@app/service/title.service';
 		</button>
 
 		<div class="flex-row gap-2 align-center">
-			<button appThemed appRouterLink="/match" icon="dice">
-				<!---->
-			</button>
-			<button appThemed appRouterLink="/settings" icon="gear">
-				<!---->
-			</button>
+			<button appThemed appRouterLink="/match" icon="dice"></button>
+			<button appThemed appRouterLink="/settings" icon="gear"></button>
 		</div>
 	</section>`,
 	styles: [
