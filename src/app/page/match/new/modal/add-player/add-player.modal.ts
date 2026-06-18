@@ -24,7 +24,7 @@ import { Enum } from '@app/util/enum';
 	],
 })
 export class AddPlayerModal extends Modal<Player> {
-	readonly TITLE = 'Add Player';
+	readonly TITLE = 'Add player';
 
 	readonly colors = Enum.toSelectOptions(PlayerColor);
 	readonly icons = Enum.toSelectOptions(PlayerIcon);

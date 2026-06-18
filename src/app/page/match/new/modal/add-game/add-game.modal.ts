@@ -21,7 +21,7 @@ import { Game as GameUtil } from '@app/util/game';
 	imports: [ReactiveFormsModule, InputDirective, SelectDirective, ButtonDirective],
 })
 export class AddGameModal extends Modal {
-	readonly TITLE = 'Add Game';
+	readonly TITLE = 'Add game';
 
 	private readonly gameStore = inject(GameStore);
 

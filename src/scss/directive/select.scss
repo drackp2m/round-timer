@@ -15,19 +15,6 @@
 			padding: $input-vertical-padding $input-horizontal-padding;
 		}
 
-		select {
-			position: absolute;
-			z-index: 1;
-			top: 0;
-			left: 0;
-
-			width: 100%;
-			height: 100%;
-			margin: 0;
-
-			opacity: 0;
-		}
-
 		label {
 			span {
 				position: absolute;
@@ -36,10 +23,9 @@
 			}
 
 			select {
-				user-select: none;
 				position: relative;
+				z-index: 1;
 				width: 100%;
-				border-radius: var(--border-radius-3);
 			}
 		}
 
@@ -50,6 +36,8 @@
 		}
 
 		.border-container {
+			overflow: hidden;
+
 			&::before {
 				content: '';
 
@@ -75,11 +63,18 @@
 		}
 
 		.label {
-			position: relative;
-			bottom: 0;
 			transition:
-				bottom $transition-duration ease-in-out,
+				transform $transition-duration ease-in-out,
 				font-size $transition-duration ease-in-out;
+		}
+
+		.selected-option {
+			transform: translateY(calc(var(--input-height) / 2));
+			color: var(--color-contrast-mid);
+			opacity: 0;
+			transition:
+				transform $transition-duration ease-in-out,
+				opacity $transition-duration ease-in-out;
 		}
 
 		&.focused,
@@ -102,8 +97,13 @@
 			}
 
 			.label {
-				bottom: calc(var(--input-height) / 2 + 1px);
+				transform: translateY(calc(-1 * var(--input-height) / 2 + 1px));
 				font-size: var(--font-size-sm);
+			}
+
+			.selected-option {
+				transform: translateY(0);
+				opacity: 1;
 			}
 		}
 
@@ -113,6 +113,13 @@
 				&::before {
 					border-color: var(--color-accent);
 				}
+			}
+		}
+
+		&.filled {
+			.selected-option {
+				opacity: 0;
+				transition: none;
 			}
 		}
 

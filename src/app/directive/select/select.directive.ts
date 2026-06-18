@@ -10,6 +10,7 @@ import {
 	ViewContainerRef,
 	effect,
 	inject,
+	input,
 } from '@angular/core';
 
 import { SvgComponent } from '@app/component/svg.component';
@@ -22,16 +23,20 @@ import { createTypedElement } from '@app/util/renderer';
 })
 // ToDo => add default placeholder as "Select an option"
 export class SelectDirective implements OnInit, AfterViewInit {
+	readonly label = input.required<string>();
+
 	private readonly elementRef = inject<ElementRef<HTMLSelectElement>>(ElementRef);
 	private readonly renderer2 = inject(Renderer2);
 	private readonly viewContainerRef = inject(ViewContainerRef);
 	private readonly viewportService = inject(ViewportService);
 
 	private readonly wrapperElement: HTMLDivElement = this.createWrapper();
+	private readonly labelSpanElement: HTMLSpanElement = createTypedElement(this.renderer2, 'span');
 	private readonly labelElement: HTMLLabelElement = this.createLabel();
 	private readonly fakeLabelElement: HTMLSpanElement = this.createFakeLabel();
 	private readonly borderContainerElement: HTMLDivElement = this.createBorderContainer();
 	private readonly labelContainerElement: HTMLDivElement = this.creteLabelContainer();
+	private readonly selectedOptionElement: HTMLSpanElement = this.createSelectedOption();
 
 	private readonly TOP_POSITION_CLASS = 'position-top';
 	private readonly BOTTOM_POSITION_CLASS = 'position-bottom';
@@ -39,6 +44,10 @@ export class SelectDirective implements OnInit, AfterViewInit {
 	private optionsContainer: HTMLElement | null = null;
 
 	constructor() {
+		effect(() => {
+			const label = this.label();
+			this.fillLabel(label);
+		});
 		effect(() => {
 			this.viewportService.routerOutletScroll();
 			this.viewportService.windowResized();
@@ -118,7 +127,7 @@ export class SelectDirective implements OnInit, AfterViewInit {
 		this.updatePositionClass();
 
 		const componentRef = this.viewContainerRef.createComponent(SelectOptionsComponent);
-		// this.optionsContainer = componentRef.location.nativeElement.querySelector('.options-container');
+		this.optionsContainer = componentRef.location.nativeElement.querySelector('.options-container');
 		this.optionsContainer = componentRef.instance.optionsContainer;
 		this.projectOptions();
 		this.renderer2.appendChild(this.wrapperElement, componentRef.location.nativeElement);
@@ -160,13 +169,14 @@ export class SelectDirective implements OnInit, AfterViewInit {
 		this.renderer2.appendChild(this.labelElement, selectElement);
 		this.renderer2.appendChild(this.wrapperElement, this.labelElement);
 		this.renderer2.appendChild(this.labelContainerElement, this.fakeLabelElement);
+		this.renderer2.appendChild(this.borderContainerElement, this.selectedOptionElement);
 		this.renderer2.appendChild(this.borderContainerElement, iconElement.location.nativeElement);
 		this.renderer2.appendChild(this.wrapperElement, this.borderContainerElement);
 		this.renderer2.appendChild(this.wrapperElement, this.labelContainerElement);
 
 		// ToDo => check if text change on language update
-		const selectLabel = this.getSelectLabel();
-		this.fillLabel(selectLabel);
+		const selectedOptionText = this.getCurrentSelectedText();
+		this.fillSelectedOption(selectedOptionText);
 
 		if (null !== nextSibling) {
 			this.renderer2.insertBefore(parentElement, this.wrapperElement, nextSibling);
@@ -176,39 +186,38 @@ export class SelectDirective implements OnInit, AfterViewInit {
 	}
 
 	private createWrapper(): HTMLDivElement {
-		const container = createTypedElement(this.renderer2, 'div');
+		const element = createTypedElement(this.renderer2, 'div');
 
-		this.renderer2.addClass(container, 'app-select');
+		this.renderer2.addClass(element, 'app-select');
 
-		return container;
+		return element;
 	}
 
 	private createLabel(): HTMLLabelElement {
-		const label = createTypedElement(this.renderer2, 'label');
-		const span = createTypedElement(this.renderer2, 'span');
+		const element = createTypedElement(this.renderer2, 'label');
 
-		this.renderer2.appendChild(label, span);
+		this.renderer2.appendChild(element, this.labelSpanElement);
 
-		return label;
+		return element;
 	}
 
 	private createFakeLabel(): HTMLSpanElement {
-		const fakeLabel = createTypedElement(this.renderer2, 'p');
+		const element = createTypedElement(this.renderer2, 'p');
 
-		this.renderer2.addClass(fakeLabel, 'label');
+		this.renderer2.addClass(element, 'label');
 
-		return fakeLabel;
+		return element;
 	}
 
 	private createBorderContainer(): HTMLDivElement {
-		const borderBox = createTypedElement(this.renderer2, 'div');
+		const element = createTypedElement(this.renderer2, 'div');
 
-		this.renderer2.addClass(borderBox, 'border-container');
-		this.renderer2.addClass(borderBox, 'flex-row');
-		this.renderer2.addClass(borderBox, 'justify-end');
-		this.renderer2.addClass(borderBox, 'align-center');
+		this.renderer2.addClass(element, 'border-container');
+		this.renderer2.addClass(element, 'flex-row');
+		this.renderer2.addClass(element, 'justify-between');
+		this.renderer2.addClass(element, 'align-center');
 
-		return borderBox;
+		return element;
 	}
 
 	private creteLabelContainer(): HTMLDivElement {
@@ -219,31 +228,37 @@ export class SelectDirective implements OnInit, AfterViewInit {
 		return element;
 	}
 
-	private createIcon(): ComponentRef<SvgComponent> {
-		const icon = this.viewContainerRef.createComponent(SvgComponent);
+	private createSelectedOption(): HTMLSpanElement {
+		const element = createTypedElement(this.renderer2, 'span');
 
-		icon.setInput('icon', 'chevron-down');
-		icon.setInput('size', 18);
+		this.renderer2.addClass(element, 'selected-option');
 
-		return icon;
+		return element;
 	}
 
-	private getSelectLabel(): string {
-		const defaultLabel = 'Select an option';
-		const options = this.elementRef.nativeElement.options;
+	private createIcon(): ComponentRef<SvgComponent> {
+		const element = this.viewContainerRef.createComponent(SvgComponent);
 
-		for (const option of options) {
-			if ('' === option.value) {
-				return option.textContent;
-			}
-		}
+		element.setInput('icon', 'chevron-down');
+		element.setInput('size', 18);
 
-		return defaultLabel;
+		return element;
 	}
 
 	private fillLabel(value: string): void {
-		this.renderer2.setProperty(this.labelElement.querySelector('span'), 'textContent', value);
-		this.renderer2.setProperty(this.wrapperElement.querySelector('.label'), 'textContent', value);
+		this.renderer2.setProperty(this.labelSpanElement, 'textContent', value);
+		this.renderer2.setProperty(this.fakeLabelElement, 'textContent', value);
+	}
+
+	private fillSelectedOption(value: string): void {
+		this.renderer2.setProperty(this.selectedOptionElement, 'textContent', value);
+	}
+
+	private getCurrentSelectedText(): string {
+		const selectElement = this.elementRef.nativeElement;
+		const selectedOption = selectElement.options[selectElement.selectedIndex];
+
+		return selectedOption?.textContent ?? '';
 	}
 
 	// IA methods

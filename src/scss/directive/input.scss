@@ -67,19 +67,17 @@
 		}
 
 		.label {
-			position: relative;
-			bottom: 0;
 			transition:
-				bottom $transition-duration ease-in-out,
+				transform $transition-duration ease-in-out,
 				font-size $transition-duration ease-in-out;
 		}
 
 		.placeholder {
-			position: relative;
-			top: calc(var(--input-height) / 2);
+			transform: translateY(calc(var(--input-height) / 2));
+			color: var(--color-contrast-mid);
 			opacity: 0;
 			transition:
-				top $transition-duration ease-in-out,
+				transform $transition-duration ease-in-out,
 				opacity $transition-duration ease-in-out;
 		}
 
@@ -103,14 +101,13 @@
 			}
 
 			.label {
-				bottom: calc(var(--input-height) / 2 + 1px);
+				transform: translateY(calc(-1 * var(--input-height) / 2 + 1px));
 				font-size: var(--font-size-sm);
 			}
 
 			.placeholder {
-				top: 0;
-				left: 0;
-				opacity: 0.5;
+				transform: translateY(0);
+				opacity: 1;
 			}
 		}
 

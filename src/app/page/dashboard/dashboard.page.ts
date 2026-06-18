@@ -3,6 +3,7 @@ import { Component, inject } from '@angular/core';
 import { PlayerColor, PlayerColorKey } from '@app/definition/model/player/player-color.enum';
 import { PlayerIcon, PlayerIconKey } from '@app/definition/model/player/player-icon.enum';
 import { ButtonDirective } from '@app/directive/button.directive';
+import { InputDirective } from '@app/directive/input.directive';
 import { RouterLinkDirective } from '@app/directive/router-link.directive';
 import { SelectDirective } from '@app/directive/select/select.directive';
 import { Game } from '@app/model/game.model';
@@ -14,7 +15,7 @@ import { Generate } from '@app/util/generate';
 
 @Component({
 	templateUrl: './dashboard.page.html',
-	imports: [RouterLinkDirective, ButtonDirective, SelectDirective],
+	imports: [RouterLinkDirective, ButtonDirective, SelectDirective, InputDirective],
 })
 export class DashboardPage {
 	private readonly gameRepository = inject(GameRepository);

@@ -16,8 +16,8 @@
 			type="number"
 		/>
 
-		<select appThemed formControlName="turnType">
-			<option value="">Turn type</option>
+		<select appThemed label="Turn type" formControlName="turnType">
+			<option value="">Select a turn type</option>
 
 			@for (turnType of turnTypes; track $index) {
 				<option
@@ -29,8 +29,8 @@
 			}
 		</select>
 
-		<select appThemed formControlName="turnOrder">
-			<option value="">Turn order</option>
+		<select appThemed label="Turn order" formControlName="turnOrder">
+			<option value="">Select a turn order</option>
 
 			@for (turnOrder of turnOrders; track $index) {
 				<option
@@ -42,8 +42,8 @@
 			}
 		</select>
 
-		<select appThemed formControlName="victoryType">
-			<option value="">Victory type</option>
+		<select appThemed label="Victory type" formControlName="victoryType">
+			<option value="">Select a victory type</option>
 
 			@for (victoryType of victoryTypes; track $index) {
 				<option [attr.value]="victoryType.value">
