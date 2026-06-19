@@ -45,10 +45,6 @@ export class SelectDirective implements OnInit, AfterViewInit {
 
 	constructor() {
 		effect(() => {
-			const label = this.label();
-			this.fillLabel(label);
-		});
-		effect(() => {
 			this.viewportService.routerOutletScroll();
 			this.viewportService.windowResized();
 
@@ -128,7 +124,7 @@ export class SelectDirective implements OnInit, AfterViewInit {
 
 		const componentRef = this.viewContainerRef.createComponent(SelectOptionsComponent);
 		this.optionsContainer = componentRef.location.nativeElement.querySelector('.options-container');
-		this.optionsContainer = componentRef.instance.optionsContainer;
+		// this.optionsContainer = componentRef.instance.optionsContainer;
 		this.projectOptions();
 		this.renderer2.appendChild(this.wrapperElement, componentRef.location.nativeElement);
 	}
@@ -142,13 +138,13 @@ export class SelectDirective implements OnInit, AfterViewInit {
 
 		const isCloserToTop = elementMidpoint < viewportMidpoint;
 
-		this.renderer2.removeClass(this.wrapperElement, this.TOP_POSITION_CLASS);
 		this.renderer2.removeClass(this.wrapperElement, this.BOTTOM_POSITION_CLASS);
+		this.renderer2.removeClass(this.wrapperElement, this.TOP_POSITION_CLASS);
 
 		if (isCloserToTop) {
-			this.renderer2.addClass(this.wrapperElement, this.TOP_POSITION_CLASS);
-		} else {
 			this.renderer2.addClass(this.wrapperElement, this.BOTTOM_POSITION_CLASS);
+		} else {
+			this.renderer2.addClass(this.wrapperElement, this.TOP_POSITION_CLASS);
 		}
 	}
 
@@ -175,6 +171,10 @@ export class SelectDirective implements OnInit, AfterViewInit {
 		this.renderer2.appendChild(this.wrapperElement, this.labelContainerElement);
 
 		// ToDo => check if text change on language update
+
+		const label = this.label();
+		this.fillLabel(label);
+
 		const selectedOptionText = this.getCurrentSelectedText();
 		this.fillSelectedOption(selectedOptionText);
 
@@ -277,9 +277,7 @@ export class SelectDirective implements OnInit, AfterViewInit {
 	private openCustomDropdown() {
 		this.renderer2.addClass(this.wrapperElement, 'open');
 
-		setTimeout(() => {
-			window.addEventListener('mousedown', this.closeOnOutsideClick);
-		});
+		window.addEventListener('mousedown', this.closeOnOutsideClick);
 	}
 
 	private closeCustomDropdown() {
@@ -325,6 +323,10 @@ export class SelectDirective implements OnInit, AfterViewInit {
 		}
 
 		Array.from(this.elementRef.nativeElement.options).forEach((option) => {
+			if ('' === option.value) {
+				return;
+			}
+
 			const optionEl = createTypedElement(this.renderer2, 'div');
 			this.renderer2.addClass(optionEl, 'option');
 
@@ -352,9 +354,7 @@ export class SelectDirective implements OnInit, AfterViewInit {
 
 			if (null !== value) {
 				this.elementRef.nativeElement.value = value;
-				this.fillLabel(option.textContent);
 				this.closeCustomDropdown();
-				// trigger select change event
 				this.elementRef.nativeElement.dispatchEvent(new Event('change', { bubbles: true }));
 			}
 		});

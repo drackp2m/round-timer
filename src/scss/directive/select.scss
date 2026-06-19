@@ -123,12 +123,21 @@
 			}
 		}
 
+		.app-select-options {
+			position: relative;
+			display: block;
+		}
+
 		.options-container {
+			position: absolute;
 			z-index: 2;
+			transform: translateY(-1 * $border-width);
 
 			overflow: hidden;
 
+			width: 100%;
 			padding: var(--spacing-1) 0;
+			border: solid 1.5px var(--color-contrast-mid);
 			border-radius: var(--border-radius-3);
 
 			background: var(--color-primary);
@@ -154,10 +163,10 @@
 			}
 		}
 
-		&.position-bottom {
+		&.position-top {
 			.options-container {
-				top: initial !important;
 				bottom: 0;
+				transform: translateY(calc(-1 * var(--input-height) + $border-width));
 			}
 		}
 	}
