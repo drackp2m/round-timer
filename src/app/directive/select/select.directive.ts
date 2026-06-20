@@ -87,7 +87,8 @@ export class SelectDirective implements OnInit, AfterViewInit {
 			'Space' === event.code ||
 			'Enter' === event.code ||
 			'ArrowDown' === event.code ||
-			'ArrowUp' === event.code
+			'ArrowUp' === event.code ||
+			'Escape' === event.code
 		) {
 			event.preventDefault();
 
@@ -95,12 +96,16 @@ export class SelectDirective implements OnInit, AfterViewInit {
 				this.toggleCustomDropdown();
 			}
 
-			// Navegar por las opciones con flechas
 			if ('ArrowDown' === event.code) {
 				this.selectNextOption();
 			}
+
 			if ('ArrowUp' === event.code) {
 				this.selectPreviousOption();
+			}
+
+			if ('Escape' === event.code) {
+				this.closeCustomDropdown();
 			}
 		}
 
@@ -124,7 +129,6 @@ export class SelectDirective implements OnInit, AfterViewInit {
 
 		const componentRef = this.viewContainerRef.createComponent(SelectOptionsComponent);
 		this.optionsContainer = componentRef.location.nativeElement.querySelector('.options-container');
-		// this.optionsContainer = componentRef.instance.optionsContainer;
 		this.projectOptions();
 		this.renderer2.appendChild(this.wrapperElement, componentRef.location.nativeElement);
 	}
@@ -250,15 +254,15 @@ export class SelectDirective implements OnInit, AfterViewInit {
 		this.renderer2.setProperty(this.fakeLabelElement, 'textContent', value);
 	}
 
-	private fillSelectedOption(value: string): void {
-		this.renderer2.setProperty(this.selectedOptionElement, 'textContent', value);
-	}
-
 	private getCurrentSelectedText(): string {
 		const selectElement = this.elementRef.nativeElement;
 		const selectedOption = selectElement.options[selectElement.selectedIndex];
 
 		return selectedOption?.textContent ?? '';
+	}
+
+	private fillSelectedOption(value: string): void {
+		this.renderer2.setProperty(this.selectedOptionElement, 'textContent', value);
 	}
 
 	// IA methods
@@ -288,6 +292,7 @@ export class SelectDirective implements OnInit, AfterViewInit {
 
 	private closeOnOutsideClick = (event: MouseEvent) => {
 		if (!this.wrapperElement.contains(event.target as Node)) {
+			console.log('closing dropdown because click was outside of wrapperElement');
 			const willCauseFocusLoss = document.activeElement === this.elementRef.nativeElement;
 
 			if (willCauseFocusLoss) {
@@ -323,33 +328,38 @@ export class SelectDirective implements OnInit, AfterViewInit {
 		}
 
 		Array.from(this.elementRef.nativeElement.options).forEach((option) => {
-			if ('' === option.value) {
-				return;
-			}
+			// if ('' === option.value) {
+			// 	return;
+			// }
 
-			const optionEl = createTypedElement(this.renderer2, 'div');
-			this.renderer2.addClass(optionEl, 'option');
+			const optionElement = createTypedElement(this.renderer2, 'div');
+			this.renderer2.addClass(optionElement, 'option');
 
 			if (option.disabled) {
-				this.renderer2.addClass(optionEl, 'disabled');
+				this.renderer2.addClass(optionElement, 'disabled');
 			}
 
 			if (option.value === this.elementRef.nativeElement.value) {
-				this.renderer2.addClass(optionEl, 'selected');
+				this.renderer2.addClass(optionElement, 'selected');
 			}
 
-			this.renderer2.setProperty(optionEl, 'textContent', option.textContent);
+			this.renderer2.setProperty(optionElement, 'textContent', option.textContent);
 
-			this.renderer2.setAttribute(optionEl, 'data-value', option.value);
+			this.renderer2.setAttribute(optionElement, 'data-value', option.value);
 
-			this.renderer2.appendChild(this.optionsContainer, optionEl);
+			this.renderer2.appendChild(this.optionsContainer, optionElement);
 
-			this.addEventListenersToOption(optionEl);
+			this.addEventListenersToOption(optionElement);
 		});
 	}
 
 	private addEventListenersToOption(option: HTMLDivElement) {
+		option.addEventListener('mousedown', (event) => {
+			event.preventDefault();
+		});
+
 		option.addEventListener('click', () => {
+			console.log('Option clicked:', option);
 			const value = option.getAttribute('data-value');
 
 			if (null !== value) {
