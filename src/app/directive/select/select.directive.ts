@@ -39,9 +39,11 @@ export class SelectDirective implements OnInit, AfterViewInit {
 	private readonly selectedOptionElement: HTMLSpanElement = this.createSelectedOption();
 
 	private readonly TOP_POSITION_CLASS = 'position-top';
-	private readonly BOTTOM_POSITION_CLASS = 'position-bottom';
+	private readonly HIGHLIGHTED_CLASS = 'highlighted';
+	private readonly KEYBOARD_NAVIGATION_CLASS = 'keyboard-navigation';
 
 	private optionsContainer: HTMLElement | null = null;
+	private highlightedOptionIndex: number | null = null;
 
 	constructor() {
 		effect(() => {
@@ -65,13 +67,7 @@ export class SelectDirective implements OnInit, AfterViewInit {
 	@HostListener('input')
 	@HostListener('change')
 	onInput() {
-		const value = this.elementRef.nativeElement.value;
-
-		if ('' === value) {
-			this.renderer2.removeClass(this.wrapperElement, 'filled');
-		} else {
-			this.renderer2.addClass(this.wrapperElement, 'filled');
-		}
+		this.updateFilledClass();
 	}
 
 	@HostListener('mousedown', ['$event'])
@@ -82,7 +78,28 @@ export class SelectDirective implements OnInit, AfterViewInit {
 	}
 
 	@HostListener('keydown', ['$event'])
+	// eslint-disable-next-line sonarjs/cognitive-complexity
 	onKeyDown(event: KeyboardEvent) {
+		const isOpen = this.wrapperElement.classList.contains('open');
+
+		if ('Enter' === event.code) {
+			if (isOpen) {
+				event.preventDefault();
+				this.confirmHighlightedOption();
+			}
+
+			return;
+		}
+
+		if ('Tab' === event.code) {
+			if (isOpen) {
+				event.preventDefault();
+				this.highlightTabTarget();
+			}
+
+			return;
+		}
+
 		if (
 			'Space' === event.code ||
 			'Enter' === event.code ||
@@ -97,11 +114,21 @@ export class SelectDirective implements OnInit, AfterViewInit {
 			}
 
 			if ('ArrowDown' === event.code) {
-				this.selectNextOption();
+				if (isOpen) {
+					this.selectNextOption();
+				} else {
+					this.openCustomDropdown();
+					this.updatePositionClass();
+				}
 			}
 
 			if ('ArrowUp' === event.code) {
-				this.selectPreviousOption();
+				if (isOpen) {
+					this.selectPreviousOption();
+				} else {
+					this.openCustomDropdown();
+					this.updatePositionClass();
+				}
 			}
 
 			if ('Escape' === event.code) {
@@ -128,7 +155,9 @@ export class SelectDirective implements OnInit, AfterViewInit {
 		this.updatePositionClass();
 
 		const componentRef = this.viewContainerRef.createComponent(SelectOptionsComponent);
-		this.optionsContainer = componentRef.location.nativeElement.querySelector('.options-container');
+		const hostElement = componentRef.location.nativeElement as HTMLElement;
+		this.optionsContainer = hostElement.querySelector<HTMLDivElement>('.options-container');
+
 		this.projectOptions();
 		this.renderer2.appendChild(this.wrapperElement, componentRef.location.nativeElement);
 	}
@@ -142,12 +171,9 @@ export class SelectDirective implements OnInit, AfterViewInit {
 
 		const isCloserToTop = elementMidpoint < viewportMidpoint;
 
-		this.renderer2.removeClass(this.wrapperElement, this.BOTTOM_POSITION_CLASS);
 		this.renderer2.removeClass(this.wrapperElement, this.TOP_POSITION_CLASS);
 
-		if (isCloserToTop) {
-			this.renderer2.addClass(this.wrapperElement, this.BOTTOM_POSITION_CLASS);
-		} else {
+		if (!isCloserToTop) {
 			this.renderer2.addClass(this.wrapperElement, this.TOP_POSITION_CLASS);
 		}
 	}
@@ -181,6 +207,7 @@ export class SelectDirective implements OnInit, AfterViewInit {
 
 		const selectedOptionText = this.getCurrentSelectedText();
 		this.fillSelectedOption(selectedOptionText);
+		this.updateFilledClass();
 
 		if (null !== nextSibling) {
 			this.renderer2.insertBefore(parentElement, this.wrapperElement, nextSibling);
@@ -282,12 +309,16 @@ export class SelectDirective implements OnInit, AfterViewInit {
 		this.renderer2.addClass(this.wrapperElement, 'open');
 
 		window.addEventListener('mousedown', this.closeOnOutsideClick);
+		this.optionsContainer?.addEventListener('mousemove', this.clearKeyboardHighlight);
+
+		this.highlightInitialOption();
 	}
 
 	private closeCustomDropdown() {
 		this.renderer2.removeClass(this.wrapperElement, 'open');
 
 		window.removeEventListener('mousedown', this.closeOnOutsideClick);
+		this.optionsContainer?.removeEventListener('mousemove', this.clearKeyboardHighlight);
 	}
 
 	private closeOnOutsideClick = (event: MouseEvent) => {
@@ -306,16 +337,44 @@ export class SelectDirective implements OnInit, AfterViewInit {
 	};
 
 	private selectNextOption() {
-		// Implementación para seleccionar la siguiente opción
+		if (null === this.optionsContainer) {
+			return;
+		}
+
+		const options = Array.from(this.optionsContainer.children) as HTMLDivElement[];
+		const startIndex = this.highlightedOptionIndex ?? -1;
+
+		for (let index = startIndex + 1; index < options.length; index++) {
+			const itemAtIndex = options[index];
+			if (undefined !== itemAtIndex && !itemAtIndex.classList.contains('disabled')) {
+				this.highlightOptionAt(index);
+
+				return;
+			}
+		}
 	}
 
 	private selectPreviousOption() {
-		// Implementación para seleccionar la opción anterior
+		if (null === this.optionsContainer) {
+			return;
+		}
+
+		const options = Array.from(this.optionsContainer.children) as HTMLDivElement[];
+		const startIndex = this.highlightedOptionIndex ?? options.length;
+
+		for (let index = startIndex - 1; 0 <= index; index--) {
+			const itemAtIndex = options[index];
+			if (undefined !== itemAtIndex && !itemAtIndex.classList.contains('disabled')) {
+				this.highlightOptionAt(index);
+
+				return;
+			}
+		}
 	}
 
 	private findOptionStartingWith(char: string) {
-		console.log('Buscando opción que comienza con:', char);
-		// Implementación para buscar opciones que comiencen con un carácter
+		console.log('Searching for option that starts with:', char);
+		// Implementation to search for options that start with a character
 	}
 
 	private projectOptions(): void {
@@ -364,9 +423,141 @@ export class SelectDirective implements OnInit, AfterViewInit {
 
 			if (null !== value) {
 				this.elementRef.nativeElement.value = value;
+				this.updateSelectedOptionClass();
+				this.fillSelectedOption(this.getCurrentSelectedText());
 				this.closeCustomDropdown();
 				this.elementRef.nativeElement.dispatchEvent(new Event('change', { bubbles: true }));
 			}
 		});
+	}
+
+	private updateFilledClass(): void {
+		const value = this.elementRef.nativeElement.value;
+
+		if ('' === value) {
+			this.renderer2.removeClass(this.wrapperElement, 'filled');
+		} else {
+			this.renderer2.addClass(this.wrapperElement, 'filled');
+		}
+	}
+
+	private highlightOptionAt(index: number): void {
+		if (null === this.optionsContainer) {
+			return;
+		}
+
+		const options = Array.from(this.optionsContainer.children) as HTMLDivElement[];
+
+		if (0 > index || index >= options.length) {
+			return;
+		}
+
+		if (null !== this.highlightedOptionIndex) {
+			const currentlyHighlighted = options[this.highlightedOptionIndex];
+
+			if (undefined !== currentlyHighlighted) {
+				this.renderer2.removeClass(currentlyHighlighted, this.HIGHLIGHTED_CLASS);
+			}
+		}
+
+		const nextHighlighted = options[index];
+
+		this.renderer2.addClass(nextHighlighted, this.HIGHLIGHTED_CLASS);
+		this.renderer2.addClass(this.optionsContainer, this.KEYBOARD_NAVIGATION_CLASS);
+		nextHighlighted?.scrollIntoView({ block: 'nearest' });
+
+		this.highlightedOptionIndex = index;
+	}
+
+	private highlightInitialOption(): void {
+		if (null === this.optionsContainer) {
+			return;
+		}
+
+		const options = Array.from(this.optionsContainer.children) as HTMLDivElement[];
+		const selectedIndex = options.findIndex((option) => option.classList.contains('selected'));
+
+		if (-1 !== selectedIndex) {
+			this.highlightOptionAt(selectedIndex);
+
+			return;
+		}
+
+		const firstEnabledIndex = options.findIndex((option) => !option.classList.contains('disabled'));
+
+		if (-1 !== firstEnabledIndex) {
+			this.highlightOptionAt(firstEnabledIndex);
+		}
+	}
+
+	private confirmHighlightedOption(): void {
+		if (null === this.optionsContainer || null === this.highlightedOptionIndex) {
+			return;
+		}
+
+		const options = Array.from(this.optionsContainer.children) as HTMLDivElement[];
+		const highlighted = options[this.highlightedOptionIndex];
+
+		if (undefined === highlighted || highlighted.classList.contains('disabled')) {
+			return;
+		}
+
+		highlighted.click();
+	}
+
+	private updateSelectedOptionClass(): void {
+		if (null === this.optionsContainer) {
+			return;
+		}
+
+		const options = Array.from(this.optionsContainer.children) as HTMLDivElement[];
+		const currentValue = this.elementRef.nativeElement.value;
+
+		options.forEach((option) => {
+			const isSelected = option.getAttribute('data-value') === currentValue;
+
+			if (isSelected) {
+				this.renderer2.addClass(option, 'selected');
+			} else {
+				this.renderer2.removeClass(option, 'selected');
+			}
+		});
+	}
+
+	private clearKeyboardHighlight = (): void => {
+		if (null === this.optionsContainer) {
+			return;
+		}
+
+		this.renderer2.removeClass(this.optionsContainer, this.KEYBOARD_NAVIGATION_CLASS);
+
+		if (null === this.highlightedOptionIndex) {
+			return;
+		}
+
+		const options = Array.from(this.optionsContainer.children) as HTMLDivElement[];
+		const currentlyHighlighted = options[this.highlightedOptionIndex];
+
+		if (undefined !== currentlyHighlighted) {
+			this.renderer2.removeClass(currentlyHighlighted, this.HIGHLIGHTED_CLASS);
+		}
+
+		this.highlightedOptionIndex = null;
+	};
+
+	private highlightTabTarget(): void {
+		if (null === this.optionsContainer) {
+			return;
+		}
+
+		const options = Array.from(this.optionsContainer.children) as HTMLDivElement[];
+		const firstValidIndex = options.findIndex(
+			(option) =>
+				'' !== option.getAttribute('data-value') && !option.classList.contains('disabled'),
+		);
+
+		if (-1 !== firstValidIndex) {
+			this.highlightOptionAt(firstValidIndex);
+		}
 	}
 }
