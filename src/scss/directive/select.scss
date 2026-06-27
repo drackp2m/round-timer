@@ -145,7 +145,13 @@
 			.option {
 				padding: var(--spacing-1) var(--spacing-3);
 
-				&:hover {
+				&.highlighted {
+					background-color: var(--color-primary-mid);
+				}
+			}
+
+			&:not(.keyboard-navigation) {
+				.option:hover {
 					background-color: var(--color-primary-mid);
 				}
 			}
