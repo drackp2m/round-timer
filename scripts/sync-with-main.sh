@@ -28,7 +28,7 @@ git fetch origin main
 LOCAL=$(git rev-parse origin/main)
 REMOTE=$(git rev-parse main 2>/dev/null || echo "none")
 
-if [ "$LOCAL" = "$REMOTE" ]; then
+if git merge-base --is-ancestor origin/main dev; then
   echo "✅ Already up to date with main, nothing to do."
   exit 0
 fi

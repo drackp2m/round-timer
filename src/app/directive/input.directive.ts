@@ -35,6 +35,7 @@ export class InputDirective implements OnInit, AfterViewInit {
 	private readonly renderer2 = inject(Renderer2);
 
 	private readonly wrapperElement: HTMLDivElement = this.createWrapper();
+	private readonly labelSpanElement: HTMLSpanElement = createTypedElement(this.renderer2, 'span');
 	private readonly labelElement: HTMLLabelElement = this.createLabel();
 	private readonly fakeLabelElement: HTMLSpanElement = this.createFakeLabel();
 	private readonly borderContainerElement: HTMLDivElement = this.createBorderContainer();
@@ -115,34 +116,33 @@ export class InputDirective implements OnInit, AfterViewInit {
 	}
 
 	private createWrapper(): HTMLDivElement {
-		const container = createTypedElement(this.renderer2, 'div');
+		const element = createTypedElement(this.renderer2, 'div');
 
-		this.renderer2.addClass(container, 'app-input');
+		this.renderer2.addClass(element, 'app-input');
 
-		return container;
+		return element;
 	}
 
 	private createLabel(): HTMLLabelElement {
-		const label = createTypedElement(this.renderer2, 'label');
-		const span = createTypedElement(this.renderer2, 'span');
+		const element = createTypedElement(this.renderer2, 'label');
+		this.renderer2.appendChild(element, this.labelSpanElement);
 
-		this.renderer2.appendChild(label, span);
-
-		return label;
+		return element;
 	}
 
 	private createFakeLabel(): HTMLSpanElement {
-		const fakeLabel = createTypedElement(this.renderer2, 'p') as HTMLSpanElement;
+		const element = createTypedElement(this.renderer2, 'p') as HTMLSpanElement;
 
-		this.renderer2.addClass(fakeLabel, 'label');
+		this.renderer2.addClass(element, 'label');
 
-		return fakeLabel;
+		return element;
 	}
 
 	private createBorderContainer(): HTMLDivElement {
 		const element = createTypedElement(this.renderer2, 'div');
 
 		this.renderer2.addClass(element, 'border-container');
+		this.renderer2.addClass(element, 'flex-row');
 
 		return element;
 	}
@@ -164,8 +164,8 @@ export class InputDirective implements OnInit, AfterViewInit {
 	}
 
 	private fillLabel(value: string): void {
-		this.renderer2.setProperty(this.labelElement.querySelector('span'), 'textContent', value);
-		this.renderer2.setProperty(this.wrapperElement.querySelector('.label'), 'textContent', value);
+		this.renderer2.setProperty(this.labelSpanElement, 'textContent', value);
+		this.renderer2.setProperty(this.fakeLabelElement, 'textContent', value);
 	}
 
 	private fillPlaceholder(value: string): void {

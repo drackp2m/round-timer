@@ -12,16 +12,16 @@
 			type="text"
 		/>
 
-		<select appThemed formControlName="color">
-			<option value="">Color</option>
+		<select appThemed label="Color" formControlName="color">
+			<option value="">Select a color</option>
 
 			@for (color of colors; track $index) {
 				<option [attr.value]="color.value">{{ color.name }}</option>
 			}
 		</select>
 
-		<select appThemed formControlName="icon">
-			<option value="">Icon</option>
+		<select appThemed label="Icon" formControlName="icon">
+			<option value="">Select an icon</option>
 
 			@for (icon of icons; track $index) {
 				<option [attr.value]="icon.value">{{ icon.name }}</option>

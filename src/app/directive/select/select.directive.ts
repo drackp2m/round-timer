@@ -10,6 +10,7 @@ import {
 	ViewContainerRef,
 	effect,
 	inject,
+	input,
 } from '@angular/core';
 
 import { SvgComponent } from '@app/component/svg.component';
@@ -22,21 +23,27 @@ import { createTypedElement } from '@app/util/renderer';
 })
 // ToDo => add default placeholder as "Select an option"
 export class SelectDirective implements OnInit, AfterViewInit {
+	readonly label = input.required<string>();
+
 	private readonly elementRef = inject<ElementRef<HTMLSelectElement>>(ElementRef);
 	private readonly renderer2 = inject(Renderer2);
 	private readonly viewContainerRef = inject(ViewContainerRef);
 	private readonly viewportService = inject(ViewportService);
 
 	private readonly wrapperElement: HTMLDivElement = this.createWrapper();
+	private readonly labelSpanElement: HTMLSpanElement = createTypedElement(this.renderer2, 'span');
 	private readonly labelElement: HTMLLabelElement = this.createLabel();
 	private readonly fakeLabelElement: HTMLSpanElement = this.createFakeLabel();
 	private readonly borderContainerElement: HTMLDivElement = this.createBorderContainer();
 	private readonly labelContainerElement: HTMLDivElement = this.creteLabelContainer();
+	private readonly selectedOptionElement: HTMLSpanElement = this.createSelectedOption();
 
 	private readonly TOP_POSITION_CLASS = 'position-top';
-	private readonly BOTTOM_POSITION_CLASS = 'position-bottom';
+	private readonly HIGHLIGHTED_CLASS = 'highlighted';
+	private readonly KEYBOARD_NAVIGATION_CLASS = 'keyboard-navigation';
 
 	private optionsContainer: HTMLElement | null = null;
+	private highlightedOptionIndex: number | null = null;
 
 	constructor() {
 		effect(() => {
@@ -60,13 +67,7 @@ export class SelectDirective implements OnInit, AfterViewInit {
 	@HostListener('input')
 	@HostListener('change')
 	onInput() {
-		const value = this.elementRef.nativeElement.value;
-
-		if ('' === value) {
-			this.renderer2.removeClass(this.wrapperElement, 'filled');
-		} else {
-			this.renderer2.addClass(this.wrapperElement, 'filled');
-		}
+		this.updateFilledClass();
 	}
 
 	@HostListener('mousedown', ['$event'])
@@ -78,11 +79,32 @@ export class SelectDirective implements OnInit, AfterViewInit {
 
 	@HostListener('keydown', ['$event'])
 	onKeyDown(event: KeyboardEvent) {
+		const isOpen = this.wrapperElement.classList.contains('open');
+
+		if ('Enter' === event.code) {
+			if (isOpen) {
+				event.preventDefault();
+				this.confirmHighlightedOption();
+			}
+
+			return;
+		}
+
+		if ('Tab' === event.code) {
+			if (isOpen) {
+				event.preventDefault();
+				this.highlightTabTarget();
+			}
+
+			return;
+		}
+
 		if (
 			'Space' === event.code ||
 			'Enter' === event.code ||
 			'ArrowDown' === event.code ||
-			'ArrowUp' === event.code
+			'ArrowUp' === event.code ||
+			'Escape' === event.code
 		) {
 			event.preventDefault();
 
@@ -90,12 +112,26 @@ export class SelectDirective implements OnInit, AfterViewInit {
 				this.toggleCustomDropdown();
 			}
 
-			// Navegar por las opciones con flechas
 			if ('ArrowDown' === event.code) {
-				this.selectNextOption();
+				if (isOpen) {
+					this.selectNextOption();
+				} else {
+					this.openCustomDropdown();
+					this.updatePositionClass();
+				}
 			}
+
 			if ('ArrowUp' === event.code) {
-				this.selectPreviousOption();
+				if (isOpen) {
+					this.selectPreviousOption();
+				} else {
+					this.openCustomDropdown();
+					this.updatePositionClass();
+				}
+			}
+
+			if ('Escape' === event.code) {
+				this.closeCustomDropdown();
 			}
 		}
 
@@ -118,8 +154,9 @@ export class SelectDirective implements OnInit, AfterViewInit {
 		this.updatePositionClass();
 
 		const componentRef = this.viewContainerRef.createComponent(SelectOptionsComponent);
-		// this.optionsContainer = componentRef.location.nativeElement.querySelector('.options-container');
-		this.optionsContainer = componentRef.instance.optionsContainer;
+		const hostElement = componentRef.location.nativeElement as HTMLElement;
+		this.optionsContainer = hostElement.querySelector<HTMLDivElement>('.options-container');
+
 		this.projectOptions();
 		this.renderer2.appendChild(this.wrapperElement, componentRef.location.nativeElement);
 	}
@@ -134,12 +171,9 @@ export class SelectDirective implements OnInit, AfterViewInit {
 		const isCloserToTop = elementMidpoint < viewportMidpoint;
 
 		this.renderer2.removeClass(this.wrapperElement, this.TOP_POSITION_CLASS);
-		this.renderer2.removeClass(this.wrapperElement, this.BOTTOM_POSITION_CLASS);
 
-		if (isCloserToTop) {
+		if (!isCloserToTop) {
 			this.renderer2.addClass(this.wrapperElement, this.TOP_POSITION_CLASS);
-		} else {
-			this.renderer2.addClass(this.wrapperElement, this.BOTTOM_POSITION_CLASS);
 		}
 	}
 
@@ -160,13 +194,19 @@ export class SelectDirective implements OnInit, AfterViewInit {
 		this.renderer2.appendChild(this.labelElement, selectElement);
 		this.renderer2.appendChild(this.wrapperElement, this.labelElement);
 		this.renderer2.appendChild(this.labelContainerElement, this.fakeLabelElement);
+		this.renderer2.appendChild(this.borderContainerElement, this.selectedOptionElement);
 		this.renderer2.appendChild(this.borderContainerElement, iconElement.location.nativeElement);
 		this.renderer2.appendChild(this.wrapperElement, this.borderContainerElement);
 		this.renderer2.appendChild(this.wrapperElement, this.labelContainerElement);
 
 		// ToDo => check if text change on language update
-		const selectLabel = this.getSelectLabel();
-		this.fillLabel(selectLabel);
+
+		const label = this.label();
+		this.fillLabel(label);
+
+		const selectedOptionText = this.getCurrentSelectedText();
+		this.fillSelectedOption(selectedOptionText);
+		this.updateFilledClass();
 
 		if (null !== nextSibling) {
 			this.renderer2.insertBefore(parentElement, this.wrapperElement, nextSibling);
@@ -176,39 +216,38 @@ export class SelectDirective implements OnInit, AfterViewInit {
 	}
 
 	private createWrapper(): HTMLDivElement {
-		const container = createTypedElement(this.renderer2, 'div');
+		const element = createTypedElement(this.renderer2, 'div');
 
-		this.renderer2.addClass(container, 'app-select');
+		this.renderer2.addClass(element, 'app-select');
 
-		return container;
+		return element;
 	}
 
 	private createLabel(): HTMLLabelElement {
-		const label = createTypedElement(this.renderer2, 'label');
-		const span = createTypedElement(this.renderer2, 'span');
+		const element = createTypedElement(this.renderer2, 'label');
 
-		this.renderer2.appendChild(label, span);
+		this.renderer2.appendChild(element, this.labelSpanElement);
 
-		return label;
+		return element;
 	}
 
 	private createFakeLabel(): HTMLSpanElement {
-		const fakeLabel = createTypedElement(this.renderer2, 'p');
+		const element = createTypedElement(this.renderer2, 'p');
 
-		this.renderer2.addClass(fakeLabel, 'label');
+		this.renderer2.addClass(element, 'label');
 
-		return fakeLabel;
+		return element;
 	}
 
 	private createBorderContainer(): HTMLDivElement {
-		const borderBox = createTypedElement(this.renderer2, 'div');
+		const element = createTypedElement(this.renderer2, 'div');
 
-		this.renderer2.addClass(borderBox, 'border-container');
-		this.renderer2.addClass(borderBox, 'flex-row');
-		this.renderer2.addClass(borderBox, 'justify-end');
-		this.renderer2.addClass(borderBox, 'align-center');
+		this.renderer2.addClass(element, 'border-container');
+		this.renderer2.addClass(element, 'flex-row');
+		this.renderer2.addClass(element, 'justify-between');
+		this.renderer2.addClass(element, 'align-center');
 
-		return borderBox;
+		return element;
 	}
 
 	private creteLabelContainer(): HTMLDivElement {
@@ -219,31 +258,37 @@ export class SelectDirective implements OnInit, AfterViewInit {
 		return element;
 	}
 
-	private createIcon(): ComponentRef<SvgComponent> {
-		const icon = this.viewContainerRef.createComponent(SvgComponent);
+	private createSelectedOption(): HTMLSpanElement {
+		const element = createTypedElement(this.renderer2, 'span');
 
-		icon.setInput('icon', 'chevron-down');
-		icon.setInput('size', 18);
+		this.renderer2.addClass(element, 'selected-option');
 
-		return icon;
+		return element;
 	}
 
-	private getSelectLabel(): string {
-		const defaultLabel = 'Select an option';
-		const options = this.elementRef.nativeElement.options;
+	private createIcon(): ComponentRef<SvgComponent> {
+		const element = this.viewContainerRef.createComponent(SvgComponent);
 
-		for (const option of options) {
-			if ('' === option.value) {
-				return option.textContent;
-			}
-		}
+		element.setInput('icon', 'chevron-down');
+		element.setInput('size', 18);
 
-		return defaultLabel;
+		return element;
 	}
 
 	private fillLabel(value: string): void {
-		this.renderer2.setProperty(this.labelElement.querySelector('span'), 'textContent', value);
-		this.renderer2.setProperty(this.wrapperElement.querySelector('.label'), 'textContent', value);
+		this.renderer2.setProperty(this.labelSpanElement, 'textContent', value);
+		this.renderer2.setProperty(this.fakeLabelElement, 'textContent', value);
+	}
+
+	private getCurrentSelectedText(): string {
+		const selectElement = this.elementRef.nativeElement;
+		const selectedOption = selectElement.options[selectElement.selectedIndex];
+
+		return selectedOption?.textContent ?? '';
+	}
+
+	private fillSelectedOption(value: string): void {
+		this.renderer2.setProperty(this.selectedOptionElement, 'textContent', value);
 	}
 
 	// IA methods
@@ -262,19 +307,22 @@ export class SelectDirective implements OnInit, AfterViewInit {
 	private openCustomDropdown() {
 		this.renderer2.addClass(this.wrapperElement, 'open');
 
-		setTimeout(() => {
-			window.addEventListener('mousedown', this.closeOnOutsideClick);
-		});
+		window.addEventListener('mousedown', this.closeOnOutsideClick);
+		this.optionsContainer?.addEventListener('mousemove', this.clearKeyboardHighlight);
+
+		this.highlightInitialOption();
 	}
 
 	private closeCustomDropdown() {
 		this.renderer2.removeClass(this.wrapperElement, 'open');
 
 		window.removeEventListener('mousedown', this.closeOnOutsideClick);
+		this.optionsContainer?.removeEventListener('mousemove', this.clearKeyboardHighlight);
 	}
 
 	private closeOnOutsideClick = (event: MouseEvent) => {
 		if (!this.wrapperElement.contains(event.target as Node)) {
+			console.log('closing dropdown because click was outside of wrapperElement');
 			const willCauseFocusLoss = document.activeElement === this.elementRef.nativeElement;
 
 			if (willCauseFocusLoss) {
@@ -288,16 +336,44 @@ export class SelectDirective implements OnInit, AfterViewInit {
 	};
 
 	private selectNextOption() {
-		// Implementación para seleccionar la siguiente opción
+		if (null === this.optionsContainer) {
+			return;
+		}
+
+		const options = Array.from(this.optionsContainer.children) as HTMLDivElement[];
+		const startIndex = this.highlightedOptionIndex ?? -1;
+
+		for (let index = startIndex + 1; index < options.length; index++) {
+			const itemAtIndex = options[index];
+			if (undefined !== itemAtIndex && !itemAtIndex.classList.contains('disabled')) {
+				this.highlightOptionAt(index);
+
+				return;
+			}
+		}
 	}
 
 	private selectPreviousOption() {
-		// Implementación para seleccionar la opción anterior
+		if (null === this.optionsContainer) {
+			return;
+		}
+
+		const options = Array.from(this.optionsContainer.children) as HTMLDivElement[];
+		const startIndex = this.highlightedOptionIndex ?? options.length;
+
+		for (let index = startIndex - 1; 0 <= index; index--) {
+			const itemAtIndex = options[index];
+			if (undefined !== itemAtIndex && !itemAtIndex.classList.contains('disabled')) {
+				this.highlightOptionAt(index);
+
+				return;
+			}
+		}
 	}
 
 	private findOptionStartingWith(char: string) {
-		console.log('Buscando opción que comienza con:', char);
-		// Implementación para buscar opciones que comiencen con un carácter
+		console.log('Searching for option that starts with:', char);
+		// Implementation to search for options that start with a character
 	}
 
 	private projectOptions(): void {
@@ -310,38 +386,177 @@ export class SelectDirective implements OnInit, AfterViewInit {
 		}
 
 		Array.from(this.elementRef.nativeElement.options).forEach((option) => {
-			const optionEl = createTypedElement(this.renderer2, 'div');
-			this.renderer2.addClass(optionEl, 'option');
+			// if ('' === option.value) {
+			// 	return;
+			// }
+
+			const optionElement = createTypedElement(this.renderer2, 'div');
+			this.renderer2.addClass(optionElement, 'option');
 
 			if (option.disabled) {
-				this.renderer2.addClass(optionEl, 'disabled');
+				this.renderer2.addClass(optionElement, 'disabled');
 			}
 
 			if (option.value === this.elementRef.nativeElement.value) {
-				this.renderer2.addClass(optionEl, 'selected');
+				this.renderer2.addClass(optionElement, 'selected');
 			}
 
-			this.renderer2.setProperty(optionEl, 'textContent', option.textContent);
+			this.renderer2.setProperty(optionElement, 'textContent', option.textContent);
 
-			this.renderer2.setAttribute(optionEl, 'data-value', option.value);
+			this.renderer2.setAttribute(optionElement, 'data-value', option.value);
 
-			this.renderer2.appendChild(this.optionsContainer, optionEl);
+			this.renderer2.appendChild(this.optionsContainer, optionElement);
 
-			this.addEventListenersToOption(optionEl);
+			this.addEventListenersToOption(optionElement);
 		});
 	}
 
 	private addEventListenersToOption(option: HTMLDivElement) {
+		option.addEventListener('mousedown', (event) => {
+			event.preventDefault();
+		});
+
 		option.addEventListener('click', () => {
+			console.log('Option clicked:', option);
 			const value = option.getAttribute('data-value');
 
 			if (null !== value) {
 				this.elementRef.nativeElement.value = value;
-				this.fillLabel(option.textContent);
+				this.updateSelectedOptionClass();
+				this.fillSelectedOption(this.getCurrentSelectedText());
 				this.closeCustomDropdown();
-				// trigger select change event
 				this.elementRef.nativeElement.dispatchEvent(new Event('change', { bubbles: true }));
 			}
 		});
+	}
+
+	private updateFilledClass(): void {
+		const value = this.elementRef.nativeElement.value;
+
+		if ('' === value) {
+			this.renderer2.removeClass(this.wrapperElement, 'filled');
+		} else {
+			this.renderer2.addClass(this.wrapperElement, 'filled');
+		}
+	}
+
+	private highlightOptionAt(index: number): void {
+		if (null === this.optionsContainer) {
+			return;
+		}
+
+		const options = Array.from(this.optionsContainer.children) as HTMLDivElement[];
+
+		if (0 > index || index >= options.length) {
+			return;
+		}
+
+		if (null !== this.highlightedOptionIndex) {
+			const currentlyHighlighted = options[this.highlightedOptionIndex];
+
+			if (undefined !== currentlyHighlighted) {
+				this.renderer2.removeClass(currentlyHighlighted, this.HIGHLIGHTED_CLASS);
+			}
+		}
+
+		const nextHighlighted = options[index];
+
+		this.renderer2.addClass(nextHighlighted, this.HIGHLIGHTED_CLASS);
+		this.renderer2.addClass(this.optionsContainer, this.KEYBOARD_NAVIGATION_CLASS);
+		nextHighlighted?.scrollIntoView({ block: 'nearest' });
+
+		this.highlightedOptionIndex = index;
+	}
+
+	private highlightInitialOption(): void {
+		if (null === this.optionsContainer) {
+			return;
+		}
+
+		const options = Array.from(this.optionsContainer.children) as HTMLDivElement[];
+		const selectedIndex = options.findIndex((option) => option.classList.contains('selected'));
+
+		if (-1 !== selectedIndex) {
+			this.highlightOptionAt(selectedIndex);
+
+			return;
+		}
+
+		const firstEnabledIndex = options.findIndex((option) => !option.classList.contains('disabled'));
+
+		if (-1 !== firstEnabledIndex) {
+			this.highlightOptionAt(firstEnabledIndex);
+		}
+	}
+
+	private confirmHighlightedOption(): void {
+		if (null === this.optionsContainer || null === this.highlightedOptionIndex) {
+			return;
+		}
+
+		const options = Array.from(this.optionsContainer.children) as HTMLDivElement[];
+		const highlighted = options[this.highlightedOptionIndex];
+
+		if (undefined === highlighted || highlighted.classList.contains('disabled')) {
+			return;
+		}
+
+		highlighted.click();
+	}
+
+	private updateSelectedOptionClass(): void {
+		if (null === this.optionsContainer) {
+			return;
+		}
+
+		const options = Array.from(this.optionsContainer.children) as HTMLDivElement[];
+		const currentValue = this.elementRef.nativeElement.value;
+
+		options.forEach((option) => {
+			const isSelected = option.getAttribute('data-value') === currentValue;
+
+			if (isSelected) {
+				this.renderer2.addClass(option, 'selected');
+			} else {
+				this.renderer2.removeClass(option, 'selected');
+			}
+		});
+	}
+
+	private clearKeyboardHighlight = (): void => {
+		if (null === this.optionsContainer) {
+			return;
+		}
+
+		this.renderer2.removeClass(this.optionsContainer, this.KEYBOARD_NAVIGATION_CLASS);
+
+		if (null === this.highlightedOptionIndex) {
+			return;
+		}
+
+		const options = Array.from(this.optionsContainer.children) as HTMLDivElement[];
+		const currentlyHighlighted = options[this.highlightedOptionIndex];
+
+		if (undefined !== currentlyHighlighted) {
+			this.renderer2.removeClass(currentlyHighlighted, this.HIGHLIGHTED_CLASS);
+		}
+
+		this.highlightedOptionIndex = null;
+	};
+
+	private highlightTabTarget(): void {
+		if (null === this.optionsContainer) {
+			return;
+		}
+
+		const options = Array.from(this.optionsContainer.children) as HTMLDivElement[];
+		const firstValidIndex = options.findIndex(
+			(option) =>
+				'' !== option.getAttribute('data-value') && !option.classList.contains('disabled'),
+		);
+
+		if (-1 !== firstValidIndex) {
+			this.highlightOptionAt(firstValidIndex);
+		}
 	}
 }
