@@ -1,3 +1,10 @@
+# v1.4.4 (2026-06-27)
+## What's Changed
+### ♻️ Code Refactoring
+* select directive divided in four files ([0f0f43d](https://github.com/drackp2m/round-timer/commit/0f0f43d4bfb10c7304a2555be733d6c41ed8b8f6)) by Marc Jovaní González
+
+**Full Changelog**: https://github.com/drackp2m/round-timer/compare/v1.4.3...v1.4.4
+
 # v1.4.3 (2026-06-27)
 ## What's Changed
 ### 🎨 Styles
