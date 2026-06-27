@@ -78,6 +78,7 @@ export class SelectDirective implements OnInit, AfterViewInit {
 	}
 
 	@HostListener('keydown', ['$event'])
+	// eslint-disable-next-line sonarjs/cognitive-complexity
 	onKeyDown(event: KeyboardEvent) {
 		const isOpen = this.wrapperElement.classList.contains('open');
 
