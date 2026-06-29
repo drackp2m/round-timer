@@ -3,11 +3,11 @@
 	"defaultSeverity": "warning",
 	"rules": {
 		"color-hex-length": "short",
-				"color-named": "never",
-				"color-no-hex": true,
-				"scss/dollar-variable-empty-line-before": null,
-				"at-rule-empty-line-before": [
-					"always",
+		"color-named": "never",
+		"color-no-hex": true,
+		"scss/dollar-variable-empty-line-before": null,
+		"at-rule-empty-line-before": [
+			"always",
 			{
 				"except": ["blockless-after-same-name-blockless", "first-nested"],
 				"ignore": ["after-comment"],
