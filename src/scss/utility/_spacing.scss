@@ -5,21 +5,11 @@
 
 @layer utility {
 	$rules: (
-		m: (
-			margin,
-		),
-		mt: (
-			margin-top,
-		),
-		mr: (
-			margin-right,
-		),
-		mb: (
-			margin-bottom,
-		),
-		ml: (
-			margin-left,
-		),
+		m: (margin),
+		mt: (margin-top),
+		mr: (margin-right),
+		mb: (margin-bottom),
+		ml: (margin-left),
 		mx: (
 			margin-right,
 			margin-left,
@@ -28,21 +18,11 @@
 			margin-top,
 			margin-bottom,
 		),
-		p: (
-			padding,
-		),
-		pt: (
-			padding-top,
-		),
-		pr: (
-			padding-right,
-		),
-		pb: (
-			padding-bottom,
-		),
-		pl: (
-			padding-left,
-		),
+		p: (padding),
+		pt: (padding-top),
+		pr: (padding-right),
+		pb: (padding-bottom),
+		pl: (padding-left),
 		px: (
 			padding-right,
 			padding-left,
