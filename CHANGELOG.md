@@ -1,22 +1,34 @@
 # v1.4.4 (2026-06-27)
+
 ## What's Changed
+
 ### ♻️ Code Refactoring
-* select directive divided in four files ([0f0f43d](https://github.com/drackp2m/round-timer/commit/0f0f43d4bfb10c7304a2555be733d6c41ed8b8f6)) by Marc Jovaní González
+
+- select directive divided in four files ([0f0f43d](https://github.com/drackp2m/round-timer/commit/0f0f43d4bfb10c7304a2555be733d6c41ed8b8f6)) by Marc Jovaní González
 
 **Full Changelog**: https://github.com/drackp2m/round-timer/compare/v1.4.3...v1.4.4
 
 # v1.4.3 (2026-06-27)
+
 ## What's Changed
+
 ### 🎨 Styles
-* fix inputs on Safari, add placeholder on custom select ([51048e5](https://github.com/drackp2m/round-timer/commit/51048e552de7cce133eb32058c1476586512bca5)) by Marc Jovaní González
+
+- fix inputs on Safari, add placeholder on custom select ([51048e5](https://github.com/drackp2m/round-timer/commit/51048e552de7cce133eb32058c1476586512bca5)) by Marc Jovaní González
+
 ### ♻️ Code Refactoring
-* improve select directive bringing it closer to native behavior ([3aa8618](https://github.com/drackp2m/round-timer/commit/3aa861887a59a74b97162412f4b0d230c316a948)) by Marc Jovaní González
-* improve select directive bringing it closer to native behavior ([ff753f3](https://github.com/drackp2m/round-timer/commit/ff753f30561018021d6518f7042a11b794ec72d5)) by Marc Jovaní González
+
+- improve select directive bringing it closer to native behavior ([3aa8618](https://github.com/drackp2m/round-timer/commit/3aa861887a59a74b97162412f4b0d230c316a948)) by Marc Jovaní González
+- improve select directive bringing it closer to native behavior ([ff753f3](https://github.com/drackp2m/round-timer/commit/ff753f30561018021d6518f7042a11b794ec72d5)) by Marc Jovaní González
+
 ### 🐛 Bug Fixes
-* remove css on select component, improve position of select options ([91fcc74](https://github.com/drackp2m/round-timer/commit/91fcc74f38c1d218f7b660fe76456f92a12dc72e)) by Marc Jovaní González
-* select an option in custom select does not apply a blur effect ([d222cd9](https://github.com/drackp2m/round-timer/commit/d222cd9ef304f37b3edeb1c182e80c5006069590)) by Marc Jovaní González
+
+- remove css on select component, improve position of select options ([91fcc74](https://github.com/drackp2m/round-timer/commit/91fcc74f38c1d218f7b660fe76456f92a12dc72e)) by Marc Jovaní González
+- select an option in custom select does not apply a blur effect ([d222cd9](https://github.com/drackp2m/round-timer/commit/d222cd9ef304f37b3edeb1c182e80c5006069590)) by Marc Jovaní González
+
 ### 🎒 Chores
-* improve check in sync script ([e6a42ea](https://github.com/drackp2m/round-timer/commit/e6a42ea9898e09c640069bfd66a7ee8629b732e1)) by Marc Jovaní González
+
+- improve check in sync script ([e6a42ea](https://github.com/drackp2m/round-timer/commit/e6a42ea9898e09c640069bfd66a7ee8629b732e1)) by Marc Jovaní González
 
 **Full Changelog**: https://github.com/drackp2m/round-timer/compare/v1.4.2...v1.4.3
 

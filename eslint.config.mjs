@@ -4,6 +4,7 @@ import eslintPluginImportX from 'eslint-plugin-import-x';
 import eslintPluginRxjs from 'eslint-plugin-rxjs-updated';
 import eslintPluginSonarjs from 'eslint-plugin-sonarjs';
 import eslintPluginUnusedImports from 'eslint-plugin-unused-imports';
+import globals from 'globals';
 import typescriptEslint from 'typescript-eslint';
 
 function eslintErrorsToWarnings(rules) {
@@ -204,6 +205,11 @@ export default typescriptEslint.config(
 		name: 'JavaScript',
 		files: ['**/*.js', '**/*.mjs'],
 		extends: [transformEslintConfigs(eslint.configs.recommended)],
+		languageOptions: {
+			globals: {
+				...globals.node,
+			},
+		},
 		rules: {
 			'@typescript-eslint/no-require-imports': 'off',
 		},
