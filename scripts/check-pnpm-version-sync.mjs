@@ -9,11 +9,15 @@ const G = '\x1b[92m';
 const Y = '\x1b[93m';
 const RD = '\x1b[91m';
 
-const stripAnsi = (s) => s.replace(/\x1b\[[0-9;]*m/g, '');
+const ESC = String.fromCharCode(27);
+const ANSI_PATTERN = new RegExp(`${ESC}\\[[0-9;]*m`, 'g');
+const stripAnsi = (s) => s.replace(ANSI_PATTERN, '');
+
 const visWidth = (s) => {
+	const clean = stripAnsi(s);
 	let w = 0;
 
-	for (const c of stripAnsi(s)) {
+	for (const c of clean) {
 		const cp = c.codePointAt(0);
 		w += 0xffff < cp || (0x2600 <= cp && 0x27bf >= cp) || 0x1f300 <= cp ? 2 : 1;
 	}
