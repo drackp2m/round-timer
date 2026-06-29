@@ -1,12 +1,9 @@
-/* eslint-disable max-lines */
 import eslint from '@eslint/js';
 import angularEslint from 'angular-eslint';
 import eslintPluginImportX from 'eslint-plugin-import-x';
-import eslintPluginPrettier from 'eslint-plugin-prettier';
 import eslintPluginRxjs from 'eslint-plugin-rxjs-updated';
 import eslintPluginSonarjs from 'eslint-plugin-sonarjs';
 import eslintPluginUnusedImports from 'eslint-plugin-unused-imports';
-import * as jsoncEslintParser from 'jsonc-eslint-parser';
 import typescriptEslint from 'typescript-eslint';
 
 function eslintErrorsToWarnings(rules) {
@@ -44,9 +41,18 @@ function transformEslintConfigs(config) {
 }
 
 export default typescriptEslint.config(
+	{
+		ignores: [
+			'.angular/**',
+			'node_modules/**',
+			'.pnpm-store/**',
+			'.devcontainers/**',
+			'dist/**',
+			'coverage/**',
+		],
+	},
 	// ── Global ignores & settings ──────────────────────────────────────────────
 	{
-		ignores: ['.angular/**'],
 		settings: {
 			'import-x/internal-regex': '^@app/',
 		},
@@ -65,7 +71,6 @@ export default typescriptEslint.config(
 		plugins: {
 			'import-x': eslintPluginImportX,
 			'unused-imports': eslintPluginUnusedImports,
-			prettier: eslintPluginPrettier,
 		},
 		rules: {
 			// Imports
@@ -82,7 +87,6 @@ export default typescriptEslint.config(
 			'unused-imports/no-unused-imports': 'warn',
 
 			// Format
-			'prettier/prettier': 'warn',
 			'no-multiple-empty-lines': ['warn', { max: 1 }],
 			'space-before-blocks': ['warn', 'always'],
 			'newline-before-return': 'warn',
@@ -209,15 +213,11 @@ export default typescriptEslint.config(
 	{
 		name: 'HTML',
 		files: ['**/*.html'],
-		plugins: {
-			prettier: eslintPluginPrettier,
-		},
 		extends: [
 			...angularEslint.configs.templateRecommended,
 			...angularEslint.configs.templateAccessibility,
 		],
 		rules: {
-			'prettier/prettier': 'warn',
 			'@angular-eslint/template/click-events-have-key-events': 'warn',
 			'@angular-eslint/template/interactive-supports-focus': 'warn',
 			'@angular-eslint/template/elements-content': [
@@ -226,21 +226,6 @@ export default typescriptEslint.config(
 					allowList: ['appThemed'],
 				},
 			],
-		},
-	},
-
-	// ── JSON ───────────────────────────────────────────────────────────────────
-	{
-		name: 'JSON',
-		files: ['**/*.json', '**/*.jsonc', '**/*.json5'],
-		languageOptions: {
-			parser: jsoncEslintParser,
-		},
-		plugins: {
-			prettier: eslintPluginPrettier,
-		},
-		rules: {
-			'prettier/prettier': 'warn',
 		},
 	},
 

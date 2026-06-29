@@ -1,10 +1,15 @@
-# v{{version}} ({{date}})
-## What's Changed
+# v{{version}}
+({{date}}) ## What's Changed
 {{#each commitGroups}}
-### {{title}}
-{{#each commits}}
-* {{#if scope}}**{{scope}}**: {{/if}}{{subject}} ([{{shortHash}}]({{@root.host}}/{{@root.owner}}/{{@root.repository}}/commit/{{hash}})) by {{committer.name}}
-{{/each}}
+	###
+	{{title}}
+	{{#each commits}}
+		*
+		{{#if scope}}**{{scope}}**: {{/if}}{{subject}}
+		([{{shortHash}}]({{@root.host}}/{{@root.owner}}/{{@root.repository}}/commit/{{hash}})) by
+		{{committer.name}}
+	{{/each}}
 {{/each}}
 
-**Full Changelog**: {{host}}/{{owner}}/{{repository}}/compare/{{previousTag}}...{{currentTag}}
+**Full Changelog**:
+{{host}}/{{owner}}/{{repository}}/compare/{{previousTag}}...{{currentTag}}

@@ -1,37 +1,17 @@
 {
-	"files": [
-		"*.css",
-		"**/*.css"
-	],
-	"extends": [
-		"stylelint-config-standard-scss",
-		"stylelint-config-clean-order"
-	],
-	"plugins": [
-		"stylelint-prettier"
-	],
+	"extends": ["stylelint-config-standard-scss", "stylelint-config-clean-order"],
 	"defaultSeverity": "warning",
 	"rules": {
-		"prettier/prettier": true,
 		"color-hex-length": "short",
-    "color-named": "never",
-    "color-no-hex": true,
-		"scss/dollar-variable-empty-line-before": null,
-		"at-rule-empty-line-before": [
-			"always",
+				"color-named": "never",
+				"color-no-hex": true,
+				"scss/dollar-variable-empty-line-before": null,
+				"at-rule-empty-line-before": [
+					"always",
 			{
-				"except": [
-					"blockless-after-same-name-blockless",
-					"first-nested"
-				],
-				"ignore": [
-					"after-comment"
-				],
-				"ignoreAtRules": [
-					"else",
-					"use",
-					"forward"
-				]
+				"except": ["blockless-after-same-name-blockless", "first-nested"],
+				"ignore": ["after-comment"],
+				"ignoreAtRules": ["else", "use", "forward"]
 			}
 		]
 	}
