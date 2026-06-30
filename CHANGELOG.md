@@ -1,3 +1,14 @@
+# v1.4.6
+
+(2026-06-30) ## What's Changed ###
+♻️ Code Refactoring *
+improve scripts
+([69e9509](https://github.com/drackp2m/round-timer/commit/69e95091e3507b9563f4535f1d8c7cc015ba2953)) by
+Marc Jovaní González
+
+**Full Changelog**:
+https://github.com/drackp2m/round-timer/compare/v1.4.5...v1.4.6
+
 # v1.4.5
 
 (2026-06-30) ## What's Changed ###
