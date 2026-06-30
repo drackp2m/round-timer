@@ -6,7 +6,7 @@ if [ -d .git/rebase-merge ] || [ -d .git/rebase-apply ]; then
   git rebase --continue
 
   if [ $? -ne 0 ]; then
-    echo "❌ Rebase still has conflicts, resolve them and run 'pnpm run sync:git' again"
+    echo "❌ Rebase still has conflicts, resolve them and run script again"
     exit 1
   fi
 
@@ -37,7 +37,7 @@ echo "📦 Changes detected in main, rebasing dev..."
 git rebase origin/main
 
 if [ $? -ne 0 ]; then
-  echo "⚠️ Rebase has conflicts. Resolve them, then run 'pnpm run sync:git' again."
+  echo "⚠️ Rebase has conflicts. Resolve them, then run script again."
   exit 1
 fi
 

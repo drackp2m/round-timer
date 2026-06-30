@@ -1,2 +1,2 @@
-pnpm run check:pnpm-sync
+pnpm run pnpm:match
 pnpm exec lint-staged

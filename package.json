@@ -14,8 +14,9 @@
 		"prepare": "husky",
 		"update:check": "pnpm outdated",
 		"update": "pnpm up --latest",
-		"sync:git": "sh scripts/sync-git-with-main-branch.sh",
-		"check:pnpm-sync": "node scripts/check-pnpm-version-sync.mjs"
+		"git:sync": "sh scripts/sync-git-main.sh",
+		"pnpm:match": "node scripts/match-pnpm-version.mjs",
+		"pnpm:match:fix": "node scripts/match-pnpm-version.mjs --fix"
 	},
 	"dependencies": {
 		"@angular/animations": "^22.0.4",
