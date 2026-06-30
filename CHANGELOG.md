@@ -1,3 +1,35 @@
+# v1.4.5
+
+(2026-06-30) ## What's Changed ###
+♻️ Code Refactoring *
+pass prettier over _spacing.scss (VSCode bug when update prettier via pnpm)
+([770baf7](https://github.com/drackp2m/round-timer/commit/770baf72059ff271cef3a9b3135f4a663bc9f3eb)) by
+Marc Jovaní González ###
+🐛 Bug Fixes *
+format all files with prettier
+([a3ee501](https://github.com/drackp2m/round-timer/commit/a3ee501141d78b20ba22eba01e9f83162da32a4f)) by
+Marc Jovaní González ###
+💻 Continuous Integration *
+add lint-staged to project
+([ae14a20](https://github.com/drackp2m/round-timer/commit/ae14a20dfa36f29276923d90899ce064384393e5)) by
+Marc Jovaní González *
+add script to check pnpm version on GitHub Actions jobs
+([3227170](https://github.com/drackp2m/round-timer/commit/3227170a79975410dcdc4b742b01fdb7e2a11793)) by
+Marc Jovaní González *
+disable husky on GitHub Actions release job
+([5db28e3](https://github.com/drackp2m/round-timer/commit/5db28e31410da2720f3ed9489fd11dfb6e8755f3)) by
+Marc Jovaní González *
+format CHANGELOG.md after semantic release update
+([6978bd6](https://github.com/drackp2m/round-timer/commit/6978bd6fcec3860f1d4f34549f7a831244340c2c)) by
+Marc Jovaní González ###
+🎒 Chores *
+add @semantic-release/exec dep, update all deps to last version
+([4bf2c55](https://github.com/drackp2m/round-timer/commit/4bf2c5547d174806746bc0067842cccc64892196)) by
+Marc Jovaní González
+
+**Full Changelog**:
+https://github.com/drackp2m/round-timer/compare/v1.4.4...v1.4.5
+
 # v1.4.4 (2026-06-27)
 
 ## What's Changed
