@@ -43,7 +43,16 @@
 		<option value="three">three</option>
 	</select>
 
-	<select (change)="show($event)">
+	<select appThemed label="Day of the week">
+		<option value="">Choose an option</option>
+		@for (weekday of weekdays; track weekday) {
+			<option [value]="weekday" [selected]="weekday === currentWeekday">
+				{{ weekday | titlecase }}
+			</option>
+		}
+	</select>
+
+	<select>
 		<option value="one">one</option>
 		<option value="two">two</option>
 		<option value="three">three</option>

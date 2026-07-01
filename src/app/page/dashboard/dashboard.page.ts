@@ -1,3 +1,4 @@
+import { TitleCasePipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 
 import { PlayerColor, PlayerColorKey } from '@app/definition/model/player/player-color.enum';
@@ -15,12 +16,24 @@ import { Generate } from '@app/util/generate';
 
 @Component({
 	templateUrl: './dashboard.page.html',
-	imports: [RouterLinkDirective, ButtonDirective, SelectDirective, InputDirective],
+	imports: [RouterLinkDirective, ButtonDirective, SelectDirective, InputDirective, TitleCasePipe],
 })
 export class DashboardPage {
 	private readonly gameRepository = inject(GameRepository);
 	private readonly playerRepository = inject(PlayerRepository);
 	private readonly matchRepository = inject(MatchRepository);
+	readonly weekdays = [
+		'monday',
+		'tuesday',
+		'wednesday',
+		'thursday',
+		'friday',
+		'saturday',
+		'sunday',
+	] as const;
+	readonly currentWeekday = new Date()
+		.toLocaleDateString('en-US', { weekday: 'long' })
+		.toLowerCase();
 
 	async createInitialData(): Promise<void> {
 		const game = new Game({
@@ -56,11 +69,5 @@ export class DashboardPage {
 		await this.matchRepository.clear('match');
 		await this.matchRepository.clear('match_player');
 		await this.matchRepository.clear('match_event');
-	}
-
-	show(message: Event): void {
-		const target = message.target as HTMLInputElement;
-
-		alert(target.value);
 	}
 }

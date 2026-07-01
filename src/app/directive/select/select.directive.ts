@@ -127,8 +127,6 @@ export class SelectDirective implements OnInit, AfterViewInit {
 		this.setCSSVariable('--label-width', `${labelWidth.toString()}px`);
 		this.setCSSVariable('--input-height', `${inputHeight.toString()}px`);
 
-		this.updatePositionClass();
-
 		const componentRef = this.viewContainerRef.createComponent(SelectOptionsComponent);
 		const hostElement = componentRef.location.nativeElement as HTMLElement;
 		const optionsContainer = hostElement.querySelector<HTMLDivElement>('.options-container');
@@ -136,6 +134,9 @@ export class SelectDirective implements OnInit, AfterViewInit {
 		this.optionsHelper.setContainer(optionsContainer);
 		this.optionsHelper.projectOptions();
 		this.renderer2.appendChild(this.wrapper.wrapperElement, componentRef.location.nativeElement);
+
+		this.updatePositionClass();
+		this.updateFilledClass();
 	}
 
 	private isDropdownOpen(): boolean {
