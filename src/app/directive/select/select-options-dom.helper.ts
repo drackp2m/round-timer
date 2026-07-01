@@ -198,7 +198,7 @@ export class SelectOptionsDomHelper {
 			event.preventDefault();
 		});
 
-		option.addEventListener('mouseenter', () => {
+		option.addEventListener('mousemove', () => {
 			this.highlightOptionAt(index);
 		});
 
