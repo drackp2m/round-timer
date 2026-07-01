@@ -25,6 +25,7 @@ export class MatchTurnsComponent {
 	readonly playerByUuid = computed(
 		() => new Map(this.players().map((player) => [player.uuid, player])),
 	);
+
 	readonly fasterTurn = computed(() =>
 		this.matchTurns().reduce(
 			(acc, turn, index) =>
@@ -32,6 +33,7 @@ export class MatchTurnsComponent {
 			{ index: 0, time: Number.MAX_SAFE_INTEGER },
 		),
 	);
+
 	readonly slowerTurn = computed(() =>
 		this.matchTurns().reduce(
 			(acc, turn, index) => (turn.time > acc.time ? { index, time: turn.time } : acc),

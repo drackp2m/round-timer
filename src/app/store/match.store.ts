@@ -120,12 +120,15 @@ export class MatchStore extends signalStore({ protectedState: false }, withState
 			matchEvent === undefined
 				? ['match', 'match_player']
 				: ['match', 'match_player', 'match_event'];
+
 		await this.matchRepository.beginTransaction(repositories);
 		await this.matchRepository.insert('match', match.toObject());
 		await this.matchRepository.batchInsert('match_player', matchPlayers);
+
 		if (matchEvent !== undefined) {
 			await this.matchRepository.insert('match_event', matchEvent.toObject());
 		}
+
 		await this.matchRepository.commitTransaction();
 
 		patchState(this, { match, playerUuids, events: matchEvent !== undefined ? [matchEvent] : [] });

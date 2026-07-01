@@ -35,6 +35,7 @@ export class RadioCheckboxDirective implements OnInit {
 		const parentElement = inputElement.parentNode;
 
 		this.renderer2.removeChild(parentElement, inputElement);
+
 		if ('string' === typeof label) {
 			const span = this.labelElement?.querySelector('span');
 			this.renderer2.insertBefore(this.labelElement, inputElement, span);

@@ -54,6 +54,7 @@ export class ModalOutletComponent implements AfterViewInit {
 	// Fixme => solve error when modal content change his height
 	private readonly modalContainer =
 		viewChild.required<ElementRef<HTMLDivElement>>('modalContainer');
+
 	private readonly modalContent = viewChild.required('modalContent', {
 		read: ViewContainerRef,
 	});

@@ -55,6 +55,7 @@ export class ButtonDirective implements OnInit {
 		this.renderer2.addClass(buttonElement, `surface-${color}`);
 		this.renderer2.addClass(buttonElement, this.getContrastColor(color));
 	}
+
 	private getContrastColor(color: string): string {
 		switch (color) {
 			case 'primary':

@@ -24,15 +24,19 @@ export class MatchButtonsComponent {
 		switch (button) {
 			case MatchButton.PREVIOUS:
 				this.buttonPressed.emit(MatchEventType.PREVIOUS_TURN);
+
 				break;
 			case MatchButton.STOP:
 				this.buttonPressed.emit(MatchEventType.END);
+
 				break;
 			case MatchButton.PLAY_PAUSE:
 				this.dispatchPlayPauseButtonPressed();
+
 				break;
 			case MatchButton.NEXT:
 				this.buttonPressed.emit(MatchEventType.NEXT_TURN);
+
 				break;
 		}
 	}

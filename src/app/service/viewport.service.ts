@@ -77,6 +77,7 @@ export class ViewportService implements OnDestroy {
 
 	private setupScrollListener(elementId: string) {
 		const element = document.getElementById(elementId);
+
 		if (null === element) {
 			return;
 		}

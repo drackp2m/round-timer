@@ -1,4 +1,6 @@
+/* eslint-disable max-lines */
 import eslint from '@eslint/js';
+import stylistic from '@stylistic/eslint-plugin';
 import angularEslint from 'angular-eslint';
 import eslintPluginImportX from 'eslint-plugin-import-x';
 import eslintPluginRxjs from 'eslint-plugin-rxjs-updated';
@@ -72,6 +74,7 @@ export default typescriptEslint.config(
 		plugins: {
 			'import-x': eslintPluginImportX,
 			'unused-imports': eslintPluginUnusedImports,
+			'@stylistic': stylistic,
 		},
 		rules: {
 			// Imports
@@ -88,12 +91,14 @@ export default typescriptEslint.config(
 			'unused-imports/no-unused-imports': 'warn',
 
 			// Format
-			'no-multiple-empty-lines': ['warn', { max: 1 }],
-			'space-before-blocks': ['warn', 'always'],
-			'newline-before-return': 'warn',
-			'padding-line-between-statements': [
+			'@stylistic/lines-between-class-members': ['warn', 'always', { exceptAfterSingleLine: true }],
+			'@stylistic/padding-line-between-statements': [
 				'warn',
-				{ blankLine: 'always', next: 'export', prev: '*' },
+				{
+					blankLine: 'always',
+					prev: '*',
+					next: ['if', 'for', 'while', 'switch', 'try', 'throw', 'return', 'break', 'continue'],
+				},
 			],
 
 			// General style
