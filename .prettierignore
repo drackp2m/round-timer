@@ -1,6 +1,8 @@
 # Add files here to ignore them from prettier formatting
-/.devcontainer
 /.angular
+/.devcontainer
+/.docker
+/.github/release-notes
 /.husky
 /.pnpm-store
 /.vscode

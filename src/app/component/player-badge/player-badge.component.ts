@@ -32,6 +32,7 @@ export class PlayerBadgeComponent implements AfterViewInit {
 
 		return undefined !== player.icon ? PlayerIcon[player.icon] : 'user-plus';
 	});
+
 	readonly color = computed(() => {
 		const player = this.player();
 
@@ -54,6 +55,7 @@ export class PlayerBadgeComponent implements AfterViewInit {
 
 		return [...move, ...arc].join(' ');
 	});
+
 	readonly createBottomCircle = computed(() => {
 		const size = this.size();
 

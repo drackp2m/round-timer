@@ -31,12 +31,15 @@ export class ShowMillisecondsPipe implements PipeTransform {
 		switch (decimals) {
 			case 0:
 				milliseconds = '';
+
 				break;
 			case 1:
 				milliseconds = '10' === milliseconds ? '0' : milliseconds;
+
 				break;
 			case 2:
 				milliseconds = '100' === milliseconds ? '00' : milliseconds.padStart(2, '0');
+
 				break;
 			default:
 				milliseconds = milliseconds.padStart(3, '0');

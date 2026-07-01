@@ -71,7 +71,7 @@ export class SelectDirective implements OnInit, AfterViewInit {
 			this.optionsHelper.confirmHighlightedOption();
 		},
 		highlightTabTarget: () => {
-			this.optionsHelper.highlightFirstValidOptionIfNoneHighlighted();
+			this.optionsHelper.highlightFirstValidOption();
 		},
 		findOptionStartingWith: (char) => {
 			this.findOptionStartingWith(char);
@@ -222,12 +222,8 @@ export class SelectDirective implements OnInit, AfterViewInit {
 
 	private openCustomDropdown() {
 		this.renderer2.addClass(this.wrapper.wrapperElement, 'open');
-
 		window.addEventListener('mousedown', this.closeOnOutsideClick);
-		this.wrapper.wrapperElement.addEventListener(
-			'mousemove',
-			this.optionsHelper.clearKeyboardHighlight,
-		);
+		window.addEventListener('mousemove', this.onMouseMoveGlobal);
 
 		this.optionsHelper.highlightInitialOption();
 		this.updatePositionClass();
@@ -237,11 +233,24 @@ export class SelectDirective implements OnInit, AfterViewInit {
 		this.renderer2.removeClass(this.wrapper.wrapperElement, 'open');
 
 		window.removeEventListener('mousedown', this.closeOnOutsideClick);
-		this.wrapper.wrapperElement.removeEventListener(
-			'mousemove',
-			this.optionsHelper.clearKeyboardHighlight,
-		);
+		window.removeEventListener('mousemove', this.onMouseMoveGlobal);
+
+		this.optionsHelper.clearHighlight();
 	}
+
+	private onMouseMoveGlobal = (event: MouseEvent): void => {
+		if (!this.isDropdownOpen()) {
+			return;
+		}
+
+		const target = event.target as HTMLElement;
+
+		if (null !== target.closest('.option')) {
+			return;
+		}
+
+		this.optionsHelper.clearHighlight();
+	};
 
 	private closeOnOutsideClick = (event: MouseEvent) => {
 		if (!this.wrapper.wrapperElement.contains(event.target as Node)) {

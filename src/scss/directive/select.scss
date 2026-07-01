@@ -149,12 +149,6 @@
 					background-color: var(--color-primary-mid);
 				}
 			}
-
-			&:not(.keyboard-navigation) {
-				.option:hover {
-					background-color: var(--color-primary-mid);
-				}
-			}
 		}
 
 		&:not(.filled) {

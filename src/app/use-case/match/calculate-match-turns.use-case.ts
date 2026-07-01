@@ -26,9 +26,11 @@ export class CalculateMatchTurns {
 		switch (event.type) {
 			case 'NEXT_TURN':
 				this.dispatchNextTurnEvent();
+
 				break;
 			case 'PAUSE':
 				this.dispatchPauseEvent();
+
 				break;
 		}
 

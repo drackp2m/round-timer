@@ -29,6 +29,7 @@ export class MatchPage {
 	readonly game = computed(() =>
 		this.gameStore.items()?.find((game) => game.uuid === this.match()?.gameUuid),
 	);
+
 	readonly events = this.matchStore.events;
 	readonly lastEvent = computed(() => {
 		const events = this.events();
@@ -39,6 +40,7 @@ export class MatchPage {
 
 		return events[events.length - 1];
 	});
+
 	readonly matchTurns = this.matchStore.matchTurns;
 	readonly currentTurn = computed(() => this.matchTurns()[this.matchTurns().length - 1]);
 	readonly timerIsRunning = this.matchStore.timerIsRunning;
@@ -55,6 +57,7 @@ export class MatchPage {
 
 		return 0;
 	});
+
 	readonly round = this.matchStore.round;
 	readonly matchTurn = this.matchStore.turn;
 	readonly roundTurn = computed(() => ((this.matchTurn() - 1) % this.playersOrder().length) + 1);
@@ -64,15 +67,18 @@ export class MatchPage {
 			.map((uuid) => this.players().find((player) => player.uuid === uuid))
 			.filter((player) => player !== undefined),
 	);
+
 	readonly currentPlayer = computed(() =>
 		this.players().find((player) => player.uuid === this.matchStore.currentPlayer()),
 	);
+
 	readonly fasterTurn = computed(() =>
 		this.matchTurns().reduce(
 			(acc, turn, index) => (turn.time < acc.time ? { index, time: turn.time } : acc),
 			{ index: 0, time: Number.MAX_SAFE_INTEGER },
 		),
 	);
+
 	readonly slowerTurn = computed(() =>
 		this.matchTurns().reduce(
 			(acc, turn, index) => (turn.time > acc.time ? { index, time: turn.time } : acc),

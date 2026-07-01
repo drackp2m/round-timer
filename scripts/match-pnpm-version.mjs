@@ -67,6 +67,7 @@ const fixMode = process.argv.includes('--fix');
 const pkg = JSON.parse(readFileSync(join(process.cwd(), 'package.json'), 'utf8'));
 
 const pm = pkg.packageManager;
+
 if (!pm?.startsWith('pnpm@')) {
 	console.error('❌ "packageManager": "pnpm@X.Y.Z" not found in package.json');
 	process.exit(1);
@@ -128,6 +129,7 @@ for (const file of files) {
 				inStep = false;
 				inWith = false;
 			}
+
 			continue;
 		}
 
@@ -135,11 +137,13 @@ for (const file of files) {
 
 		if (/^jobs:/.test(t)) {
 			jIndent = ind;
+
 			continue;
 		}
 
 		if (-1 !== jIndent && ind === jIndent + 2 && !t.startsWith('-')) {
 			const k = t.split(':')[0];
+
 			if (k && !reserved.includes(k)) {
 				job = k;
 			}
@@ -148,6 +152,7 @@ for (const file of files) {
 		if (/uses:\s*pnpm\/action-setup@/.test(t)) {
 			inStep = true;
 			inWith = false;
+
 			continue;
 		}
 
@@ -155,19 +160,23 @@ for (const file of files) {
 			// Fix: accept "with:" as an intermediate line before "version:"
 			if (t.startsWith('with:')) {
 				inWith = true;
+
 				continue;
 			}
 
 			if (t.startsWith('version:') && inWith) {
 				const m = t.match(/^version:\s*["']?([^\s#"']+)["']?/);
+
 				if (m) {
 					const v = m[1].trim();
+
 					if (v !== pkgVer) {
 						bad.push({ job: job || 'unnamed', v, d: diffType(pkgVer, v) });
 					}
 				}
 				inStep = false;
 				inWith = false;
+
 				continue;
 			}
 

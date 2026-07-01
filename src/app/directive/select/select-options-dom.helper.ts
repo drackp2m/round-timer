@@ -3,13 +3,7 @@ import { Renderer2 } from '@angular/core';
 import { createTypedElement } from '@app/util/renderer';
 
 const HIGHLIGHTED_CLASS = 'highlighted';
-const KEYBOARD_NAVIGATION_CLASS = 'keyboard-navigation';
 
-/**
- * Owns the rendered option <div> elements inside the custom dropdown and
- * keeps them in sync with the native <select>: projection, selected state,
- * keyboard highlight, and confirmation.
- */
 export class SelectOptionsDomHelper {
 	private optionsContainer: HTMLElement | null = null;
 	private highlightedOptionIndex: number | null = null;
@@ -33,7 +27,7 @@ export class SelectOptionsDomHelper {
 			this.optionsContainer.removeChild(this.optionsContainer.firstChild);
 		}
 
-		Array.from(this.selectElement.options).forEach((option) => {
+		Array.from(this.selectElement.options).forEach((option, index) => {
 			const optionElement = createTypedElement(this.renderer2, 'div');
 
 			this.renderer2.addClass(optionElement, 'option');
@@ -51,7 +45,7 @@ export class SelectOptionsDomHelper {
 
 			this.renderer2.appendChild(this.optionsContainer, optionElement);
 
-			this.addEventListenersToOption(optionElement);
+			this.addEventListenersToOption(optionElement, index);
 		});
 	}
 
@@ -121,11 +115,7 @@ export class SelectOptionsDomHelper {
 		}
 	}
 
-	highlightFirstValidOptionIfNoneHighlighted(): void {
-		if (null !== this.highlightedOptionIndex) {
-			return;
-		}
-
+	highlightFirstValidOption(): void {
 		const options = this.getOptionElements();
 		const firstValidIndex = options.findIndex(
 			(option) =>
@@ -152,25 +142,21 @@ export class SelectOptionsDomHelper {
 		highlighted.click();
 	}
 
-	clearKeyboardHighlight = (): void => {
+	clearHighlight = (): void => {
 		if (null === this.optionsContainer) {
 			return;
 		}
 
-		this.renderer2.removeClass(this.optionsContainer, KEYBOARD_NAVIGATION_CLASS);
+		if (null !== this.highlightedOptionIndex) {
+			const options = this.getOptionElements();
+			const current = options[this.highlightedOptionIndex];
 
-		if (null === this.highlightedOptionIndex) {
-			return;
+			if (undefined !== current) {
+				this.renderer2.removeClass(current, HIGHLIGHTED_CLASS);
+			}
+
+			this.highlightedOptionIndex = null;
 		}
-
-		const options = this.getOptionElements();
-		const currentlyHighlighted = options[this.highlightedOptionIndex];
-
-		if (undefined !== currentlyHighlighted) {
-			this.renderer2.removeClass(currentlyHighlighted, HIGHLIGHTED_CLASS);
-		}
-
-		this.highlightedOptionIndex = null;
 	};
 
 	private highlightOptionAt(index: number): void {
@@ -185,18 +171,16 @@ export class SelectOptionsDomHelper {
 		}
 
 		if (null !== this.highlightedOptionIndex) {
-			const currentlyHighlighted = options[this.highlightedOptionIndex];
+			const current = options[this.highlightedOptionIndex];
 
-			if (undefined !== currentlyHighlighted) {
-				this.renderer2.removeClass(currentlyHighlighted, HIGHLIGHTED_CLASS);
+			if (undefined !== current) {
+				this.renderer2.removeClass(current, HIGHLIGHTED_CLASS);
 			}
 		}
 
-		const nextHighlighted = options[index];
-
-		this.renderer2.addClass(nextHighlighted, HIGHLIGHTED_CLASS);
-		this.renderer2.addClass(this.optionsContainer, KEYBOARD_NAVIGATION_CLASS);
-		nextHighlighted?.scrollIntoView({ block: 'nearest' });
+		const next = options[index];
+		this.renderer2.addClass(next, HIGHLIGHTED_CLASS);
+		next?.scrollIntoView({ block: 'nearest' });
 
 		this.highlightedOptionIndex = index;
 	}
@@ -209,9 +193,13 @@ export class SelectOptionsDomHelper {
 		return Array.from(this.optionsContainer.children) as HTMLDivElement[];
 	}
 
-	private addEventListenersToOption(option: HTMLDivElement): void {
+	private addEventListenersToOption(option: HTMLDivElement, index: number): void {
 		option.addEventListener('mousedown', (event) => {
 			event.preventDefault();
+		});
+
+		option.addEventListener('mousemove', () => {
+			this.highlightOptionAt(index);
 		});
 
 		option.addEventListener('click', () => {
