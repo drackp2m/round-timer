@@ -1,3 +1,18 @@
+# v1.4.7 (2026-07-01)
+
+## What's Changed
+
+### ♻️ Code Refactoring
+
+- add eslint-stylistic and fix warnings ([89e0310](https://github.com/drackp2m/round-timer/commit/89e0310223dccd1c6efa71b23704eb231b120100)) by Marc Jovaní González
+
+### 🐛 Bug Fixes
+
+- remove github templates from prettier, rewrite CHANGELOG.md ([2007159](https://github.com/drackp2m/round-timer/commit/200715952ab8e43cac0cb9f747b76b020770d174)) by Marc Jovaní González
+- use keyboard and after move mouse to previous item on select now works nice ([1f8972d](https://github.com/drackp2m/round-timer/commit/1f8972df36c68d40ebaa8eea077023a8fd2c2565)) by Marc Jovaní González
+
+**Full Changelog**: https://github.com/drackp2m/round-timer/compare/v1.4.6...v1.4.7
+
 # v1.4.6 (2026-06-30)
 
 ## What's Changed
