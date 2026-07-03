@@ -1,3 +1,18 @@
+# v1.4.8 (2026-07-03)
+
+## What's Changed
+
+### ♻️ Code Refactoring
+
+- use shell component on select, add some improvements ([60e6ec3](https://github.com/drackp2m/round-timer/commit/60e6ec31b4c5c1bead157439a8ae06b16531c434)) by Marc Jovaní González
+- use shell component on select, add some improvements ([6392c7c](https://github.com/drackp2m/round-timer/commit/6392c7c435f8112420bc25a3094cfddcf1320409)) by Marc Jovaní González
+
+### 🐛 Bug Fixes
+
+- update filled class on select after view init ([5a57380](https://github.com/drackp2m/round-timer/commit/5a57380a0efab3807c635baab89e7912fa86521d)) by Marc Jovaní González
+
+**Full Changelog**: https://github.com/drackp2m/round-timer/compare/v1.4.7...v1.4.8
+
 # v1.4.7 (2026-07-01)
 
 ## What's Changed
