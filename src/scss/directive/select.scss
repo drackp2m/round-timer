@@ -5,9 +5,12 @@
 		$input-horizontal-padding: var(--spacing-3);
 		$input-vertical-padding: var(--spacing-2);
 		$border-width: 1.5px;
+		$border-radius: var(--border-radius-3);
 		$transition-duration: 0.25s;
 
 		position: relative;
+		border-radius: $border-radius;
+		transition: box-shadow $transition-duration ease-in-out;
 
 		select,
 		.border-container,
@@ -45,7 +48,7 @@
 				inset: 0;
 
 				border: solid $border-width var(--color-contrast-mid);
-				border-radius: var(--border-radius-3);
+				border-radius: $border-radius;
 
 				clip-path: polygon(
 					0 0,
@@ -75,6 +78,34 @@
 			transition:
 				transform $transition-duration ease-in-out,
 				opacity $transition-duration ease-in-out;
+		}
+
+		.search-overlay {
+			display: none;
+
+			input {
+				width: 100%;
+				padding: 0;
+				border: none;
+
+				font: inherit;
+				color: inherit;
+
+				background: none;
+				outline: none;
+			}
+		}
+
+		&.searching {
+			.selected-option {
+				display: none;
+			}
+
+			.search-overlay {
+				display: inline-flex;
+				flex: 1;
+				align-items: center;
+			}
 		}
 
 		&.focused,
@@ -109,6 +140,17 @@
 
 		&:hover,
 		&.focused {
+			$shadow: 0 0 6px
+				color-mix(
+					in oklab,
+					color-mix(in oklab, var(--color-accent) 30%, transparent) 80%,
+					rgb(255 210 75)
+				);
+
+			box-shadow:
+				$shadow,
+				inset $shadow;
+
 			.border-container {
 				&::before {
 					border-color: var(--color-accent);
@@ -133,12 +175,14 @@
 			z-index: 2;
 			transform: translateY(-1 * $border-width);
 
+			overflow: scroll;
 			overflow: hidden;
 
 			width: 100%;
+			max-height: 395px;
 			padding: var(--spacing-1) 0;
 			border: solid 1.5px var(--color-contrast-mid);
-			border-radius: var(--border-radius-3);
+			border-radius: $border-radius;
 
 			background: var(--color-primary);
 
@@ -148,10 +192,21 @@
 				&.highlighted {
 					background-color: var(--color-primary-mid);
 				}
+
+				&.disabled {
+					pointer-events: none;
+					opacity: 0.5;
+				}
+			}
+
+			.no-matches {
+				padding: var(--spacing-1) var(--spacing-3);
+				color: var(--color-contrast-mid);
 			}
 		}
 
-		&:not(.filled) {
+		&:not(.filled),
+		&.searching {
 			select {
 				color: transparent;
 			}

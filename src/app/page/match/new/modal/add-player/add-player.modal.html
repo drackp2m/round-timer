@@ -12,7 +12,16 @@
 			type="text"
 		/>
 
-		<select appThemed label="Color" formControlName="color">
+		<ng-template #colorOption let-option>
+			<span class="flex-row align-center gap-2">
+				@if ('' !== option.value) {
+					<span class="color-swatch" [style.background-color]="getColorHex(option.value)"></span>
+				}
+				{{ option.label }}
+			</span>
+		</ng-template>
+
+		<select appThemed label="Color" formControlName="color" [optionTemplate]="colorOption">
 			<option value="">Select a color</option>
 
 			@for (color of colors; track $index) {
@@ -20,7 +29,16 @@
 			}
 		</select>
 
-		<select appThemed label="Icon" formControlName="icon">
+		<ng-template #iconOption let-icon>
+			<span class="flex-row align-center gap-2">
+				@let iconValue = icon.value !== '' ? icon.value : 'user-plus';
+
+				<app-svg [icon]="iconValue | lowercase" [size]="18" squared />
+				{{ icon.label }}
+			</span>
+		</ng-template>
+
+		<select appThemed label="Icon" formControlName="icon" [optionTemplate]="iconOption">
 			<option value="">Select an icon</option>
 
 			@for (icon of icons; track $index) {
