@@ -31,6 +31,7 @@ export class DashboardPage {
 		'saturday',
 		'sunday',
 	] as const;
+
 	readonly currentWeekday = new Date()
 		.toLocaleDateString('en-US', { weekday: 'long' })
 		.toLowerCase();
