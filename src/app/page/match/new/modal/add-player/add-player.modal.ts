@@ -1,8 +1,10 @@
+import { LowerCasePipe } from '@angular/common';
 import { Component, Signal, computed } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { PlayerBadgeComponent } from '@app/component/player-badge/player-badge.component';
+import { SvgComponent } from '@app/component/svg.component';
 import { PlayerColor, PlayerColorKey } from '@app/definition/model/player/player-color.enum';
 import { PlayerIcon, PlayerIconKey } from '@app/definition/model/player/player-icon.enum';
 import { ButtonDirective } from '@app/directive/button.directive';
@@ -21,6 +23,8 @@ import { Enum } from '@app/util/enum';
 		ReactiveFormsModule,
 		ButtonDirective,
 		PlayerBadgeComponent,
+		SvgComponent,
+		LowerCasePipe,
 	],
 })
 export class AddPlayerModal extends Modal<Player> {
@@ -55,6 +59,10 @@ export class AddPlayerModal extends Modal<Player> {
 
 		return this.playerFromForm();
 	});
+
+	getColorHex(key: PlayerColorKey): string {
+		return PlayerColor[key];
+	}
 
 	onSubmit(): void {
 		const player = this.player();

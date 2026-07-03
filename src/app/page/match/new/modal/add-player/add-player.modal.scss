@@ -2,3 +2,12 @@ app-player-badge {
 	align-self: center;
 	height: 80px;
 }
+
+.color-swatch {
+	display: inline-block;
+
+	width: 1rem;
+	height: 1rem;
+	border: 1.5px solid var(--color-contrast-mid);
+	border-radius: 50%;
+}

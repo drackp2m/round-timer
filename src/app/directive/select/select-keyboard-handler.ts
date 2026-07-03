@@ -2,12 +2,12 @@ export interface SelectKeyboardCallbacks {
 	isOpen: () => boolean;
 	openDropdown: () => void;
 	closeDropdown: () => void;
-	toggleDropdown: () => void;
 	highlightNext: () => void;
 	highlightPrevious: () => void;
 	confirmHighlighted: () => void;
 	highlightTabTarget: () => void;
-	findOptionStartingWith: (char: string) => void;
+	onSearchInput: (char: string) => void;
+	onSearchBackspace: () => void;
 }
 
 /**
@@ -30,6 +30,13 @@ export class SelectKeyboardHandler {
 			return;
 		}
 
+		if ('Backspace' === event.code) {
+			event.preventDefault();
+			this.callbacks.onSearchBackspace();
+
+			return;
+		}
+
 		if (this.isNavigationKey(event.code)) {
 			this.handleNavigationKey(event);
 
@@ -37,7 +44,8 @@ export class SelectKeyboardHandler {
 		}
 
 		if (/^[a-z0-9]$/i.test(event.key)) {
-			this.callbacks.findOptionStartingWith(event.key);
+			event.preventDefault();
+			this.callbacks.onSearchInput(event.key);
 		}
 	}
 
@@ -67,7 +75,11 @@ export class SelectKeyboardHandler {
 		event.preventDefault();
 
 		if ('Space' === event.code) {
-			this.callbacks.toggleDropdown();
+			if (this.callbacks.isOpen()) {
+				this.callbacks.confirmHighlighted();
+			} else {
+				this.callbacks.openDropdown();
+			}
 
 			return;
 		}

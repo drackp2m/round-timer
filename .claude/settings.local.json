@@ -1,0 +1,11 @@
+{
+	"permissions": {
+		"allow": [
+			"Bash(bash -c ' *)",
+			"Bash(echo \"EXIT:$?\")",
+			"Read(//Users/drackp2m/**)",
+			"Read(//Users/drackp2m/.local/bin/**)",
+			"Bash(docker exec round-timer-node *)"
+		]
+	}
+}
