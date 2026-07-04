@@ -7,5 +7,32 @@
 		<input appThemed type="radio" label="Dark" value="dark" formControlName="appearance" />
 	</form>
 
+	<h4>Backup</h4>
+
+	<div class="flex-row gap-4">
+		<button appThemed type="button" (click)="downloadBackup()">Download backup</button>
+
+		<button appThemed type="button" (click)="restoreInput.click()">Restore backup</button>
+		<input
+			#restoreInput
+			hidden
+			type="file"
+			accept="application/json"
+			(change)="restoreBackup($event)"
+		/>
+	</div>
+
+	@if (restoreError(); as error) {
+		<p class="fs-sm">{{ error }}</p>
+	}
+
+	@if (restoreSummary(); as summary) {
+		<p class="fs-sm">
+			Players: {{ summary.players.added }} added, {{ summary.players.skipped }} skipped (already
+			existed). Games: {{ summary.games.added }} added, {{ summary.games.skipped }} skipped (already
+			existed).
+		</p>
+	}
+
 	<p class="flex-row flex-grow justify-center align-end mono fs-sm">version {{ VERSION }}</p>
 </section>
