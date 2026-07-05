@@ -9,6 +9,8 @@ import eslintPluginUnusedImports from 'eslint-plugin-unused-imports';
 import globals from 'globals';
 import typescriptEslint from 'typescript-eslint';
 
+import componentOrder from './tools/eslint-plugins/component-order.js';
+
 function eslintErrorsToWarnings(rules) {
 	return Object.fromEntries(
 		Object.entries(rules).map(([ruleName, ruleValue]) => {
@@ -72,9 +74,9 @@ export default typescriptEslint.config(
 		name: 'Base',
 		files: ['**/*.ts', '**/*.mts', '**/*.js', '**/*.mjs'],
 		plugins: {
+			'@stylistic': stylistic,
 			'import-x': eslintPluginImportX,
 			'unused-imports': eslintPluginUnusedImports,
-			'@stylistic': stylistic,
 		},
 		rules: {
 			// Imports
@@ -129,6 +131,7 @@ export default typescriptEslint.config(
 		plugins: {
 			sonarjs: eslintPluginSonarjs,
 			rxjs: eslintPluginRxjs,
+			'component-order': componentOrder,
 		},
 		extends: [
 			transformEslintConfigs(eslint.configs.recommended),
@@ -155,6 +158,7 @@ export default typescriptEslint.config(
 				'warn',
 				{ suffixes: ['Layout', 'Page', 'Modal', 'Component'] },
 			],
+			'component-order/component-property-order': 'warn',
 
 			// TypeScript
 			'@typescript-eslint/no-extraneous-class': 'off',

@@ -26,12 +26,12 @@
 		<p class="fs-sm">{{ error }}</p>
 	}
 
-	@if (restoreSummary(); as summary) {
-		<p class="fs-sm">
-			Players: {{ summary.players.added }} added, {{ summary.players.skipped }} skipped (already
-			existed). Games: {{ summary.games.added }} added, {{ summary.games.skipped }} skipped (already
-			existed).
-		</p>
+	@if (restoreSummaryRows().length > 0) {
+		<ul class="flex-col gap-1 fs-sm">
+			@for (row of restoreSummaryRows(); track row.label) {
+				<li>{{ row.label }}: {{ row.counters.added }} added, {{ row.counters.skipped }} skipped</li>
+			}
+		</ul>
 	}
 
 	<p class="flex-row flex-grow justify-center align-end mono fs-sm">version {{ VERSION }}</p>

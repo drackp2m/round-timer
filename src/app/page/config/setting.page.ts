@@ -1,4 +1,4 @@
-import { Component, Signal, effect, inject, signal } from '@angular/core';
+import { Component, Signal, computed, effect, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
@@ -25,6 +25,23 @@ export class SettingPage {
 
 	readonly restoreSummary = signal<RestoreSummary | null>(null);
 	readonly restoreError = signal<string | null>(null);
+
+	readonly restoreSummaryRows = computed(() => {
+		const summary = this.restoreSummary();
+
+		if (null === summary) {
+			return [];
+		}
+
+		return [
+			{ label: 'Players', counters: summary.players },
+			{ label: 'Games', counters: summary.games },
+			{ label: 'Settings', counters: summary.settings },
+			{ label: 'Matches', counters: summary.matches },
+			{ label: 'Match players', counters: summary.matchPlayers },
+			{ label: 'Match events', counters: summary.matchEvents },
+		];
+	});
 
 	private firstChangeIgnored = false;
 
