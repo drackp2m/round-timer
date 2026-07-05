@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-	selector: 'app-backup-conflict',
 	templateUrl: './backup-conflict.page.html',
-	imports: [],
+	styleUrl: './backup-conflict.page.scss',
 })
-export class BackupConflict {}
+export class BackupConflictPage {}

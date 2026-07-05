@@ -9,7 +9,7 @@ import eslintPluginUnusedImports from 'eslint-plugin-unused-imports';
 import globals from 'globals';
 import typescriptEslint from 'typescript-eslint';
 
-import componentOrder from './tools/eslint-plugins/component-order.js';
+import angularCustomPlugin from './tools/eslint-plugins/angular/index.js';
 
 function eslintErrorsToWarnings(rules) {
 	return Object.fromEntries(
@@ -131,7 +131,7 @@ export default typescriptEslint.config(
 		plugins: {
 			sonarjs: eslintPluginSonarjs,
 			rxjs: eslintPluginRxjs,
-			'component-order': componentOrder,
+			'angular-custom': angularCustomPlugin,
 		},
 		extends: [
 			transformEslintConfigs(eslint.configs.recommended),
@@ -158,7 +158,8 @@ export default typescriptEslint.config(
 				'warn',
 				{ suffixes: ['Layout', 'Page', 'Modal', 'Component'] },
 			],
-			'component-order/component-property-order': 'warn',
+			'angular-custom/component-property-order': 'warn',
+			'angular-custom/no-page-selector': 'warn',
 
 			// TypeScript
 			'@typescript-eslint/no-extraneous-class': 'off',

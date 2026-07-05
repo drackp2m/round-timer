@@ -12,7 +12,7 @@ import { SelectDirective } from '@app/directive/select/select.directive';
 import { MatchPlayer } from '@app/model/match-player.model';
 import { Match } from '@app/model/match.model';
 import { Player } from '@app/model/player.model';
-import { AddGameModal } from '@app/page/match/new/modal/add-game/add-game.modal';
+import { AddGameModal } from '@app/page/match/page/new/modal/add-game/add-game.modal';
 import { GameStore } from '@app/store/game.store';
 import { MatchStore } from '@app/store/match.store';
 import { ModalStore } from '@app/store/modal.store';

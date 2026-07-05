@@ -22,6 +22,10 @@
 		/>
 	</div>
 
+	<button appThemed color="accent" appRouterLink="/settings/backup-conflict">
+		Go to Backup conflict
+	</button>
+
 	@if (restoreError(); as error) {
 		<p class="fs-sm">{{ error }}</p>
 	}
