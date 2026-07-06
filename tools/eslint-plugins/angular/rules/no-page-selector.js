@@ -37,7 +37,8 @@ module.exports = {
 				context.report({
 					node: selectorProp,
 					message:
-						'"Page" components must not declare a selector: without one Angular wraps the host in <ng-component>, which the layout CSS relies on to space the section that follows it.',
+						'`{{name}}` is a Page component and must not declare a `selector`; without one Angular hosts it in `<ng-component>`, which the layout CSS relies on.',
+					data: { name: classNode.id.name },
 					fix(fixer) {
 						const props = arg.properties;
 						const index = props.indexOf(selectorProp);
