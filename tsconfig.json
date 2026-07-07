@@ -24,6 +24,8 @@
 		// Paths
 		"paths": {
 			"@app/package": ["./package.json"],
+			"@app/tools/*": ["./tools/*"],
+
 			"@app/component/*": ["./src/app/component/*"],
 			"@app/definition/*": ["./src/app/definition/*"],
 			"@app/directive/*": ["./src/app/directive/*"],

@@ -2,7 +2,7 @@ import { Component, ElementRef, computed, effect, inject, input, viewChild } fro
 
 import { SvgComponent } from '@app/component/svg.component';
 import { MatchTurn } from '@app/definition/page/match/match-turn.interface';
-import { ShowMillisecondsPipe } from '@app/pipe/show-milliseconds.pipe';
+import { DurationPartsPipe } from '@app/pipe/duration-parts.pipe';
 import { PlayerStore } from '@app/store/player.store';
 import { Async } from '@app/util/async';
 
@@ -10,7 +10,7 @@ import { Async } from '@app/util/async';
 	selector: 'app-match-turns',
 	templateUrl: './match-turns.component.html',
 	styleUrl: './match-turns.component.scss',
-	imports: [ShowMillisecondsPipe, SvgComponent],
+	imports: [DurationPartsPipe, SvgComponent],
 })
 // ToDo => add time for round (and the paused lost time)
 export class MatchTurnsComponent {

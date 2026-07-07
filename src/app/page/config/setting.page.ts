@@ -4,7 +4,8 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 
 import { Theme } from '@app/definition/service/theme.type';
 import { ButtonDirective } from '@app/directive/button.directive';
-import { RadioCheckboxDirective } from '@app/directive/radio-checkbox.directive';
+import { RadioCheckboxDirective } from '@app/directive/radio-checkbox/radio-checkbox.directive';
+import { RouterLinkDirective } from '@app/directive/router-link.directive';
 import { version } from '@app/package';
 import { ThemeService } from '@app/service/theme.service';
 import { BackupDataUseCase } from '@app/use-case/backup-data.use-case';
@@ -13,7 +14,7 @@ import { RestoreDataUseCase, RestoreSummary } from '@app/use-case/restore-data.u
 @Component({
 	templateUrl: './setting.page.html',
 	styleUrl: './setting.page.scss',
-	imports: [ReactiveFormsModule, RadioCheckboxDirective, ButtonDirective],
+	imports: [ReactiveFormsModule, RadioCheckboxDirective, ButtonDirective, RouterLinkDirective],
 	providers: [BackupDataUseCase, RestoreDataUseCase],
 })
 export class SettingPage {

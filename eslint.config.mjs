@@ -110,12 +110,20 @@ export default typescriptEslint.config(
 			'no-empty': 'warn',
 			'no-implicit-coercion': ['warn', { boolean: true }],
 			'no-extra-boolean-cast': 'warn',
+		},
+	},
+
+	// ── App source: enforce path aliases ───────────────────────────────────────
+	{
+		name: 'App source',
+		files: ['src/**/*.ts'],
+		rules: {
 			'no-restricted-imports': [
 				'warn',
 				{
 					patterns: [
 						{
-							group: ['../*'],
+							group: ['./*', '../*'],
 							message: 'Use path aliases instead of relative imports',
 						},
 					],
