@@ -1,23 +1,23 @@
 import { Component, computed, inject, input } from '@angular/core';
 
-import { ShowMillisecondsPipe } from '@app/pipe/show-milliseconds.pipe';
+import { DurationPartsPipe } from '@app/pipe/duration-parts.pipe';
 
 @Component({
-	selector: 'app-show-milliseconds',
-	templateUrl: './show-milliseconds.component.html',
-	providers: [ShowMillisecondsPipe],
+	selector: 'app-duration',
+	templateUrl: './duration.component.html',
+	providers: [DurationPartsPipe],
 })
-export class ShowMillisecondsComponent {
+export class DurationComponent {
 	readonly time = input.required<number>();
 	readonly decimals = input(2);
 
-	private readonly showMillisecondsPipe = inject(ShowMillisecondsPipe);
+	private readonly durationPartsPipe = inject(DurationPartsPipe);
 
 	readonly parts = computed(() => {
 		const time = this.time();
 		const decimals = this.decimals();
 
-		return this.showMillisecondsPipe.transform(time, decimals);
+		return this.durationPartsPipe.transform(time, decimals);
 	});
 
 	readonly seconds = computed(() => {

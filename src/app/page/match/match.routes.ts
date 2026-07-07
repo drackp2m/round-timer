@@ -9,6 +9,7 @@ export default [
 	{
 		path: 'new',
 		title: 'New Match',
-		loadComponent: () => import('./new/new-match.page').then(({ NewMatchPage }) => NewMatchPage),
+		loadComponent: () =>
+			import('./page/new/new-match.page').then(({ NewMatchPage }) => NewMatchPage),
 	},
 ] satisfies Routes;

@@ -1,0 +1,67 @@
+<section class="flex-col gap-6">
+	<div class="flex-col gap-2">
+		@if (players.length !== 0) {
+			<h4>Players with conflicts</h4>
+
+			<div class="flex-col gap-4">
+				@for (playersGroup of players; track $index) {
+					<div class="flex-row gap-4">
+						@for (player of playersGroup; track player.uuid) {
+							<ng-template #label>
+								<div class="label flex-col gap-1 p-4">
+									{{ player.uuid | shortenUuid }}
+									<div class="flex-row gap-2">
+										<span>{{ player.nick }}</span> <span class="fw-sm">{{ player.name }}</span>
+									</div>
+									<span class="fw-sm">{{ player.createdAt | date: 'short' }}</span>
+								</div>
+							</ng-template>
+
+							<input
+								appThemed
+								type="radio"
+								bare
+								[name]="player.nick"
+								[value]="player.uuid"
+								[label]="label"
+							/>
+						}
+					</div>
+				}
+			</div>
+		}
+	</div>
+
+	<div class="flex-col gap-2">
+		@if (games.length !== 0) {
+			<h4>Games with conflicts</h4>
+
+			<div class="flex-col gap-4">
+				@for (gamesGroup of games; track $index) {
+					<div class="flex-row gap-4">
+						@for (game of gamesGroup; track game.uuid) {
+							<ng-template #label>
+								<div class="label flex-col gap-1 p-4">
+									{{ game.uuid | shortenUuid }}
+									<div class="flex-row gap-2">
+										<span>{{ game.name }}</span>
+									</div>
+									<span class="fw-sm">{{ game.createdAt | date: 'short' }}</span>
+								</div>
+							</ng-template>
+
+							<input
+								appThemed
+								type="radio"
+								bare
+								[name]="game.name"
+								[value]="game.uuid"
+								[label]="label"
+							/>
+						}
+					</div>
+				}
+			</div>
+		}
+	</div>
+</section>

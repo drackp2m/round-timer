@@ -26,10 +26,7 @@
 	<h2 class="text-center color-accent fw-xl">
 		@let currentTurnValue = currentTurn();
 
-		<app-show-milliseconds
-			[time]="(currentTurnValue?.time ?? 0) + currentTimeRunning()"
-			[decimals]="2"
-		/>
+		<app-duration [time]="(currentTurnValue?.time ?? 0) + currentTimeRunning()" [decimals]="2" />
 	</h2>
 
 	<app-match-buttons

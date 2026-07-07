@@ -9,6 +9,8 @@ import eslintPluginUnusedImports from 'eslint-plugin-unused-imports';
 import globals from 'globals';
 import typescriptEslint from 'typescript-eslint';
 
+import angularCustomPlugin from './tools/eslint-plugins/angular/index.js';
+
 function eslintErrorsToWarnings(rules) {
 	return Object.fromEntries(
 		Object.entries(rules).map(([ruleName, ruleValue]) => {
@@ -72,9 +74,9 @@ export default typescriptEslint.config(
 		name: 'Base',
 		files: ['**/*.ts', '**/*.mts', '**/*.js', '**/*.mjs'],
 		plugins: {
+			'@stylistic': stylistic,
 			'import-x': eslintPluginImportX,
 			'unused-imports': eslintPluginUnusedImports,
-			'@stylistic': stylistic,
 		},
 		rules: {
 			// Imports
@@ -108,12 +110,20 @@ export default typescriptEslint.config(
 			'no-empty': 'warn',
 			'no-implicit-coercion': ['warn', { boolean: true }],
 			'no-extra-boolean-cast': 'warn',
+		},
+	},
+
+	// ── App source: enforce path aliases ───────────────────────────────────────
+	{
+		name: 'App source',
+		files: ['src/**/*.ts'],
+		rules: {
 			'no-restricted-imports': [
 				'warn',
 				{
 					patterns: [
 						{
-							group: ['../*'],
+							group: ['./*', '../*'],
 							message: 'Use path aliases instead of relative imports',
 						},
 					],
@@ -129,6 +139,7 @@ export default typescriptEslint.config(
 		plugins: {
 			sonarjs: eslintPluginSonarjs,
 			rxjs: eslintPluginRxjs,
+			'angular-custom': angularCustomPlugin,
 		},
 		extends: [
 			transformEslintConfigs(eslint.configs.recommended),
@@ -155,6 +166,8 @@ export default typescriptEslint.config(
 				'warn',
 				{ suffixes: ['Layout', 'Page', 'Modal', 'Component'] },
 			],
+			'angular-custom/component-property-order': 'warn',
+			'angular-custom/no-page-selector': 'warn',
 
 			// TypeScript
 			'@typescript-eslint/no-extraneous-class': 'off',

@@ -6,7 +6,7 @@
 			</div>
 		}
 
-		@let parts = turn.time | showMilliseconds;
+		@let parts = turn.time | durationParts;
 		@let player = playerByUuid().get(turn.playerUuid);
 		@let faster = turn.time !== 0 && fasterTurn().index === index;
 		@let slower = turn.time !== 0 && slowerTurn().index === index;

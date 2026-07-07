@@ -16,7 +16,6 @@ import { Enum } from '@app/util/enum';
 
 @Component({
 	templateUrl: './add-player.modal.html',
-	styleUrls: ['./add-player.modal.scss'],
 	imports: [
 		InputDirective,
 		SelectDirective,
@@ -26,6 +25,7 @@ import { Enum } from '@app/util/enum';
 		SvgComponent,
 		LowerCasePipe,
 	],
+	styleUrls: ['./add-player.modal.scss'],
 })
 export class AddPlayerModal extends Modal<Player> {
 	readonly TITLE = 'Add player';

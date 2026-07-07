@@ -3,7 +3,7 @@ import { Component, computed, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { interval } from 'rxjs';
 
-import { ShowMillisecondsComponent } from '@app/component/show-milliseconds/show-milliseconds.component';
+import { DurationComponent } from '@app/component/duration/duration.component';
 import { MatchEventType } from '@app/definition/model/match/match-event-type.enum';
 import { MatchButtonsComponent } from '@app/page/match/component/buttons/match-buttons.component';
 import { MatchTurnsComponent } from '@app/page/match/component/turns/match-turns.component';
@@ -14,7 +14,7 @@ import { PlayerStore } from '@app/store/player.store';
 @Component({
 	templateUrl: './match.page.html',
 	styleUrl: './match.page.scss',
-	imports: [DatePipe, MatchButtonsComponent, ShowMillisecondsComponent, MatchTurnsComponent],
+	imports: [DatePipe, MatchButtonsComponent, DurationComponent, MatchTurnsComponent],
 })
 export class MatchPage {
 	private readonly matchStore = inject(MatchStore);

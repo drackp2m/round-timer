@@ -1,9 +1,9 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-	name: 'showMilliseconds',
+	name: 'durationParts',
 })
-export class ShowMillisecondsPipe implements PipeTransform {
+export class DurationPartsPipe implements PipeTransform {
 	transform(ms: number, decimals = 2): string[] {
 		const [milliseconds, extraSecond] = this.getMillisecondsAndExtraSecond(ms, decimals);
 		const seconds = Math.floor(((ms + extraSecond * 1000) / 1000) % 60);

@@ -1,0 +1,20 @@
+:host ::ng-deep {
+	app-radio-checkbox-shell {
+		flex-grow: 1;
+
+		.app-radio.bare {
+			border: solid 1.5px var(--color-contrast);
+			border-radius: var(--border-radius-2);
+
+			&.selected {
+				color: var(--color-primary);
+				background-color: var(--color-contrast-mid);
+			}
+
+			&.focused,
+			&:hover {
+				border-color: var(--color-accent);
+			}
+		}
+	}
+}
