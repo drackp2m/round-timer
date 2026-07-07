@@ -9,7 +9,7 @@
 		"start": "ng serve",
 		"build": "ng build",
 		"lint": "ng lint && pnpm exec prettier --check . && pnpm exec stylelint '**/*.{css,scss}'",
-		"lint:fix": "ng lint --fix && pnpm exec prettier --write . && pnpm exec stylelint --fix '**/*.{css,scss}'",
+		"lint:fix": "ng lint --fix && pnpm exec prettier --write --list-different . && pnpm exec stylelint --fix '**/*.{css,scss}'",
 		"test": "ng test",
 		"prepare": "husky",
 		"update:check": "pnpm outdated",

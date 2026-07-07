@@ -1,5 +1,7 @@
 import { Routes } from '@angular/router';
 
+import { backupConflictGuard } from '@app/guard/backup-conflict.guard';
+
 export default [
 	{
 		path: '',
@@ -9,6 +11,7 @@ export default [
 	{
 		path: 'backup-conflict',
 		title: 'Backup conflict',
+		canActivate: [backupConflictGuard],
 		loadComponent: () =>
 			import('./page/backup-conflict/backup-conflict.page').then(
 				({ BackupConflictPage }) => BackupConflictPage,

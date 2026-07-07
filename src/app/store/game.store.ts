@@ -34,6 +34,16 @@ export class GameStore extends signalStore({ protectedState: false }, withState(
 		});
 	}
 
+	updateGame(game: Game): void {
+		void this.gameRepository.insert('game', game).then((game) => {
+			const currentItems = this.items() ?? [];
+
+			patchState(this, {
+				items: currentItems.map((item) => (item.uuid === game.uuid ? game : item)),
+			});
+		});
+	}
+
 	private fetchData(): void {
 		patchState(this, { isLoading: true });
 

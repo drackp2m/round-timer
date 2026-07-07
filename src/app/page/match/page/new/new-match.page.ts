@@ -2,8 +2,6 @@ import { Component, computed, effect, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { AddPlayerModal } from './modal/add-player/add-player.modal';
-
 import { SvgComponent } from '@app/component/svg.component';
 import { ButtonDirective } from '@app/directive/button.directive';
 import { InputDirective } from '@app/directive/input.directive';
@@ -13,6 +11,7 @@ import { MatchPlayer } from '@app/model/match-player.model';
 import { Match } from '@app/model/match.model';
 import { Player } from '@app/model/player.model';
 import { AddGameModal } from '@app/page/match/page/new/modal/add-game/add-game.modal';
+import { AddPlayerModal } from '@app/page/match/page/new/modal/add-player/add-player.modal';
 import { GameStore } from '@app/store/game.store';
 import { MatchStore } from '@app/store/match.store';
 import { ModalStore } from '@app/store/modal.store';

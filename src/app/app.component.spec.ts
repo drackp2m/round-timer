@@ -1,7 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { AppComponent } from './app.component';
-
+import { AppComponent } from '@app/app.component';
 import { GameRepository } from '@app/repository/game.repository';
 import { MatchRepository } from '@app/repository/match.repository';
 

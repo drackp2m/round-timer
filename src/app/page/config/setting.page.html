@@ -30,11 +30,11 @@
 					(change)="restoreBackup($event)"
 				/>
 			</div>
-
-			<button appThemed color="accent" appRouterLink="/settings/backup-conflict">
-				Go to Backup conflict
-			</button>
 		</div>
+
+		@if (downloadError(); as error) {
+			<p class="fs-sm">{{ error }}</p>
+		}
 
 		@if (restoreError(); as error) {
 			<p class="fs-sm">{{ error }}</p>
@@ -44,7 +44,8 @@
 			<ul class="flex-col gap-1 fs-sm">
 				@for (row of restoreSummaryRows(); track row.label) {
 					<li>
-						{{ row.label }}: {{ row.counters.added }} added, {{ row.counters.skipped }} skipped
+						{{ row.label }}: {{ row.counters.added }} added, {{ row.counters.updated }} updated,
+						{{ row.counters.skipped }} skipped
 					</li>
 				}
 			</ul>

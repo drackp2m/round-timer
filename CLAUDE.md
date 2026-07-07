@@ -20,10 +20,10 @@ CI (`.github/workflows/deploy.yml`) runs lint+test on every push to `main`, then
 
 ## Imports
 
-Use the path aliases defined in `tsconfig.json` — relative `../` imports are blocked by an ESLint rule (`no-restricted-imports`):
-`@app/component`, `@app/definition`, `@app/directive`, `@app/layout`, `@app/model`, `@app/page`, `@app/pipe`, `@app/repository`, `@app/service`, `@app/store`, `@app/use-case`, `@app/util`, `@app/package`.
+Use the path aliases defined in `tsconfig.json` — relative `./` and `../` imports are blocked by an ESLint rule (`no-restricted-imports`):
+`@app/component`, `@app/definition`, `@app/directive`, `@app/guard`, `@app/layout`, `@app/model`, `@app/page`, `@app/pipe`, `@app/repository`, `@app/service`, `@app/store`, `@app/strategy`, `@app/use-case`, `@app/util`, `@app/package`.
 
-Note: `src/app/strategy/` has no matching path alias — import from it with a relative path since `@app/strategy/*` doesn't exist.
+The root-level singletons have their own exact aliases (no `/*`): `@app/app.config`, `@app/app.routes`, `@app/app.component` — used e.g. from `src/main.ts`.
 
 ## Architecture
 
@@ -35,7 +35,7 @@ TypeScript is strict beyond Angular CLI defaults: `noUncheckedIndexedAccess`, `e
 
 - Component selector prefix is `app`; directives are camelCase, components are kebab-case.
 - Component class names must end in `Layout`, `Page`, `Modal`, or `Component`.
-- Keep files under 250 lines and functions under 75 lines (ESLint warns, doesn't fail — CI allows up to 16 warnings via `maxWarnings`).
+- Keep files under 250 lines and functions under 75 lines (ESLint warns, doesn't fail — warnings are advisory and don't break `ng lint`/CI; only ESLint errors do).
 - Prettier: printWidth 100, single quotes, trailing commas everywhere, Angular parser for `*.html`.
 - SCSS: `stylelint-config-standard-scss` + `stylelint-config-clean-order`; short hex colors, no named colors.
 
