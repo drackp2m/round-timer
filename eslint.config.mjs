@@ -49,9 +49,9 @@ export default typescriptEslint.config(
 	{
 		ignores: [
 			'.angular/**',
-			'node_modules/**',
 			'.pnpm-store/**',
 			'.devcontainers/**',
+			'node_modules/**',
 			'dist/**',
 			'coverage/**',
 		],

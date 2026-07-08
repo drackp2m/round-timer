@@ -38,6 +38,7 @@
 		"@angular/cli": "22.0.4",
 		"@angular/compiler-cli": "22.0.4",
 		"@eslint/js": "10.0.1",
+		"@faker-js/faker": "^10.5.0",
 		"@semantic-release/changelog": "6.0.3",
 		"@semantic-release/exec": "7.1.0",
 		"@semantic-release/git": "10.0.1",
