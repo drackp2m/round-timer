@@ -1,6 +1,12 @@
 import { Injectable, inject } from '@angular/core';
 import { patchState, signalStore, type, withState } from '@ngrx/signals';
-import { addEntity, entityConfig, setAllEntities, withEntities } from '@ngrx/signals/entities';
+import {
+	addEntity,
+	entityConfig,
+	setAllEntities,
+	updateEntity,
+	withEntities,
+} from '@ngrx/signals/entities';
 
 import { Player } from '@app/model/player.model';
 import { PlayerRepository } from '@app/repository/player.repository';
@@ -42,6 +48,12 @@ export class PlayerStore extends signalStore(
 	add(player: Player): void {
 		void this.playerRepository.insert('player', player).then((player) => {
 			patchState(this, addEntity(player, playerConfig));
+		});
+	}
+
+	update(player: Player): void {
+		void this.playerRepository.insert('player', player).then((player) => {
+			patchState(this, updateEntity({ id: player.uuid, changes: player }, playerConfig));
 		});
 	}
 

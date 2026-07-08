@@ -26,9 +26,14 @@
 			"@app/package": ["./package.json"],
 			"@app/tools/*": ["./tools/*"],
 
+			"@app/app.config": ["./src/app/app.config.ts"],
+			"@app/app.routes": ["./src/app/app.routes.ts"],
+			"@app/app.component": ["./src/app/app.component.ts"],
+
 			"@app/component/*": ["./src/app/component/*"],
 			"@app/definition/*": ["./src/app/definition/*"],
 			"@app/directive/*": ["./src/app/directive/*"],
+			"@app/guard/*": ["./src/app/guard/*"],
 			"@app/layout/*": ["./src/app/layout/*"],
 			"@app/model/*": ["./src/app/model/*"],
 			"@app/page/*": ["./src/app/page/*"],
@@ -36,6 +41,7 @@
 			"@app/repository/*": ["./src/app/repository/*"],
 			"@app/service/*": ["./src/app/service/*"],
 			"@app/store/*": ["./src/app/store/*"],
+			"@app/strategy/*": ["./src/app/strategy/*"],
 			"@app/use-case/*": ["./src/app/use-case/*"],
 			"@app/util/*": ["./src/app/util/*"]
 		}

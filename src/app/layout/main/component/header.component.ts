@@ -6,6 +6,7 @@ import { TitleService } from '@app/service/title.service';
 
 @Component({
 	selector: 'app-header',
+	imports: [RouterLinkDirective, ButtonDirective],
 	template: `<section
 		class="header force-light pb-2 px-4 surface-contrast color-primary flex-row align-center justify-between"
 	>
@@ -40,7 +41,6 @@ import { TitleService } from '@app/service/title.service';
 			}
 		`,
 	],
-	imports: [RouterLinkDirective, ButtonDirective],
 })
 export class HeaderComponent {
 	private readonly titleService = inject(TitleService);

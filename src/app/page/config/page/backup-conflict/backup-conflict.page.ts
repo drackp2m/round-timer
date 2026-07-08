@@ -1,64 +1,46 @@
 import { DatePipe } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
+import { Router } from '@angular/router';
 
+import { RestoreChoice, RestoreResolutions } from '@app/definition/use-case/restore.interface';
+import { ButtonDirective } from '@app/directive/button.directive';
 import { RadioCheckboxDirective } from '@app/directive/radio-checkbox/radio-checkbox.directive';
-import { Game } from '@app/model/game.model';
-import { Player } from '@app/model/player.model';
 import { ShortenUuidPipe } from '@app/pipe/shorten-uuid.pipe';
+import { RestoreConflictStore } from '@app/store/restore-conflict.store';
+import { RestoreDataUseCase } from '@app/use-case/restore-data.use-case';
 
 @Component({
 	templateUrl: './backup-conflict.page.html',
 	styleUrl: './backup-conflict.page.scss',
-	imports: [RadioCheckboxDirective, ShortenUuidPipe, DatePipe],
+	imports: [RadioCheckboxDirective, ButtonDirective, ShortenUuidPipe, DatePipe],
+	providers: [RestoreDataUseCase],
 })
 export class BackupConflictPage {
-	readonly players: Player[][] = [
-		[
-			new Player({
-				nick: 'player1',
-				name: 'Some name',
-				color: 'CADET_BLUE',
-				icon: 'STAFF',
-			}),
-			new Player({
-				nick: 'player1',
-				name: 'Other name',
-				color: 'DARK_ORANGE',
-				icon: 'SWORDS',
-			}),
-		],
-		[
-			new Player({
-				nick: 'player4',
-				name: 'Some name',
-				color: 'LIGHT_GRAY',
-				icon: 'GHOST',
-			}),
-			new Player({
-				nick: 'player4',
-				name: 'Other name',
-				color: 'CRIMSON',
-				icon: 'SWORDS',
-			}),
-		],
-	];
+	private readonly router = inject(Router);
+	private readonly restoreDataUseCase = inject(RestoreDataUseCase);
+	private readonly restoreConflictStore = inject(RestoreConflictStore);
 
-	readonly games: Game[][] = [
-		[
-			new Game({
-				name: 'Game 1',
-				maxPlayers: 4,
-				turnOrder: 'ALWAYS_FIXED',
-				turnType: 'PASS_ONCE',
-				victoryType: 'COMPETITIVE',
-			}),
-			new Game({
-				name: 'Game 1',
-				maxPlayers: 3,
-				turnOrder: 'EACH_ROUND_DIFFERENT',
-				turnType: 'EQUITABLE',
-				victoryType: 'TEAM_COMPETITIVE',
-			}),
-		],
-	];
+	readonly playerConflicts = computed(
+		() => this.restoreConflictStore.session()?.players.conflicts ?? [],
+	);
+
+	readonly gameConflicts = computed(
+		() => this.restoreConflictStore.session()?.games.conflicts ?? [],
+	);
+
+	private readonly resolutions = signal<RestoreResolutions>({});
+
+	resolve(existingUuid: string, choice: RestoreChoice): void {
+		this.resolutions.update((current) => ({ ...current, [existingUuid]: choice }));
+	}
+
+	async apply(): Promise<void> {
+		await this.restoreDataUseCase.apply(this.resolutions());
+		await this.router.navigate(['/settings']);
+	}
+
+	async cancel(): Promise<void> {
+		this.restoreConflictStore.setSession(null);
+		await this.router.navigate(['/settings']);
+	}
 }

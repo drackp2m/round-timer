@@ -80,6 +80,8 @@ export default typescriptEslint.config(
 		},
 		rules: {
 			// Imports
+			'sort-imports': ['warn', { ignoreDeclarationSort: true, ignoreMemberSort: false }],
+			'unused-imports/no-unused-imports': 'warn',
 			'import-x/no-duplicates': 'warn',
 			'import-x/order': [
 				'warn',
@@ -90,7 +92,6 @@ export default typescriptEslint.config(
 					},
 				},
 			],
-			'unused-imports/no-unused-imports': 'warn',
 
 			// Format
 			'@stylistic/lines-between-class-members': ['warn', 'always', { exceptAfterSingleLine: true }],

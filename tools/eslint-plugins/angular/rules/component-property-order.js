@@ -1,4 +1,12 @@
-const ORDER = ['standalone', 'selector', 'templateUrl', 'styleUrl', 'imports'];
+const ORDER = [
+	'standalone',
+	'selector',
+	'templateUrl',
+	'styleUrl',
+	'imports',
+	'template',
+	'styles',
+];
 
 function orderIndex(name) {
 	const index = ORDER.indexOf(name);
