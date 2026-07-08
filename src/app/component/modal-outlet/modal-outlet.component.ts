@@ -1,9 +1,7 @@
-import { AnimationEvent, animate, state, style, transition, trigger } from '@angular/animations';
 import {
 	AfterViewInit,
 	Component,
 	ComponentRef,
-	ElementRef,
 	Renderer2,
 	Type,
 	ViewContainerRef,
@@ -23,38 +21,8 @@ import { Async } from '@app/util/async';
 	templateUrl: './modal-outlet.component.html',
 	styleUrl: './modal-outlet.component.scss',
 	imports: [ButtonDirective],
-	animations: [
-		trigger('slideAnimation', [
-			state('visible', style({ transform: 'translateY(-{{distance}}px)' }), {
-				params: { distance: 0 },
-			}),
-			state('hidden', style({ transform: 'translateY(0)' })),
-			transition('* <=> visible', animate('{{duration}}ms {{easing}}')),
-		]),
-		trigger('fadeAnimation', [
-			state(
-				'visible',
-				style({
-					'background-color': 'rgb(from var(--color-overlay) r g b / var(--opacity-overlay))',
-					'backdrop-filter': 'blur(2px) grayscale(0.5)',
-				}),
-			),
-			state(
-				'hidden',
-				style({
-					'background-color': 'rgb(from var(--color-overlay) r g b / 0%)',
-					'backdrop-filter': 'blur(0px) grayscale(0)',
-				}),
-			),
-			transition('* <=> visible', animate('{{duration}}ms {{easing}}')),
-		]),
-	],
 })
 export class ModalOutletComponent implements AfterViewInit {
-	// Fixme => solve error when modal content change his height
-	private readonly modalContainer =
-		viewChild.required<ElementRef<HTMLDivElement>>('modalContainer');
-
 	private readonly modalContent = viewChild.required('modalContent', {
 		read: ViewContainerRef,
 	});
@@ -62,20 +30,27 @@ export class ModalOutletComponent implements AfterViewInit {
 	private readonly modalStore = inject(ModalStore);
 	private readonly renderer2 = inject(Renderer2);
 
-	private readonly ANIMATION_DURATION_MS = 400;
-	private readonly ANIMATION_EASING = 'cubic-bezier(0.4, 0.0, 0.2, 1)';
-
 	activeComponentRef: ComponentRef<unknown> | null = null;
 
 	readonly modalState = signal<'hidden' | 'transitioning' | 'visible'>('hidden');
-	readonly height = signal(0);
 	readonly title = signal('');
 	readonly isInTransition = signal(false);
-	readonly animationParams = computed(() => ({
-		duration: this.ANIMATION_DURATION_MS,
-		easing: this.ANIMATION_EASING,
-		distance: this.height(),
-	}));
+
+	// Single source of truth for the template: one enumerated state (reflected as
+	// `data-state`) drives every CSS transition, instead of stacking booleans.
+	readonly outletState = computed<'closed' | 'closing' | 'opening' | 'open'>(() => {
+		const state = this.modalState();
+
+		if ('visible' === state) {
+			return 'open';
+		}
+
+		if ('transitioning' === state) {
+			return 'opening';
+		}
+
+		return this.isInTransition() ? 'closing' : 'closed';
+	});
 
 	ngAfterViewInit() {
 		this.modalStore.initializeContainer(this);
@@ -91,7 +66,6 @@ export class ModalOutletComponent implements AfterViewInit {
 		await Async.waitForFrames();
 
 		const modalContent = this.modalContent();
-		const modalContainer = this.modalContainer();
 		const animationInProgress = this.isInTransition();
 		const modalState = this.modalState();
 
@@ -109,10 +83,9 @@ export class ModalOutletComponent implements AfterViewInit {
 		this.title.set(componentRef.instance.TITLE);
 		this.renderer2.addClass(componentRef.location.nativeElement, 'modal');
 
-		// ToDo => check if need for three
+		// Let the browser paint the container at its resting transform before
+		// flipping to `visible`, so the CSS transition actually runs.
 		await Async.waitForFrames(2);
-
-		this.height.set(modalContainer.nativeElement.offsetHeight);
 
 		this.modalState.set('visible');
 
@@ -128,10 +101,14 @@ export class ModalOutletComponent implements AfterViewInit {
 		}
 	}
 
-	onAnimationDone(event: AnimationEvent): void {
+	onTransitionEnd(event: TransitionEvent): void {
+		if (event.target !== event.currentTarget || 'transform' !== event.propertyName) {
+			return;
+		}
+
 		this.isInTransition.set(false);
 
-		if ('hidden' === event.toState) {
+		if ('hidden' === this.modalState()) {
 			this.cleanupModal();
 		}
 	}

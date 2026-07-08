@@ -1,14 +1,9 @@
-<div id="modal-outlet" [class.hidden]="'hidden' === modalState() && false === isInTransition()">
-	<div class="overlay" [@fadeAnimation]="{ value: modalState(), params: animationParams() }"></div>
+<div id="modal-outlet" [attr.data-state]="outletState()">
+	<div class="overlay"></div>
 
 	<div class="wrapper">
-		@if (modalState() !== 'hidden') {
-			<div
-				#modalContainer
-				class="container shadow-top-xl"
-				[@slideAnimation]="{ value: modalState(), params: animationParams() }"
-				(@slideAnimation.done)="onAnimationDone($event)"
-			>
+		@if ('closed' !== outletState()) {
+			<div class="container shadow-top-xl" (transitionend)="onTransitionEnd($event)">
 				<div class="header flex-row justify-between align-center p-4 pb-0">
 					<h4 class="color-contrast-mid">{{ title() }}</h4>
 

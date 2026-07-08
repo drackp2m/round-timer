@@ -19,7 +19,6 @@
 		"pnpm:match:fix": "node tools/scripts/match-pnpm-version.mjs --fix"
 	},
 	"dependencies": {
-		"@angular/animations": "22.0.4",
 		"@angular/common": "22.0.4",
 		"@angular/compiler": "22.0.4",
 		"@angular/core": "22.0.4",
