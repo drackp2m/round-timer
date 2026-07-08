@@ -1,10 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 
-import {
-	BackupFile,
-	SerializedBase,
-	SerializedUpdatable,
-} from '@app/definition/use-case/backup-file.interface';
+import { BackupFile, SerializedUpdatable } from '@app/definition/use-case/backup-file.interface';
 import {
 	EntityAnalysis,
 	NormalizedBackupFile,
@@ -15,16 +11,13 @@ import {
 	RestoreSummary,
 } from '@app/definition/use-case/restore.interface';
 import { Game } from '@app/model/game.model';
-import { MatchEvent } from '@app/model/match-event.model';
-import { MatchPlayer } from '@app/model/match-player.model';
-import { Match } from '@app/model/match.model';
 import { Player } from '@app/model/player.model';
 import { Setting } from '@app/model/setting.model';
-import { MatchRepository } from '@app/repository/match.repository';
 import { GameStore } from '@app/store/game.store';
 import { PlayerStore } from '@app/store/player.store';
 import { RestoreConflictStore } from '@app/store/restore-conflict.store';
 import { SettingStore } from '@app/store/setting.store';
+import { RestoreDependentDataUseCase } from '@app/use-case/restore-dependent-data.use-case';
 import { BackupSerializer } from '@app/util/backup-serializer';
 import { JsonFile } from '@app/util/json-file';
 import { Repository } from '@app/util/repository';
@@ -36,8 +29,8 @@ export class RestoreDataUseCase {
 	private readonly playerStore = inject(PlayerStore);
 	private readonly gameStore = inject(GameStore);
 	private readonly settingStore = inject(SettingStore);
-	private readonly matchRepository = inject(MatchRepository);
 	private readonly restoreConflictStore = inject(RestoreConflictStore);
+	private readonly restoreDependentData = inject(RestoreDependentDataUseCase);
 
 	/**
 	 * Reads the backup, classifies every deduplicated entity (player, game,
@@ -131,12 +124,11 @@ export class RestoreDataUseCase {
 			() => undefined,
 		);
 
-		const matches = await this.restoreMatches(session.backup.matches, session.games.uuidMap);
-		const matchPlayers = await this.restoreMatchPlayers(
-			session.backup.matchPlayers,
+		const { matches, matchPlayers, matchEvents } = await this.restoreDependentData.execute(
+			session.backup,
+			session.games.uuidMap,
 			session.players.uuidMap,
 		);
-		const matchEvents = await this.restoreMatchEvents(session.backup.matchEvents);
 
 		const summary: RestoreSummary = {
 			players,
@@ -273,59 +265,5 @@ export class RestoreDataUseCase {
 		};
 
 		return BackupSerializer.deserializeUpdatable<T>(merged);
-	}
-
-	private async restoreMatches(
-		rawMatches: SerializedUpdatable<Match>[],
-		gameUuidMap: Map<string, string>,
-	): Promise<RestoreCounters> {
-		const matches = rawMatches.map((raw) => {
-			const remapped: SerializedUpdatable<Match> = {
-				...raw,
-				gameUuid: gameUuidMap.get(raw.gameUuid) ?? raw.gameUuid,
-			};
-
-			return BackupSerializer.deserializeUpdatable<Match>(remapped);
-		});
-
-		if (0 !== matches.length) {
-			await this.matchRepository.batchInsert('match', matches);
-		}
-
-		return { added: matches.length, updated: 0, skipped: 0 };
-	}
-
-	private async restoreMatchPlayers(
-		rawMatchPlayers: SerializedUpdatable<MatchPlayer>[],
-		playerUuidMap: Map<string, string>,
-	): Promise<RestoreCounters> {
-		const matchPlayers = rawMatchPlayers.map((raw) => {
-			const remapped: SerializedUpdatable<MatchPlayer> = {
-				...raw,
-				playerUuid: playerUuidMap.get(raw.playerUuid) ?? raw.playerUuid,
-			};
-
-			return BackupSerializer.deserializeUpdatable<MatchPlayer>(remapped);
-		});
-
-		if (0 !== matchPlayers.length) {
-			await this.matchRepository.batchInsert('match_player', matchPlayers);
-		}
-
-		return { added: matchPlayers.length, updated: 0, skipped: 0 };
-	}
-
-	private async restoreMatchEvents(
-		rawMatchEvents: SerializedBase<MatchEvent>[],
-	): Promise<RestoreCounters> {
-		const matchEvents = rawMatchEvents.map((raw) =>
-			BackupSerializer.deserializeBase<MatchEvent>(raw),
-		);
-
-		if (0 !== matchEvents.length) {
-			await this.matchRepository.batchInsert('match_event', matchEvents);
-		}
-
-		return { added: matchEvents.length, updated: 0, skipped: 0 };
 	}
 }

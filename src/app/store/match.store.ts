@@ -1,4 +1,4 @@
-import { computed, inject, Injectable } from '@angular/core';
+import { Injectable, computed, inject } from '@angular/core';
 import { patchState, signalStore, withState } from '@ngrx/signals';
 import { StoreNames } from 'idb';
 
