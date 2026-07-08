@@ -11,12 +11,12 @@
 		"lint": "node tools/scripts/lint/lint.mjs",
 		"lint:fix": "node tools/scripts/lint/lint.mjs --fix --verbose",
 		"test": "ng test",
-		"prepare": "husky",
-		"update:check": "pnpm outdated",
-		"update:execute": "pnpm up --latest",
+		"update:check": "ng update && pnpm outdated",
+		"update:execute": "sh tools/scripts/update-deps.sh",
 		"git:sync": "sh tools/scripts/sync-git-main.sh",
 		"pnpm:match": "node tools/scripts/match-pnpm-version.mjs",
-		"pnpm:match:fix": "node tools/scripts/match-pnpm-version.mjs --fix"
+		"pnpm:match:fix": "node tools/scripts/match-pnpm-version.mjs --fix",
+		"prepare": "husky"
 	},
 	"dependencies": {
 		"@angular/common": "22.0.5",
