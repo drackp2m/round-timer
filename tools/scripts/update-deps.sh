@@ -33,19 +33,14 @@ if [ -n "$(git status --porcelain)" ]; then
   exit 1
 fi
 
-echo "🅰️ Updating Angular packages (with migrations)..."
-pnpm exec ng update @angular/cli @angular/core
+# Every migration-bearing package goes in a single `ng update` call: it runs one
+# clean-tree check and updates them atomically. Chaining several `ng update`
+# calls would fail, since the first dirties the tree and the next one refuses.
+echo "🅰️ Updating Angular, ngrx and angular-eslint (with migrations)..."
+pnpm exec ng update @angular/cli @angular/core @ngrx/signals angular-eslint
 
 if [ $? -ne 0 ]; then
-  echo "❌ Angular update failed"
-  exit 1
-fi
-
-echo "🧩 Updating @ngrx/signals and angular-eslint (with migrations)..."
-pnpm exec ng update @ngrx/signals angular-eslint
-
-if [ $? -ne 0 ]; then
-  echo "❌ ngrx/angular-eslint update failed"
+  echo "❌ Migration-based update failed"
   exit 1
 fi
 
