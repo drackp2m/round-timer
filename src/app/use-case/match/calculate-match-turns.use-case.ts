@@ -1,6 +1,7 @@
 import { MatchTurn } from '@app/definition/page/match/match-turn.interface';
 import { MatchEvent } from '@app/model/match-event.model';
 import { Check } from '@app/util/check';
+import { Debug } from '@app/util/debug';
 
 export class CalculateMatchTurns {
 	private readonly events: MatchEvent[] = [];
@@ -9,13 +10,13 @@ export class CalculateMatchTurns {
 	private currentTurn = -1;
 
 	constructor() {
-		console.log('CalculateMatchTurns created');
+		Debug.log('CalculateMatchTurns created');
 	}
 
 	addEvent(event: MatchEvent): MatchTurn[] {
 		this.events.push(event);
 
-		console.log(`Checking event #${this.events.length.toString()} ${event.type}...`);
+		Debug.log(`Checking event #${this.events.length.toString()} ${event.type}...`);
 
 		if (Check.isEventType(event, 'SET_TURN_ORDER')) {
 			this.turnOrder = event.payload;

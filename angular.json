@@ -30,7 +30,10 @@
 								"input": "public"
 							}
 						],
-						"styles": ["src/styles.scss"]
+						"styles": ["src/styles.scss"],
+						"define": {
+							"APP_DEBUG": "false"
+						}
 					},
 					"configurations": {
 						"production": {
@@ -51,6 +54,14 @@
 						"development": {
 							"optimization": false,
 							"extractLicenses": false,
+							"sourceMap": true,
+							"define": {
+								"APP_DEBUG": "true"
+							}
+						},
+						"testing": {
+							"optimization": false,
+							"extractLicenses": false,
 							"sourceMap": true
 						}
 					},
@@ -69,7 +80,10 @@
 					"defaultConfiguration": "development"
 				},
 				"test": {
-					"builder": "@angular/build:unit-test"
+					"builder": "@angular/build:unit-test",
+					"options": {
+						"buildTarget": "round-timer:build:testing"
+					}
 				}
 			}
 		}
