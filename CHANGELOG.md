@@ -1,3 +1,25 @@
+# v1.5.0 (2026-07-08)
+
+## What's Changed
+
+### ✨ Features
+
+- add new rule to custom ESLint plugin, create new view for Backup conflict ([cf3b641](https://github.com/drackp2m/round-timer/commit/cf3b6411fca0d40babec137a52d68e4da18331aa)) by Marc Jovaní González
+- apply migration restore now run conflict solver if is necessary ([64e23ef](https://github.com/drackp2m/round-timer/commit/64e23ef5d075f60323552740f6c95b214a1fc49a)) by Marc Jovaní González
+- backup / restore on settings ([34fcb26](https://github.com/drackp2m/round-timer/commit/34fcb26ad8a2b81bf0258e5edb661fd6dc278922)) by Marc Jovaní González
+- backup conflict page ([91ed9c8](https://github.com/drackp2m/round-timer/commit/91ed9c88c786b67b4d0b4e260f76e7e1cdf3906f)) by Marc Jovaní González
+- backup restoration, new lint script ([3672ff2](https://github.com/drackp2m/round-timer/commit/3672ff208fed25c09c29520b0947e5b7dddc5e3b)) by Marc Jovaní González
+
+### ♻️ Code Refactoring
+
+- improve backup restoration, create eslint plugin for Angular Component ([51006dd](https://github.com/drackp2m/round-timer/commit/51006dd74a819f3eb075ae68d20a6260b0cba5db)) by Marc Jovaní González
+
+### 🐛 Bug Fixes
+
+- `angular-custom/component-property-order` rule now show only one error ([00c1c03](https://github.com/drackp2m/round-timer/commit/00c1c0387ab385b28f75c0b1cd96eb940f5a3167)) by Marc Jovaní González
+
+**Full Changelog**: https://github.com/drackp2m/round-timer/compare/v1.4.8...v1.5.0
+
 # v1.4.8 (2026-07-03)
 
 ## What's Changed

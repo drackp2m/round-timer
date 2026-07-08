@@ -1,6 +1,6 @@
 {
 	"name": "round-timer",
-	"version": "1.4.8",
+	"version": "1.5.0",
 	"author": "Marc Jovaní González",
 	"private": true,
 	"packageManager": "pnpm@11.10.0",
