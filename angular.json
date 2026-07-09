@@ -63,6 +63,12 @@
 							"optimization": false,
 							"extractLicenses": false,
 							"sourceMap": true
+						},
+						"typecheck": {
+							"optimization": false,
+							"extractLicenses": false,
+							"sourceMap": false,
+							"outputPath": "dist/typecheck"
 						}
 					},
 					"defaultConfiguration": "production"
