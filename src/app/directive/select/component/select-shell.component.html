@@ -1,33 +1,33 @@
-@let model = viewModel();
-
 <div
 	class="app-select"
-	[class.focused]="model.focused"
-	[class.filled]="model.filled"
-	[class.open]="model.isOpen"
-	[class.searching]="model.isSearching"
-	[class.position-top]="model.positionTop"
+	#wrapper
+	[class.focused]="store.focused()"
+	[class.filled]="store.filled()"
+	[class.open]="store.isOpen()"
+	[class.searching]="'' !== store.searchText()"
+	[class.position-top]="positionTop()"
+	(pointerdown)="onWrapperPointerDown($event)"
 >
-	<label [attr.for]="model.selectId">
-		<span>{{ model.label }}</span>
+	<label [attr.for]="selectId()">
+		<span #labelText>{{ label() }}</span>
 		<ng-content></ng-content>
 	</label>
 
 	<div class="border-container flex-row justify-between align-center">
-		<span class="selected-option">{{ model.selectedText }}</span>
+		<span class="selected-option">{{ store.selectedText() }}</span>
 		<span class="search-overlay">
-			<input type="text" tabindex="-1" readonly [value]="model.searchText" />
+			<input type="text" tabindex="-1" readonly [value]="store.searchText()" />
 		</span>
 		<app-svg icon="chevron-down" [size]="18" />
 	</div>
 
 	<div class="label-container">
-		<p class="label">{{ model.label }}</p>
+		<p class="label">{{ label() }}</p>
 	</div>
 
 	<div class="app-select-options">
 		<div class="options-container">
-			@for (option of model.options; track option.value; let index = $index) {
+			@for (option of store.visibleOptions(); track option.value; let index = $index) {
 				<div
 					class="option"
 					tabindex="-1"
@@ -39,8 +39,8 @@
 					(click)="selectOption(option)"
 					(keydown.enter)="selectOption(option)"
 				>
-					@if (model.optionTemplate; as optionTemplate) {
-						<ng-container *ngTemplateOutlet="optionTemplate; context: { $implicit: option }" />
+					@if (optionTemplate(); as template) {
+						<ng-container *ngTemplateOutlet="template; context: { $implicit: option }" />
 					} @else {
 						{{ option.label }}
 					}

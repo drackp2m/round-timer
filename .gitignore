@@ -47,3 +47,6 @@ Thumbs.db
 
 # Claude Code
 .claude/hook-errors.log
+
+# Local dev SSL certificates (mkcert)
+.cert/

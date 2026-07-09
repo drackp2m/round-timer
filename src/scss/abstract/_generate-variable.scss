@@ -43,6 +43,10 @@
 		@each $name, $value in var.$shadow {
 			--shadow-#{$name}: #{$value};
 		}
+
+		@each $name, $value in var.$transition {
+			--transition-#{$name}: #{$value};
+		}
 	}
 
 	[data-theme='dark']:not(.force-light, .force-dark) {

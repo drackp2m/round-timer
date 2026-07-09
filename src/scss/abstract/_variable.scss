@@ -3,6 +3,11 @@
 $base-spacing: 0.25rem !default;
 $hover-opacity: 0.7 !default;
 
+$transition: (
+	duration: 400ms,
+	easing: cubic-bezier(0.4, 0, 0.2, 1),
+) !default;
+
 $breakpoint: (
 	sm: 480px,
 	md: 768px,

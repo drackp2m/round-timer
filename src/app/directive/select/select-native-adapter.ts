@@ -16,10 +16,38 @@ export class SelectNativeAdapter {
 		return this.selectElement.id;
 	}
 
-	getCurrentSelectedText(): string {
+	/**
+	 * When the select has no empty-valued option, prepends a generic
+	 * placeholder so the field can start "unset". It only becomes the active
+	 * selection when nothing was explicitly pre-selected (no `selected`
+	 * attribute and no non-first option chosen), otherwise the existing
+	 * selection is preserved.
+	 */
+	ensurePlaceholder(text: string): void {
+		const options = Array.from(this.selectElement.options);
+
+		if (options.some((option) => '' === option.value)) {
+			return;
+		}
+
+		const hasPreselection =
+			0 < this.selectElement.selectedIndex || (options[0]?.defaultSelected ?? false);
+
+		this.selectElement.prepend(new Option(text, ''));
+
+		if (!hasPreselection) {
+			this.selectElement.value = '';
+		}
+	}
+
+	getValue(): string {
+		return this.selectElement.value;
+	}
+
+	getSelectedText(): string {
 		const selectedOption = this.selectElement.options[this.selectElement.selectedIndex];
 
-		return selectedOption?.textContent ?? '';
+		return selectedOption?.text ?? '';
 	}
 
 	isFilled(): boolean {

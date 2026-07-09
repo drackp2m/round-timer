@@ -1,25 +1,41 @@
 import { Injectable, computed } from '@angular/core';
 import { patchState, signalStore, withState } from '@ngrx/signals';
 
-import { SelectOptionViewModel } from '@app/directive/select/select-option.model';
+export interface SelectOptionViewModel {
+	value: string;
+	label: string;
+	disabled: boolean;
+	selected: boolean;
+	highlighted: boolean;
+}
 
-interface SelectOptionsStoreProps {
+interface SelectStoreProps {
 	options: SelectOptionViewModel[];
 	highlightedIndex: number | null;
 	searchText: string;
+	selectedText: string;
+	isOpen: boolean;
+	focused: boolean;
+	filled: boolean;
 }
 
-const initialState: SelectOptionsStoreProps = {
+const initialState: SelectStoreProps = {
 	options: [],
 	highlightedIndex: null,
 	searchText: '',
+	selectedText: '',
+	isOpen: false,
+	focused: false,
+	filled: false,
 };
 
+/**
+ * Single source of truth for one select's reactive UI state: the option
+ * list, the open/focused/filled flags, the search text and the highlight.
+ * Provided per directive instance; the shell component reads it directly.
+ */
 @Injectable()
-export class SelectOptionsStore extends signalStore(
-	{ protectedState: false },
-	withState(initialState),
-) {
+export class SelectStore extends signalStore({ protectedState: false }, withState(initialState)) {
 	readonly visibleOptions = computed<SelectOptionViewModel[]>(() => {
 		const search = this.searchText().trim().toLowerCase();
 		const highlightedIndex = this.highlightedIndex();
@@ -32,7 +48,7 @@ export class SelectOptionsStore extends signalStore(
 	setOptionsFromSelect(selectElement: HTMLSelectElement): void {
 		const options: SelectOptionViewModel[] = Array.from(selectElement.options).map((option) => ({
 			value: option.value,
-			label: option.textContent,
+			label: option.text,
 			disabled: option.disabled,
 			selected: option.value === selectElement.value,
 			highlighted: false,
@@ -41,26 +57,40 @@ export class SelectOptionsStore extends signalStore(
 		patchState(this, { options });
 	}
 
-	updateSelectedValue(value: string): void {
+	updateSelection(value: string, selectedText: string): void {
 		patchState(this, {
+			selectedText,
+			filled: '' !== value,
 			options: this.options().map((option) => ({ ...option, selected: option.value === value })),
 		});
 	}
 
-	highlightInitialOption(): void {
+	setFocused(focused: boolean): void {
+		patchState(this, { focused });
+	}
+
+	openDropdown(): void {
+		patchState(this, { isOpen: true });
+		this.highlightInitialOption();
+	}
+
+	closeDropdown(): void {
+		patchState(this, { isOpen: false, highlightedIndex: null, searchText: '' });
+	}
+
+	moveHighlight(step: 1 | -1): void {
 		const visible = this.visibleOptions();
-		const selectedIndex = visible.findIndex((option) => option.selected && !option.disabled);
-		const fallbackIndex = visible.findIndex((option) => !option.disabled);
+		const start = (this.highlightedIndex() ?? (1 === step ? -1 : visible.length)) + step;
 
-		this.highlightAt(-1 !== selectedIndex ? selectedIndex : fallbackIndex);
-	}
+		for (let index = start; 0 <= index && index < visible.length; index += step) {
+			const option = visible[index];
 
-	highlightNextOption(): void {
-		this.moveHighlight(1);
-	}
+			if (undefined !== option && !option.disabled) {
+				this.highlightAt(index);
 
-	highlightPreviousOption(): void {
-		this.moveHighlight(-1);
+				return;
+			}
+		}
 	}
 
 	highlightFirstValidOption(): void {
@@ -75,6 +105,10 @@ export class SelectOptionsStore extends signalStore(
 		patchState(this, { highlightedIndex: -1 === index ? null : index });
 	}
 
+	clearHighlight(): void {
+		patchState(this, { highlightedIndex: null });
+	}
+
 	confirmHighlightedOption(): SelectOptionViewModel | null {
 		const highlighted = this.visibleOptions()[this.highlightedIndex() ?? -1];
 
@@ -83,10 +117,6 @@ export class SelectOptionsStore extends signalStore(
 		}
 
 		return highlighted;
-	}
-
-	clearHighlight(): void {
-		patchState(this, { highlightedIndex: null });
 	}
 
 	appendSearchChar(char: string): void {
@@ -103,32 +133,17 @@ export class SelectOptionsStore extends signalStore(
 		this.highlightFirstMatch();
 	}
 
-	clearSearch(): void {
-		if ('' === this.searchText()) {
-			return;
-		}
+	private highlightInitialOption(): void {
+		const visible = this.visibleOptions();
+		const selectedIndex = visible.findIndex((option) => option.selected && !option.disabled);
+		const fallbackIndex = visible.findIndex((option) => !option.disabled);
 
-		patchState(this, { searchText: '', highlightedIndex: null });
+		this.highlightAt(-1 !== selectedIndex ? selectedIndex : fallbackIndex);
 	}
 
 	private highlightFirstMatch(): void {
 		const index = this.visibleOptions().findIndex((option) => !option.disabled);
 
 		this.highlightAt(index);
-	}
-
-	private moveHighlight(step: 1 | -1): void {
-		const visible = this.visibleOptions();
-		const start = (this.highlightedIndex() ?? (1 === step ? -1 : visible.length)) + step;
-
-		for (let index = start; 0 <= index && index < visible.length; index += step) {
-			const option = visible[index];
-
-			if (undefined !== option && !option.disabled) {
-				this.highlightAt(index);
-
-				return;
-			}
-		}
 	}
 }

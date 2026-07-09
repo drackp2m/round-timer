@@ -42,6 +42,7 @@
 			"@app/service/*": ["./src/app/service/*"],
 			"@app/store/*": ["./src/app/store/*"],
 			"@app/strategy/*": ["./src/app/strategy/*"],
+			"@app/testing/*": ["./src/app/testing/*"],
 			"@app/use-case/*": ["./src/app/use-case/*"],
 			"@app/util/*": ["./src/app/util/*"]
 		}

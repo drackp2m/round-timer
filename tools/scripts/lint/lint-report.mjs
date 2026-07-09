@@ -56,13 +56,15 @@ export function printSection(name, { fixed, remaining, skipped }) {
 	}
 
 	if (0 === fixed.length && 0 === remaining.length) {
-		console.log(`  ${c.dim}✓ no problems${c.reset}`);
+		console.log(`  ${c.dim}✓ No problems${c.reset}`);
 
 		return;
 	}
 
+	let printedBlock = false;
+
 	if (0 !== remaining.length) {
-		console.log(`\n  ${c.dim}Files with problems:${c.reset}`);
+		console.log(`  ${c.dim}Files with problems:${c.reset}`);
 		printProblems(remaining);
 
 		const errors = remaining.filter((problem) => 'error' === problem.severity).length;
@@ -77,10 +79,11 @@ export function printSection(name, { fixed, remaining, skipped }) {
 		console.log(
 			`\n  ${icon} ${plural(remaining.length, 'problem')} (${errorBlock}, ${warningBlock})`,
 		);
+		printedBlock = true;
 	}
 
 	if (0 !== fixed.length) {
-		console.log(`\n  ${c.dim}Files fixed automatically:${c.reset}`);
+		console.log(`${printedBlock ? '\n' : ''}  ${c.dim}Files fixed automatically:${c.reset}`);
 
 		for (const entry of fixed) {
 			const fixes = null !== entry.count ? `  ${c.dim}(${entry.count})${c.reset}` : '';

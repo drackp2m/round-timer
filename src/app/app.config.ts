@@ -1,5 +1,4 @@
 import { ApplicationConfig, inject, isDevMode, provideAppInitializer } from '@angular/core';
-import { provideAnimations } from '@angular/platform-browser/animations';
 import { TitleStrategy, provideRouter, withHashLocation, withRouterConfig } from '@angular/router';
 import { provideServiceWorker } from '@angular/service-worker';
 
@@ -17,7 +16,6 @@ export const appConfig: ApplicationConfig = {
 		MatchRepository,
 		PlayerRepository,
 		SettingRepository,
-		provideAnimations(),
 		provideAppInitializer(() => {
 			const _themeService = inject(ThemeService);
 		}),
