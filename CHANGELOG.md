@@ -1,3 +1,30 @@
+# v1.5.1 (2026-07-09)
+
+## What's Changed
+
+### 🧪 Tests
+
+- created tests for all entities ([3419790](https://github.com/drackp2m/round-timer/commit/3419790ffcdfd84495e84f3d05f08743051ada60)) by Marc Jovaní González
+- remove debug on tests ([0823119](https://github.com/drackp2m/round-timer/commit/0823119203684ecbaf01ee588202b396fb1b6032)) by Marc Jovaní González
+
+### ♻️ Code Refactoring
+
+- refactor select directive, fix open native dropdown on iOS when get focus ([c3b06ce](https://github.com/drackp2m/round-timer/commit/c3b06ce5f9d7b75dcf51a02b3479a6d4a68d67ff)) by Marc Jovaní González
+- remove angular-animations ([9eb75b9](https://github.com/drackp2m/round-timer/commit/9eb75b9717533de3958e729623dd8b7b30025510)) by Marc Jovaní González
+
+### 💻 Continuous Integration
+
+- create single command to manage updates ([f1470c7](https://github.com/drackp2m/round-timer/commit/f1470c77268578d553b23061a4e97d3a09a598d1)) by Marc Jovaní González
+- improve pnpm update script ([04498a0](https://github.com/drackp2m/round-timer/commit/04498a05d6cfe34f3b9f0e898ee7143a4bff91bf)) by Marc Jovaní González
+- update deps atomically in one ng update call ([99e1e78](https://github.com/drackp2m/round-timer/commit/99e1e78b5558ed456b5f5e4a5c59d36b0ee06abb)) by Marc Jovaní González
+
+### 🎒 Chores
+
+- update deps ([adc7ff8](https://github.com/drackp2m/round-timer/commit/adc7ff8c0ddbd32b6df8b46341f89266022ae884)) by Marc Jovaní González
+- update to Angular 22.0.6 ([a217349](https://github.com/drackp2m/round-timer/commit/a2173494697cb0e74272a62f6a827e5a364ab590)) by Marc Jovaní González
+
+**Full Changelog**: https://github.com/drackp2m/round-timer/compare/v1.5.0...v1.5.1
+
 # v1.5.0 (2026-07-08)
 
 ## What's Changed
