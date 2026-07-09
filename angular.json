@@ -69,6 +69,13 @@
 				},
 				"serve": {
 					"builder": "@angular/build:dev-server",
+					"options": {
+						"host": "0.0.0.0",
+						"ssl": true,
+						"sslCert": ".cert/cert.pem",
+						"sslKey": ".cert/key.pem",
+						"allowedHosts": ["marcbook-air.local", "localhost"]
+					},
 					"configurations": {
 						"production": {
 							"buildTarget": "round-timer:build:production"

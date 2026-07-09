@@ -4,247 +4,158 @@ import {
 	Directive,
 	ElementRef,
 	HostListener,
+	Injector,
 	OnDestroy,
-	OutputRefSubscription,
 	TemplateRef,
 	ViewContainerRef,
-	computed,
 	effect,
 	inject,
 	input,
-	signal,
 } from '@angular/core';
 
-import {
-	SelectShellComponent,
-	SelectShellViewModel,
-} from '@app/directive/select/component/select-shell.component';
-import { SelectKeyboardHandler } from '@app/directive/select/select-keyboard-handler';
-import { SelectLayoutTracker } from '@app/directive/select/select-layout-tracker';
+import { SelectShellComponent } from '@app/directive/select/component/select-shell.component';
+import { SelectInteractionHandler } from '@app/directive/select/select-interaction-handler';
 import { SelectNativeAdapter } from '@app/directive/select/select-native-adapter';
-import { SelectOptionViewModel } from '@app/directive/select/select-option.model';
-import { SelectOptionsStore } from '@app/directive/select/select-options.store';
-import { SelectOutsideInteractionHandler } from '@app/directive/select/select-outside-interaction-handler';
-import { ViewportService } from '@app/service/viewport.service';
+import { SelectOptionViewModel, SelectStore } from '@app/directive/select/select.store';
 
 let nextSelectId = 0;
 
-// ToDo => add default placeholder as "Select an option"
+/**
+ * Progressive enhancement over a native `<select>`: keeps the native element
+ * as the source of truth (focus, forms, a11y) while rendering a themed shell
+ * with a custom dropdown around it. Orchestrates the store, the shell
+ * component and the interaction handler.
+ */
 @Directive({
 	selector: 'select[appThemed]',
-	providers: [SelectOptionsStore],
+	providers: [SelectStore],
 })
 export class SelectDirective implements AfterViewInit, OnDestroy {
 	readonly label = input.required<string>();
+	readonly placeholder = input('Choose an option');
 	readonly optionTemplate = input<TemplateRef<{ $implicit: SelectOptionViewModel }>>();
 
 	private readonly elementRef = inject<ElementRef<HTMLSelectElement>>(ElementRef);
 	private readonly viewContainerRef = inject(ViewContainerRef);
-	private readonly viewportService = inject(ViewportService);
-	private readonly optionsStore = inject(SelectOptionsStore);
+	private readonly injector = inject(Injector);
+	private readonly store = inject(SelectStore);
 	private readonly nativeAdapter = new SelectNativeAdapter(this.elementRef.nativeElement);
+	private readonly coarsePointer = window.matchMedia('(pointer: coarse)').matches;
 
-	private readonly fallbackSelectId = `app-select-${(nextSelectId++).toString()}`;
-	private selectId = this.fallbackSelectId;
-
-	private readonly isOpenSignal = signal(false);
-	private readonly focusedSignal = signal(false);
-	private readonly filledSignal = signal(false);
-	private readonly positionTopSignal = signal(false);
-	private readonly selectedTextSignal = signal('');
-
-	private readonly shellRef = signal<ComponentRef<SelectShellComponent> | null>(null);
-	private readonly layout = new SelectLayoutTracker();
-	private optionSelectedSubscription: OutputRefSubscription | null = null;
-	private optionHoveredSubscription: OutputRefSubscription | null = null;
-
-	private readonly viewModel = computed<SelectShellViewModel>(() => ({
-		label: this.label(),
-		selectId: this.selectId,
-		selectedText: this.selectedTextSignal(),
-		searchText: this.optionsStore.searchText(),
-		isSearching: '' !== this.optionsStore.searchText(),
-		isOpen: this.isOpenSignal(),
-		positionTop: this.positionTopSignal(),
-		focused: this.focusedSignal(),
-		filled: this.filledSignal(),
-		options: this.optionsStore.visibleOptions(),
-		optionTemplate: this.optionTemplate(),
-	}));
-
-	private readonly keyboardHandler = new SelectKeyboardHandler({
-		isOpen: () => this.isDropdownOpen(),
+	private readonly interaction = new SelectInteractionHandler(this.store, {
+		isInsideShell: (target) => this.shellElement?.contains(target) ?? false,
+		getFocusElement: () => this.elementRef.nativeElement,
 		openDropdown: () => {
-			this.openCustomDropdown();
+			this.openDropdown();
 		},
 		closeDropdown: () => {
-			this.closeCustomDropdown();
+			this.closeDropdown();
 		},
-		highlightNext: () => {
-			this.optionsStore.highlightNextOption();
-		},
-		highlightPrevious: () => {
-			this.optionsStore.highlightPreviousOption();
-		},
-		confirmHighlighted: () => {
-			this.confirmHighlightedOption();
-		},
-		highlightTabTarget: () => {
-			this.optionsStore.highlightFirstValidOption();
-		},
-		onSearchInput: (char) => {
-			this.appendToSearch(char);
-		},
-		onSearchBackspace: () => {
-			this.optionsStore.removeSearchChar();
+		selectOption: (value) => {
+			this.selectOption(value);
 		},
 	});
 
-	private readonly outsideInteraction = new SelectOutsideInteractionHandler({
-		isOpen: () => this.isDropdownOpen(),
-		isInsideWrapper: (target) => this.layout.contains(target),
-		getFocusElement: () => this.elementRef.nativeElement,
-		onOutsideClick: () => {
-			this.closeCustomDropdown();
-			this.updatePositionClass();
-		},
-		onPointerLeaveOptions: () => {
-			this.optionsStore.clearHighlight();
-		},
-	});
+	private shellRef: ComponentRef<SelectShellComponent> | null = null;
+	private shellElement: HTMLElement | null = null;
 
 	constructor() {
 		effect(() => {
-			this.shellRef()?.setInput('viewModel', this.viewModel());
-		});
-
-		effect(() => {
-			this.viewportService.routerOutletScroll();
-			this.viewportService.windowResized();
-
-			this.updatePositionClass();
+			this.shellRef?.setInput('label', this.label());
+			this.shellRef?.setInput('optionTemplate', this.optionTemplate());
 		});
 	}
 
 	@HostListener('focus')
 	onFocus() {
-		this.focusedSignal.set(true);
+		this.store.setFocused(true);
 	}
 
 	@HostListener('blur')
 	onBlur() {
-		this.focusedSignal.set(false);
+		this.store.setFocused(false);
 	}
 
 	@HostListener('input')
 	@HostListener('change')
-	onInput() {
-		this.filledSignal.set(this.nativeAdapter.isFilled());
-	}
-
-	@HostListener('mousedown', ['$event'])
-	onMouseDown(event: MouseEvent) {
-		event.preventDefault();
-		this.nativeAdapter.focus();
-		this.toggleCustomDropdown();
+	onNativeValueChange() {
+		this.store.updateSelection(this.nativeAdapter.getValue(), this.nativeAdapter.getSelectedText());
 	}
 
 	@HostListener('keydown', ['$event'])
 	onKeyDown(event: KeyboardEvent) {
-		this.keyboardHandler.handle(event);
+		this.interaction.handleKeydown(event);
 	}
 
 	ngAfterViewInit(): void {
-		const nativeSelect = this.elementRef.nativeElement;
-
-		this.selectId = this.nativeAdapter.ensureId(this.fallbackSelectId);
-
-		this.optionsStore.setOptionsFromSelect(nativeSelect);
-		this.selectedTextSignal.set(this.nativeAdapter.getCurrentSelectedText());
-		this.filledSignal.set(this.nativeAdapter.isFilled());
-
-		const componentRef = this.viewContainerRef.createComponent(SelectShellComponent, {
-			projectableNodes: [[nativeSelect]],
-		});
-
-		componentRef.setInput('viewModel', this.viewModel());
-		componentRef.changeDetectorRef.detectChanges();
-
-		this.optionSelectedSubscription = componentRef.instance.optionSelected.subscribe((value) => {
-			this.applySelectedValue(value);
-		});
-		this.optionHoveredSubscription = componentRef.instance.optionHovered.subscribe((index) => {
-			this.optionsStore.highlightAt(index);
-		});
-
-		this.shellRef.set(componentRef);
-		this.layout.attach(componentRef.location.nativeElement as HTMLElement);
-		this.updatePositionClass();
+		this.nativeAdapter.ensurePlaceholder(this.placeholder());
+		this.store.setOptionsFromSelect(this.elementRef.nativeElement);
+		this.onNativeValueChange();
+		this.createShell();
 	}
 
 	ngOnDestroy(): void {
-		this.outsideInteraction.detach();
-		this.optionSelectedSubscription?.unsubscribe();
-		this.optionHoveredSubscription?.unsubscribe();
+		this.interaction.detachOutsideListeners();
 	}
 
-	private isDropdownOpen(): boolean {
-		return this.isOpenSignal();
+	private createShell(): void {
+		const selectId = this.nativeAdapter.ensureId(`app-select-${(nextSelectId++).toString()}`);
+		const componentRef = this.viewContainerRef.createComponent(SelectShellComponent, {
+			injector: this.injector,
+			projectableNodes: [[this.elementRef.nativeElement]],
+		});
+
+		componentRef.setInput('label', this.label());
+		componentRef.setInput('selectId', selectId);
+		componentRef.setInput('optionTemplate', this.optionTemplate());
+
+		componentRef.instance.optionSelected.subscribe((value) => {
+			this.selectOption(value);
+		});
+		componentRef.instance.toggleRequested.subscribe(() => {
+			this.toggleDropdown();
+		});
+
+		componentRef.changeDetectorRef.detectChanges();
+
+		this.shellRef = componentRef;
+		this.shellElement = componentRef.location.nativeElement as HTMLElement;
 	}
 
-	private updatePositionClass(): void {
-		this.positionTopSignal.set(this.layout.isPositionedTop());
-	}
-
-	private toggleCustomDropdown() {
-		if (this.isDropdownOpen()) {
-			this.closeCustomDropdown();
-		} else {
-			this.openCustomDropdown();
+	private toggleDropdown(): void {
+		if (!this.coarsePointer) {
+			this.nativeAdapter.focus();
 		}
 
-		this.updatePositionClass();
-	}
+		if (this.store.isOpen()) {
+			this.closeDropdown();
 
-	private openCustomDropdown() {
-		this.isOpenSignal.set(true);
-		this.outsideInteraction.attach();
-
-		this.optionsStore.highlightInitialOption();
-		this.updatePositionClass();
-	}
-
-	private closeCustomDropdown() {
-		this.isOpenSignal.set(false);
-		this.outsideInteraction.detach();
-
-		this.optionsStore.clearHighlight();
-		this.optionsStore.clearSearch();
-	}
-
-	private confirmHighlightedOption(): void {
-		const option = this.optionsStore.confirmHighlightedOption();
-
-		if (null === option) {
 			return;
 		}
 
-		this.applySelectedValue(option.value);
-	}
+		this.openDropdown();
 
-	private applySelectedValue(value: string): void {
-		this.nativeAdapter.applyValue(value);
-		this.optionsStore.updateSelectedValue(value);
-		this.selectedTextSignal.set(this.nativeAdapter.getCurrentSelectedText());
-		this.filledSignal.set(this.nativeAdapter.isFilled());
-		this.closeCustomDropdown();
-	}
-
-	private appendToSearch(char: string): void {
-		if (!this.isDropdownOpen()) {
-			this.openCustomDropdown();
+		if (this.coarsePointer) {
+			this.store.setFocused(true);
 		}
+	}
 
-		this.optionsStore.appendSearchChar(char);
+	private openDropdown(): void {
+		this.store.openDropdown();
+		this.interaction.attachOutsideListeners();
+	}
+
+	private closeDropdown(): void {
+		this.store.closeDropdown();
+		this.interaction.detachOutsideListeners();
+
+		if (this.coarsePointer) {
+			this.store.setFocused(false);
+		}
+	}
+
+	private selectOption(value: string): void {
+		this.nativeAdapter.applyValue(value);
+		this.closeDropdown();
 	}
 }

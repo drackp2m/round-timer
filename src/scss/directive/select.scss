@@ -26,6 +26,7 @@
 			}
 
 			select {
+				pointer-events: none;
 				position: relative;
 				z-index: 1;
 				width: 100%;
@@ -36,6 +37,11 @@
 		.label-container {
 			position: absolute;
 			inset: 0;
+		}
+
+		label select,
+		.label-container {
+			pointer-events: none;
 		}
 
 		.border-container {
