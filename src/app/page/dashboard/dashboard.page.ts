@@ -1,5 +1,5 @@
 import { TitleCasePipe } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, ElementRef, inject, viewChild } from '@angular/core';
 
 import { PlayerColor, PlayerColorKey } from '@app/definition/model/player/player-color.enum';
 import { PlayerIcon, PlayerIconKey } from '@app/definition/model/player/player-icon.enum';
@@ -32,6 +32,8 @@ export class DashboardPage {
 		'sunday',
 	] as const;
 
+	readonly inputThemed = viewChild<ElementRef<HTMLSelectElement>>('inputThemed');
+
 	readonly currentWeekday = new Date()
 		.toLocaleDateString('en-US', { weekday: 'long' })
 		.toLowerCase();
@@ -62,6 +64,14 @@ export class DashboardPage {
 		await Promise.all(
 			players.map((player) => this.playerRepository.insert('player', player.toObject())),
 		);
+	}
+
+	changeValue(): void {
+		const element = this.inputThemed()?.nativeElement;
+
+		if (undefined !== element) {
+			element.value = 'three';
+		}
 	}
 
 	async eraseAllData(): Promise<void> {

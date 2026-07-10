@@ -36,11 +36,13 @@
 		<option value="three">three</option>
 	</select>
 
-	<select appThemed label="Label">
+	<select appThemed label="Label" #inputThemed>
 		<option value="one">one</option>
 		<option value="two">two</option>
 		<option value="three">three</option>
 	</select>
+
+	<button appThemed (click)="changeValue()">Change value</button>
 
 	<select appThemed label="Day of the week">
 		<option value="">Choose an option</option>
@@ -49,6 +51,13 @@
 				{{ weekday | titlecase }}
 			</option>
 		}
+	</select>
+
+	<select>
+		<option value="" selected>Select a number</option>
+		<option value="one">one</option>
+		<option value="two">two</option>
+		<option value="three">three</option>
 	</select>
 
 	<select>

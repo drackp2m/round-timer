@@ -8,6 +8,7 @@
 		$border-radius: var(--border-radius-3);
 		$transition-duration: 0.25s;
 
+		cursor: pointer;
 		position: relative;
 		border-radius: $border-radius;
 		transition: box-shadow $transition-duration ease-in-out;

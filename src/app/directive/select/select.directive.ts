@@ -44,7 +44,6 @@ export class SelectDirective implements AfterViewInit, OnDestroy {
 
 	private readonly interaction = new SelectInteractionHandler(this.store, {
 		isInsideShell: (target) => this.shellElement?.contains(target) ?? false,
-		getFocusElement: () => this.elementRef.nativeElement,
 		openDropdown: () => {
 			this.openDropdown();
 		},
@@ -91,6 +90,9 @@ export class SelectDirective implements AfterViewInit, OnDestroy {
 		this.nativeAdapter.ensurePlaceholder(this.placeholder());
 		this.store.setOptionsFromSelect(this.elementRef.nativeElement);
 		this.onNativeValueChange();
+		this.nativeAdapter.observeValueWrites(() => {
+			this.onNativeValueChange();
+		});
 		this.createShell();
 	}
 
@@ -123,7 +125,9 @@ export class SelectDirective implements AfterViewInit, OnDestroy {
 	}
 
 	private toggleDropdown(): void {
-		if (!this.coarsePointer) {
+		if (this.coarsePointer) {
+			this.blurActiveElement();
+		} else {
 			this.nativeAdapter.focus();
 		}
 
@@ -151,6 +155,19 @@ export class SelectDirective implements AfterViewInit, OnDestroy {
 
 		if (this.coarsePointer) {
 			this.store.setFocused(false);
+		}
+	}
+
+	/**
+	 * On coarse pointers the native select never receives real DOM focus (it
+	 * would open the native dropdown on iOS), so whatever element held the
+	 * focus before tapping the shell must be blurred by hand.
+	 */
+	private blurActiveElement(): void {
+		const activeElement = document.activeElement;
+
+		if (activeElement instanceof HTMLElement && activeElement !== this.elementRef.nativeElement) {
+			activeElement.blur();
 		}
 	}
 

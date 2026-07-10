@@ -6,7 +6,6 @@
 	[class.open]="store.isOpen()"
 	[class.searching]="'' !== store.searchText()"
 	[class.position-top]="positionTop()"
-	(pointerdown)="onWrapperPointerDown($event)"
 >
 	<label [attr.for]="selectId()">
 		<span #labelText>{{ label() }}</span>

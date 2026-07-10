@@ -40,6 +40,30 @@ export class SelectNativeAdapter {
 		}
 	}
 
+	/**
+	 * Replaces the element's `value` accessor with a notifying wrapper:
+	 * programmatic writes (reactive forms' `writeValue`, direct assignments)
+	 * update the DOM without firing any event, so intercepting the setter is
+	 * the only way to observe them.
+	 */
+	observeValueWrites(onWrite: () => void): void {
+		const descriptor = Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, 'value');
+		const { get, set } = descriptor ?? {};
+
+		if (undefined === get || undefined === set) {
+			return;
+		}
+
+		Object.defineProperty(this.selectElement, 'value', {
+			configurable: true,
+			get: (): string => get.call(this.selectElement) as string,
+			set: (value: string): void => {
+				set.call(this.selectElement, value);
+				onWrite();
+			},
+		});
+	}
+
 	getValue(): string {
 		return this.selectElement.value;
 	}
