@@ -6,7 +6,34 @@
  * doesn't fire one on its own).
  */
 export class SelectNativeAdapter {
+	private optionsObserver: MutationObserver | null = null;
+
 	constructor(private readonly selectElement: HTMLSelectElement) {}
+
+	/**
+	 * Watches the projected `<option>` list, which the directive only scans
+	 * once at init: options rendered asynchronously or relabeled later would
+	 * otherwise never reach the store. Text edits arrive as characterData
+	 * mutations; note that property-only writes (e.g. `[value]` re-bound on
+	 * a reused element) are invisible to a MutationObserver.
+	 */
+	observeOptionChanges(onChange: () => void): void {
+		this.optionsObserver = new MutationObserver(() => {
+			onChange();
+		});
+
+		this.optionsObserver.observe(this.selectElement, {
+			subtree: true,
+			childList: true,
+			characterData: true,
+			attributes: true,
+			attributeFilter: ['value', 'disabled', 'selected', 'label'],
+		});
+	}
+
+	stopObservingOptionChanges(): void {
+		this.optionsObserver?.disconnect();
+	}
 
 	ensureId(fallbackId: string): string {
 		if ('' === this.selectElement.id) {
@@ -76,6 +103,14 @@ export class SelectNativeAdapter {
 
 	isFilled(): boolean {
 		return '' !== this.selectElement.value;
+	}
+
+	isDisabled(): boolean {
+		return this.selectElement.disabled;
+	}
+
+	setExpanded(expanded: boolean): void {
+		this.selectElement.setAttribute('aria-expanded', expanded.toString());
 	}
 
 	applyValue(value: string): void {

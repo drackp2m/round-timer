@@ -5,6 +5,7 @@ import {
 	HostListener,
 	TemplateRef,
 	afterNextRender,
+	computed,
 	effect,
 	inject,
 	input,
@@ -43,6 +44,31 @@ export class SelectShellComponent {
 	protected readonly store = inject(SelectStore);
 	protected readonly positionTop = signal(false);
 
+	/**
+	 * Screen-reader feedback while the dropdown is open: the custom listbox
+	 * is a purely visual layer (hidden from the accessibility tree), so
+	 * highlight movements are voiced through a polite live region instead.
+	 */
+	protected readonly announcement = computed<string>(() => {
+		if (!this.store.isOpen()) {
+			return '';
+		}
+
+		const options = this.store.visibleOptions();
+		const highlightedIndex = options.findIndex((option) => option.highlighted);
+		const highlighted = options[highlightedIndex];
+
+		if (0 === options.length) {
+			return 'No matches found';
+		}
+
+		if (undefined === highlighted) {
+			return '';
+		}
+
+		return `${highlighted.label}, ${(highlightedIndex + 1).toString()} of ${options.length.toString()}`;
+	});
+
 	private readonly viewportService = inject(ViewportService);
 	private readonly wrapper = viewChild<ElementRef<HTMLElement>>('wrapper');
 	private readonly labelText = viewChild<ElementRef<HTMLElement>>('labelText');
@@ -64,10 +90,11 @@ export class SelectShellComponent {
 	}
 
 	/**
-	 * On touch, `pointerdown` fires before the browser knows whether the
-	 * gesture is a tap or a scroll, so toggling is deferred to `click` (which
-	 * never fires after a pan). Skipping `preventDefault()` there also lets
-	 * the browser blur whatever element currently holds the focus.
+	 * For direct pointers (finger, stylus), `pointerdown` fires before the
+	 * browser knows whether the gesture is a tap or a scroll, so toggling is
+	 * deferred to `click` (which never fires after a pan). Skipping
+	 * `preventDefault()` there also lets the browser blur whatever element
+	 * currently holds the focus.
 	 */
 	@HostListener('pointerdown', ['$event'])
 	onWrapperPointerDown(event: PointerEvent): void {
@@ -78,7 +105,7 @@ export class SelectShellComponent {
 			return;
 		}
 
-		if ('touch' === event.pointerType) {
+		if ('touch' === event.pointerType || 'pen' === event.pointerType) {
 			this.togglesOnClick = true;
 
 			return;
@@ -97,11 +124,11 @@ export class SelectShellComponent {
 	}
 
 	/**
-	 * Toggling from `click` covers two cases: touch taps (deferred from
-	 * pointerdown once the gesture is known not to be a scroll) and clicks
-	 * that arrive with no pointerdown at all — Safari suppresses only the
-	 * pointerdown of the click that dismisses a native select popup, while
-	 * assistive tech emits bare synthetic clicks.
+	 * Toggling from `click` covers two cases: direct-pointer taps (deferred
+	 * from pointerdown once the gesture is known not to be a scroll) and
+	 * clicks that arrive with no pointerdown at all — Safari suppresses only
+	 * the pointerdown of the click that dismisses a native select popup,
+	 * while assistive tech emits bare synthetic clicks.
 	 */
 	@HostListener('click', ['$event'])
 	onWrapperClick(event: MouseEvent): void {

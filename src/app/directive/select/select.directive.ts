@@ -40,6 +40,13 @@ export class SelectDirective implements AfterViewInit, OnDestroy {
 	private readonly injector = inject(Injector);
 	private readonly store = inject(SelectStore);
 	private readonly nativeAdapter = new SelectNativeAdapter(this.elementRef.nativeElement);
+	/**
+	 * Device-level proxy for platforms where giving the native select real
+	 * DOM focus opens the native picker (iOS/iPadOS). That side effect
+	 * depends on the OS, not on the pointer of a given interaction — an iPad
+	 * trackpad click must avoid real focus too — hence a media query here
+	 * while the shell reads each event's pointerType for gesture handling.
+	 */
 	private readonly coarsePointer = window.matchMedia('(pointer: coarse)').matches;
 
 	private readonly interaction = new SelectInteractionHandler(this.store, {
@@ -62,6 +69,11 @@ export class SelectDirective implements AfterViewInit, OnDestroy {
 		effect(() => {
 			this.shellRef?.setInput('label', this.label());
 			this.shellRef?.setInput('optionTemplate', this.optionTemplate());
+
+			// The visible label text lives in the shell's visual layers, which
+			// are hidden from the accessibility tree — without this the select
+			// would have no accessible name.
+			this.elementRef.nativeElement.setAttribute('aria-label', this.label());
 		});
 	}
 
@@ -87,17 +99,33 @@ export class SelectDirective implements AfterViewInit, OnDestroy {
 	}
 
 	ngAfterViewInit(): void {
-		this.nativeAdapter.ensurePlaceholder(this.placeholder());
-		this.store.setOptionsFromSelect(this.elementRef.nativeElement);
-		this.onNativeValueChange();
+		this.syncFromNativeSelect();
+		this.nativeAdapter.setExpanded(false);
 		this.nativeAdapter.observeValueWrites(() => {
 			this.onNativeValueChange();
+		});
+		this.nativeAdapter.observeOptionChanges(() => {
+			this.syncFromNativeSelect();
 		});
 		this.createShell();
 	}
 
 	ngOnDestroy(): void {
+		this.nativeAdapter.stopObservingOptionChanges();
 		this.interaction.detachOutsideListeners();
+	}
+
+	private syncFromNativeSelect(): void {
+		const disabled = this.nativeAdapter.isDisabled();
+
+		this.nativeAdapter.ensurePlaceholder(this.placeholder());
+		this.store.setOptionsFromSelect(this.elementRef.nativeElement);
+		this.store.setDisabled(disabled);
+		this.onNativeValueChange();
+
+		if (disabled && this.store.isOpen()) {
+			this.closeDropdown();
+		}
 	}
 
 	private createShell(): void {
@@ -125,6 +153,10 @@ export class SelectDirective implements AfterViewInit, OnDestroy {
 	}
 
 	private toggleDropdown(): void {
+		if (this.store.disabled()) {
+			return;
+		}
+
 		if (this.coarsePointer) {
 			this.blurActiveElement();
 		} else {
@@ -139,7 +171,9 @@ export class SelectDirective implements AfterViewInit, OnDestroy {
 
 		this.openDropdown();
 
-		if (this.coarsePointer) {
+		// When the native select could not take real focus (skipped or
+		// refused), the focused look is simulated in the store instead.
+		if (!this.hasNativeFocus()) {
 			this.store.setFocused(true);
 		}
 	}
@@ -147,26 +181,32 @@ export class SelectDirective implements AfterViewInit, OnDestroy {
 	private openDropdown(): void {
 		this.store.openDropdown();
 		this.interaction.attachOutsideListeners();
+		this.nativeAdapter.setExpanded(true);
 	}
 
 	private closeDropdown(): void {
 		this.store.closeDropdown();
 		this.interaction.detachOutsideListeners();
+		this.nativeAdapter.setExpanded(false);
 
-		if (this.coarsePointer) {
+		if (!this.hasNativeFocus()) {
 			this.store.setFocused(false);
 		}
 	}
 
+	private hasNativeFocus(): boolean {
+		return document.activeElement === this.elementRef.nativeElement;
+	}
+
 	/**
-	 * On coarse pointers the native select never receives real DOM focus (it
-	 * would open the native dropdown on iOS), so whatever element held the
-	 * focus before tapping the shell must be blurred by hand.
+	 * On coarse-pointer platforms the native select never receives real DOM
+	 * focus (it would open the native dropdown on iOS), so whatever element
+	 * held the focus before tapping the shell must be blurred by hand.
 	 */
 	private blurActiveElement(): void {
 		const activeElement = document.activeElement;
 
-		if (activeElement instanceof HTMLElement && activeElement !== this.elementRef.nativeElement) {
+		if (activeElement instanceof HTMLElement && !this.hasNativeFocus()) {
 			activeElement.blur();
 		}
 	}

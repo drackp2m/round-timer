@@ -37,9 +37,11 @@
 	</select>
 
 	<select appThemed label="Label" #inputThemed>
-		<option value="one">one</option>
-		<option value="two">two</option>
-		<option value="three">three</option>
+		@for (options of someOptions(); track options.value) {
+			<option [value]="options.value">
+				{{ options.label }}
+			</option>
+		}
 	</select>
 
 	<button appThemed (click)="changeValue()">Change value</button>

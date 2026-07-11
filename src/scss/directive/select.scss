@@ -15,7 +15,7 @@
 
 		select,
 		.border-container,
-		.label-container {
+		.label {
 			padding: $input-vertical-padding $input-horizontal-padding;
 		}
 
@@ -35,13 +35,13 @@
 		}
 
 		.border-container,
-		.label-container {
+		.label {
 			position: absolute;
 			inset: 0;
 		}
 
 		label select,
-		.label-container {
+		.label {
 			pointer-events: none;
 		}
 
@@ -89,18 +89,6 @@
 
 		.search-overlay {
 			display: none;
-
-			input {
-				width: 100%;
-				padding: 0;
-				border: none;
-
-				font: inherit;
-				color: inherit;
-
-				background: none;
-				outline: none;
-			}
 		}
 
 		&.searching {
@@ -173,41 +161,36 @@
 		}
 
 		.app-select-options {
-			position: relative;
-			display: block;
+			position: absolute;
+			z-index: 2;
+			top: calc(100% - $border-width);
 
-			.options-container {
-				position: absolute;
-				z-index: 2;
-				transform: translateY(-1 * $border-width);
+			overflow: hidden auto;
 
-				overflow: scroll;
+			width: 100%;
+			max-height: 395px;
+			padding: var(--spacing-1) 0;
+			border: solid 1.5px var(--color-contrast-mid);
+			border-radius: $border-radius;
 
-				width: 100%;
-				max-height: 395px;
-				padding: var(--spacing-1) 0;
-				border: solid 1.5px var(--color-contrast-mid);
-				border-radius: $border-radius;
+			background: var(--color-primary);
 
-				background: var(--color-primary);
+			.option {
+				padding: var(--spacing-1) var(--spacing-3);
 
-				.option {
-					padding: var(--spacing-1) var(--spacing-3);
-
-					&.highlighted {
-						background-color: var(--color-primary-mid);
-					}
-
-					&.disabled {
-						pointer-events: none;
-						opacity: 0.5;
-					}
+				&.highlighted {
+					background-color: var(--color-primary-mid);
 				}
 
-				.no-matches {
-					padding: var(--spacing-1) var(--spacing-3);
-					color: var(--color-contrast-mid);
+				&.disabled {
+					pointer-events: none;
+					opacity: 0.5;
 				}
+			}
+
+			.no-matches {
+				padding: var(--spacing-1) var(--spacing-3);
+				color: var(--color-contrast-mid);
 			}
 		}
 
@@ -218,16 +201,28 @@
 			}
 		}
 
+		&.disabled {
+			pointer-events: none;
+			opacity: 0.5;
+		}
+
+		.sr-status {
+			position: absolute;
+			overflow: hidden;
+			width: 1px;
+			height: 1px;
+		}
+
 		&:not(.open) {
-			.options-container {
+			.app-select-options {
 				display: none;
 			}
 		}
 
 		&.position-top {
-			.options-container {
-				bottom: 0;
-				transform: translateY(calc(-1 * var(--input-height) + $border-width));
+			.app-select-options {
+				top: auto;
+				bottom: calc(100% - $border-width);
 			}
 		}
 	}

@@ -36,8 +36,7 @@ export class SelectInteractionHandler {
 				break;
 
 			case 'Escape':
-				event.preventDefault();
-				this.hooks.closeDropdown();
+				this.handleEscape(event);
 
 				break;
 
@@ -128,6 +127,21 @@ export class SelectInteractionHandler {
 
 		this.store.clearHighlight();
 	};
+
+	/**
+	 * Escape only belongs to the select while its dropdown is open — and then
+	 * it must not leak further (one press closes a single layer, e.g. not
+	 * also a surrounding modal). Closed, it passes through untouched.
+	 */
+	private handleEscape(event: KeyboardEvent): void {
+		if (!this.store.isOpen()) {
+			return;
+		}
+
+		event.preventDefault();
+		event.stopPropagation();
+		this.hooks.closeDropdown();
+	}
 
 	private handleEnter(event: KeyboardEvent): void {
 		if (!this.store.isOpen()) {
