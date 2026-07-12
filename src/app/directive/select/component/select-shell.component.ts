@@ -1,6 +1,7 @@
 import { NgTemplateOutlet } from '@angular/common';
 import {
 	Component,
+	DestroyRef,
 	ElementRef,
 	HostListener,
 	TemplateRef,
@@ -70,6 +71,7 @@ export class SelectShellComponent {
 	});
 
 	private readonly viewportService = inject(ViewportService);
+	private readonly destroyRef = inject(DestroyRef);
 	private readonly wrapper = viewChild<ElementRef<HTMLElement>>('wrapper');
 	private readonly labelText = viewChild<ElementRef<HTMLElement>>('labelText');
 	private togglesOnClick = false;
@@ -77,7 +79,7 @@ export class SelectShellComponent {
 
 	constructor() {
 		afterNextRender(() => {
-			this.applySizeVariables();
+			this.observeSizeChanges();
 		});
 
 		effect(() => {
@@ -158,6 +160,33 @@ export class SelectShellComponent {
 
 	private isInsideOptions(target: EventTarget | null): boolean {
 		return null !== (target as HTMLElement).closest('.app-select-options');
+	}
+
+	/**
+	 * The label width is not static: translations resolve asynchronously, the
+	 * language can change at runtime and web fonts reflow the text once they
+	 * load. A ResizeObserver on the hidden measure span (and on the wrapper,
+	 * for the height) re-measures on every such change — including the initial
+	 * layout, since observers fire once on `observe()`.
+	 */
+	private observeSizeChanges(): void {
+		const wrapperElement = this.wrapper()?.nativeElement;
+		const labelElement = this.labelText()?.nativeElement;
+
+		if (undefined === wrapperElement || undefined === labelElement) {
+			return;
+		}
+
+		const observer = new ResizeObserver(() => {
+			this.applySizeVariables();
+		});
+
+		observer.observe(labelElement);
+		observer.observe(wrapperElement);
+
+		this.destroyRef.onDestroy(() => {
+			observer.disconnect();
+		});
 	}
 
 	private applySizeVariables(): void {

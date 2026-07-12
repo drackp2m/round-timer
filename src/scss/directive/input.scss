@@ -6,6 +6,17 @@
 		$input-vertical-padding: var(--spacing-2);
 		$border-width: 1.5px;
 		$transition-duration: 0.25s;
+		$clip-gap: 3px;
+
+		// Notch edges shared by both clip-path states so they transition into
+		// each other. The end is capped at the field width minus the padding:
+		// a label longer than the field must not carve past the right border.
+		--notch-start: calc(#{$input-horizontal-padding} - #{$clip-gap});
+		--notch-end: min(
+			calc(#{$input-horizontal-padding} + var(--label-width) + #{$clip-gap}),
+			calc(100% - #{$input-horizontal-padding})
+		);
+		--notch-mid: calc((var(--notch-start) + var(--notch-end)) / 2);
 
 		position: relative;
 
@@ -16,9 +27,13 @@
 		}
 
 		label {
+			// Measured with nowrap: an absolutely-positioned span cannot grow
+			// past its containing block, so a wrapping label would report the
+			// wrapper's width instead of the text's real single-line width.
 			span {
 				position: absolute;
 				font-size: var(--font-size-sm);
+				white-space: nowrap;
 				visibility: hidden;
 			}
 
@@ -53,10 +68,10 @@
 
 				clip-path: polygon(
 					0 0,
-					calc($input-horizontal-padding + var(--label-width) / 2) 0,
-					calc($input-horizontal-padding + var(--label-width) / 2) 2px,
-					calc($input-horizontal-padding + var(--label-width) / 2) 2px,
-					calc($input-horizontal-padding + var(--label-width) / 2) 0,
+					var(--notch-mid) 0,
+					var(--notch-mid) 2px,
+					var(--notch-mid) 2px,
+					var(--notch-mid) 0,
 					100% 0,
 					100% 100%,
 					0 100%
@@ -67,6 +82,9 @@
 		}
 
 		.label {
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
 			transition:
 				transform $transition-duration ease-in-out,
 				font-size $transition-duration ease-in-out;
@@ -85,14 +103,12 @@
 		&.filled {
 			.border-container {
 				&::before {
-					$clip-gap: 3px;
-
 					clip-path: polygon(
 						0 0,
-						calc($input-horizontal-padding - $clip-gap) 0,
-						calc($input-horizontal-padding - $clip-gap) 2px,
-						calc($input-horizontal-padding + var(--label-width) + $clip-gap) 2px,
-						calc($input-horizontal-padding + var(--label-width) + $clip-gap) 0,
+						var(--notch-start) 0,
+						var(--notch-start) 2px,
+						var(--notch-end) 2px,
+						var(--notch-end) 0,
 						100% 0,
 						100% 100%,
 						0 100%
@@ -125,6 +141,11 @@
 				opacity: 0;
 				transition: none;
 			}
+		}
+
+		&.disabled {
+			pointer-events: none;
+			opacity: 0.5;
 		}
 	}
 

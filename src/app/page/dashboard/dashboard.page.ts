@@ -79,7 +79,7 @@ export class DashboardPage {
 
 		if (undefined !== element) {
 			element.value = 'three';
-			// element.disabled = true;
+			element.disabled = true;
 		}
 
 		this.someOptions.set([

@@ -27,7 +27,14 @@
 		suscipit magni magnam dolorem, alias sequi! Cupiditate, laudantium?
 	</p>
 
-	<input appThemed type="text" label="Label" placeholder="Placeholder" />
+	<input
+		appThemed
+		type="text"
+		value="42"
+		[label]="someOptions()[4]?.label || ''"
+		placeholder="Placeholder"
+		disabled
+	/>
 
 	<select appThemed label="Number">
 		<option value="">Choose an option</option>

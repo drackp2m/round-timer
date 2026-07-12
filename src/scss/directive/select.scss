@@ -10,11 +10,23 @@
 		$glow: var(--glow-size);
 		$glow-neg: calc(-1 * var(--glow-size));
 
+		$clip-gap: 3px;
+
 		// Blur radius of the focus/hover glow. The same value drives how deep
 		// the label notch is carved out of the box-shadow — up into the outset
 		// half and down into the inset half — so the gap stays clean on both
 		// sides of the border and the clip always matches the glow's reach.
 		--glow-size: 6px;
+
+		// Notch edges shared by both clip-path states so they transition into
+		// each other. The end is capped at the field width minus the padding:
+		// a label longer than the field must not carve past the right border.
+		--notch-start: calc(#{$input-horizontal-padding} - #{$clip-gap});
+		--notch-end: min(
+			calc(#{$input-horizontal-padding} + var(--label-width) + #{$clip-gap}),
+			calc(100% - #{$input-horizontal-padding})
+		);
+		--notch-mid: calc((var(--notch-start) + var(--notch-end)) / 2);
 
 		cursor: pointer;
 		position: relative;
@@ -33,9 +45,13 @@
 			width: 100%;
 		}
 
+		// Measured with nowrap: an absolutely-positioned span cannot grow past
+		// its containing block, so a wrapping label would report the wrapper's
+		// width instead of the text's real single-line width.
 		.label-measure {
 			position: absolute;
 			font-size: var(--font-size-sm);
+			white-space: nowrap;
 			visibility: hidden;
 		}
 
@@ -47,6 +63,9 @@
 
 		.label {
 			pointer-events: none;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
 		}
 
 		// Border, notch (clip-path) and glow (box-shadow) live on the same
@@ -59,10 +78,10 @@
 
 			clip-path: polygon(
 				$glow-neg $glow-neg,
-				calc($input-horizontal-padding + var(--label-width) / 2) $glow-neg,
-				calc($input-horizontal-padding + var(--label-width) / 2) $glow,
-				calc($input-horizontal-padding + var(--label-width) / 2) $glow,
-				calc($input-horizontal-padding + var(--label-width) / 2) $glow-neg,
+				var(--notch-mid) $glow-neg,
+				var(--notch-mid) $glow,
+				var(--notch-mid) $glow,
+				var(--notch-mid) $glow-neg,
 				calc(100% + $glow) $glow-neg,
 				calc(100% + $glow) calc(100% + $glow),
 				$glow-neg calc(100% + $glow)
@@ -107,14 +126,12 @@
 		&.focused,
 		&.filled {
 			.border-container {
-				$clip-gap: 3px;
-
 				clip-path: polygon(
 					$glow-neg $glow-neg,
-					calc($input-horizontal-padding - $clip-gap) $glow-neg,
-					calc($input-horizontal-padding - $clip-gap) $glow,
-					calc($input-horizontal-padding + var(--label-width) + $clip-gap) $glow,
-					calc($input-horizontal-padding + var(--label-width) + $clip-gap) $glow-neg,
+					var(--notch-start) $glow-neg,
+					var(--notch-start) $glow,
+					var(--notch-end) $glow,
+					var(--notch-end) $glow-neg,
 					calc(100% + $glow) $glow-neg,
 					calc(100% + $glow) calc(100% + $glow),
 					$glow-neg calc(100% + $glow)
