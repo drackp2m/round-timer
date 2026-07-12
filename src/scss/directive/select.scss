@@ -8,10 +8,14 @@
 		$border-radius: var(--border-radius-3);
 		$transition-duration: 0.25s;
 
+		// Extra room the clip-path keeps beyond the box so the outset glow is
+		// preserved (clip-path clips box-shadow) while the label notch is cut.
+		$shadow-reach: 10px;
+		$shadow-reach-neg: calc(-1 * $shadow-reach);
+
 		cursor: pointer;
 		position: relative;
 		border-radius: $border-radius;
-		transition: box-shadow $transition-duration ease-in-out;
 
 		select,
 		.border-container,
@@ -19,19 +23,17 @@
 			padding: $input-vertical-padding $input-horizontal-padding;
 		}
 
-		label {
-			span {
-				position: absolute;
-				font-size: var(--font-size-sm);
-				visibility: hidden;
-			}
+		select {
+			pointer-events: none;
+			position: relative;
+			z-index: 1;
+			width: 100%;
+		}
 
-			select {
-				pointer-events: none;
-				position: relative;
-				z-index: 1;
-				width: 100%;
-			}
+		.label-measure {
+			position: absolute;
+			font-size: var(--font-size-sm);
+			visibility: hidden;
 		}
 
 		.border-container,
@@ -40,36 +42,32 @@
 			inset: 0;
 		}
 
-		label select,
 		.label {
 			pointer-events: none;
 		}
 
+		// Border, notch (clip-path) and glow (box-shadow) live on the same
+		// element so the notch is carved out of the border AND the shadow.
 		.border-container {
 			overflow: hidden;
 
-			&::before {
-				content: '';
+			border: solid $border-width var(--color-contrast-mid);
+			border-radius: $border-radius;
 
-				position: absolute;
-				inset: 0;
+			clip-path: polygon(
+				$shadow-reach-neg $shadow-reach-neg,
+				calc($input-horizontal-padding + var(--label-width) / 2) $shadow-reach-neg,
+				calc($input-horizontal-padding + var(--label-width) / 2) 2px,
+				calc($input-horizontal-padding + var(--label-width) / 2) 2px,
+				calc($input-horizontal-padding + var(--label-width) / 2) $shadow-reach-neg,
+				calc(100% + $shadow-reach) $shadow-reach-neg,
+				calc(100% + $shadow-reach) calc(100% + $shadow-reach),
+				$shadow-reach-neg calc(100% + $shadow-reach)
+			);
 
-				border: solid $border-width var(--color-contrast-mid);
-				border-radius: $border-radius;
-
-				clip-path: polygon(
-					0 0,
-					calc($input-horizontal-padding + var(--label-width) / 2) 0,
-					calc($input-horizontal-padding + var(--label-width) / 2) 2px,
-					calc($input-horizontal-padding + var(--label-width) / 2) 2px,
-					calc($input-horizontal-padding + var(--label-width) / 2) 0,
-					100% 0,
-					100% 100%,
-					0 100%
-				);
-
-				transition: clip-path $transition-duration ease-in-out;
-			}
+			transition:
+				clip-path $transition-duration ease-in-out,
+				box-shadow $transition-duration ease-in-out;
 		}
 
 		.label {
@@ -106,20 +104,18 @@
 		&.focused,
 		&.filled {
 			.border-container {
-				&::before {
-					$clip-gap: 3px;
+				$clip-gap: 3px;
 
-					clip-path: polygon(
-						0 0,
-						calc($input-horizontal-padding - $clip-gap) 0,
-						calc($input-horizontal-padding - $clip-gap) 2px,
-						calc($input-horizontal-padding + var(--label-width) + $clip-gap) 2px,
-						calc($input-horizontal-padding + var(--label-width) + $clip-gap) 0,
-						100% 0,
-						100% 100%,
-						0 100%
-					);
-				}
+				clip-path: polygon(
+					$shadow-reach-neg $shadow-reach-neg,
+					calc($input-horizontal-padding - $clip-gap) $shadow-reach-neg,
+					calc($input-horizontal-padding - $clip-gap) 2px,
+					calc($input-horizontal-padding + var(--label-width) + $clip-gap) 2px,
+					calc($input-horizontal-padding + var(--label-width) + $clip-gap) $shadow-reach-neg,
+					calc(100% + $shadow-reach) $shadow-reach-neg,
+					calc(100% + $shadow-reach) calc(100% + $shadow-reach),
+					$shadow-reach-neg calc(100% + $shadow-reach)
+				);
 			}
 
 			.label {
@@ -142,14 +138,11 @@
 					rgb(255 210 75)
 				);
 
-			box-shadow:
-				$shadow,
-				inset $shadow;
-
 			.border-container {
-				&::before {
-					border-color: var(--color-accent);
-				}
+				border-color: var(--color-accent);
+				box-shadow:
+					$shadow,
+					inset $shadow;
 			}
 		}
 

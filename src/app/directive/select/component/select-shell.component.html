@@ -8,10 +8,7 @@
 	[class.position-top]="positionTop()"
 	[class.disabled]="store.disabled()"
 >
-	<label [attr.for]="selectId()">
-		<span #labelText>{{ label() }}</span>
-		<ng-content></ng-content>
-	</label>
+	<ng-content></ng-content>
 
 	<div class="border-container flex-row justify-between align-center" aria-hidden="true">
 		<span class="selected-option">{{ store.selectedText() }}</span>
@@ -19,7 +16,9 @@
 		<app-svg icon="chevron-down" [size]="18" />
 	</div>
 
-	<p class="label" aria-hidden="true">{{ label() }}</p>
+	<label class="label" [attr.for]="selectId()">{{ label() }}</label>
+
+	<span #labelText class="label-measure" aria-hidden="true">{{ label() }}</span>
 
 	<div class="sr-status" aria-live="polite">{{ announcement() }}</div>
 
