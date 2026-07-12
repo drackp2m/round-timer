@@ -52,6 +52,7 @@
 				"[scss]": {
 					"editor.defaultFormatter": "stylelint.vscode-stylelint"
 				},
+				"todo-tree.ripgrep.ripgrep": "/usr/bin/rg",
 				"todo-tree.regex.regexCaseSensitive": false,
 				"todo-tree.general.statusBar": "tags",
 				"todo-tree.general.tags": [" ToDo ", " FixMe "],
@@ -75,8 +76,7 @@
 				}
 			},
 			"extensions": [
-				"GitHub.copilot",
-				"GitHub.copilot-chat",
+				"Anthropic.claude-code",
 				"editorconfig.editorconfig",
 				"esbenp.prettier-vscode",
 				"dbaeumer.vscode-eslint",

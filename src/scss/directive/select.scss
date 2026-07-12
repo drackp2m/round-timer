@@ -7,11 +7,14 @@
 		$border-width: 1.5px;
 		$border-radius: var(--border-radius-3);
 		$transition-duration: 0.25s;
+		$glow: var(--glow-size);
+		$glow-neg: calc(-1 * var(--glow-size));
 
-		// Extra room the clip-path keeps beyond the box so the outset glow is
-		// preserved (clip-path clips box-shadow) while the label notch is cut.
-		$shadow-reach: 10px;
-		$shadow-reach-neg: calc(-1 * $shadow-reach);
+		// Blur radius of the focus/hover glow. The same value drives how deep
+		// the label notch is carved out of the box-shadow — up into the outset
+		// half and down into the inset half — so the gap stays clean on both
+		// sides of the border and the clip always matches the glow's reach.
+		--glow-size: 6px;
 
 		cursor: pointer;
 		position: relative;
@@ -55,14 +58,14 @@
 			border-radius: $border-radius;
 
 			clip-path: polygon(
-				$shadow-reach-neg $shadow-reach-neg,
-				calc($input-horizontal-padding + var(--label-width) / 2) $shadow-reach-neg,
-				calc($input-horizontal-padding + var(--label-width) / 2) 2px,
-				calc($input-horizontal-padding + var(--label-width) / 2) 2px,
-				calc($input-horizontal-padding + var(--label-width) / 2) $shadow-reach-neg,
-				calc(100% + $shadow-reach) $shadow-reach-neg,
-				calc(100% + $shadow-reach) calc(100% + $shadow-reach),
-				$shadow-reach-neg calc(100% + $shadow-reach)
+				$glow-neg $glow-neg,
+				calc($input-horizontal-padding + var(--label-width) / 2) $glow-neg,
+				calc($input-horizontal-padding + var(--label-width) / 2) $glow,
+				calc($input-horizontal-padding + var(--label-width) / 2) $glow,
+				calc($input-horizontal-padding + var(--label-width) / 2) $glow-neg,
+				calc(100% + $glow) $glow-neg,
+				calc(100% + $glow) calc(100% + $glow),
+				$glow-neg calc(100% + $glow)
 			);
 
 			transition:
@@ -107,14 +110,14 @@
 				$clip-gap: 3px;
 
 				clip-path: polygon(
-					$shadow-reach-neg $shadow-reach-neg,
-					calc($input-horizontal-padding - $clip-gap) $shadow-reach-neg,
-					calc($input-horizontal-padding - $clip-gap) 2px,
-					calc($input-horizontal-padding + var(--label-width) + $clip-gap) 2px,
-					calc($input-horizontal-padding + var(--label-width) + $clip-gap) $shadow-reach-neg,
-					calc(100% + $shadow-reach) $shadow-reach-neg,
-					calc(100% + $shadow-reach) calc(100% + $shadow-reach),
-					$shadow-reach-neg calc(100% + $shadow-reach)
+					$glow-neg $glow-neg,
+					calc($input-horizontal-padding - $clip-gap) $glow-neg,
+					calc($input-horizontal-padding - $clip-gap) $glow,
+					calc($input-horizontal-padding + var(--label-width) + $clip-gap) $glow,
+					calc($input-horizontal-padding + var(--label-width) + $clip-gap) $glow-neg,
+					calc(100% + $glow) $glow-neg,
+					calc(100% + $glow) calc(100% + $glow),
+					$glow-neg calc(100% + $glow)
 				);
 			}
 
@@ -131,7 +134,7 @@
 
 		&:hover,
 		&.focused {
-			$shadow: 0 0 6px
+			$shadow: 0 0 var(--glow-size)
 				color-mix(
 					in oklab,
 					color-mix(in oklab, var(--color-accent) 30%, transparent) 80%,

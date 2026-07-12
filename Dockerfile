@@ -39,7 +39,7 @@ RUN addgroup node root \
 
 USER node
 
-RUN sudo apk add --no-cache git openssh-client gnupg vim \
+RUN sudo apk add --no-cache git openssh-client gnupg vim ripgrep \
 			zsh zsh-theme-powerlevel10k
 
 RUN mkdir -p ~/.local/share/zsh/plugins \

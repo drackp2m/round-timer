@@ -36,7 +36,7 @@
 		<option value="three">three</option>
 	</select>
 
-	<select appThemed label="Label" #inputThemed>
+	<select appThemed [label]="someOptions()[4]?.label || ''" #inputThemed>
 		@for (options of someOptions(); track options.value) {
 			<option [value]="options.value">
 				{{ options.label }}

@@ -78,8 +78,8 @@ export class DashboardPage {
 		const element = this.inputThemed()?.nativeElement;
 
 		if (undefined !== element) {
-			// element.value = 'three';
-			element.disabled = true;
+			element.value = 'three';
+			// element.disabled = true;
 		}
 
 		this.someOptions.set([
