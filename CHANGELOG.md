@@ -1,3 +1,29 @@
+# v1.5.2 (2026-07-13)
+
+## What's Changed
+
+### ♻️ Code Refactoring
+
+- common css of input / selector on _field.scss ([29e5327](https://github.com/drackp2m/round-timer/commit/29e532769ff32c70ecdf1181b28d148bd1d0a365)) by Marc Jovaní González
+
+### 🐛 Bug Fixes
+
+- clip path cut shadow on select directive ([e3e5b64](https://github.com/drackp2m/round-timer/commit/e3e5b646a719735ffb7fec88c2a407fe23e9ce21)) by Marc Jovaní González
+- now set values to custom selects with elementRef update visible value ([c59b7df](https://github.com/drackp2m/round-timer/commit/c59b7df3752043ab1e1a37ab88c95dfcb5d83e3b)) by Marc Jovaní González
+- solve problem with input/select label size ([87bc274](https://github.com/drackp2m/round-timer/commit/87bc274b045d02b018022aa5b06d7f38bdaa8b0f)) by Marc Jovaní González
+- solve some ui/ux/aria problems on custom select directive ([d26f0df](https://github.com/drackp2m/round-timer/commit/d26f0df9bb82b0c4ac0beb69816e01db77f5bdae)) by Marc Jovaní González
+
+### 💻 Continuous Integration
+
+- add Angular typecheck and tests on pre-commit hook ([9e16ba2](https://github.com/drackp2m/round-timer/commit/9e16ba2fa43e081ad3515d00298193116f35627e)) by Marc Jovaní González
+
+### 🎒 Chores
+
+- solve todo tree ripgrep error ([0cb215b](https://github.com/drackp2m/round-timer/commit/0cb215baba43983682a18c8ae6139a5dbcd7e17b)) by Marc Jovaní González
+- update to node:26.5-alpine3.24 ([9329d66](https://github.com/drackp2m/round-timer/commit/9329d66ccd6eb2d9cd4c844fe9b6712bdd4b2211)) by Marc Jovaní González
+
+**Full Changelog**: https://github.com/drackp2m/round-timer/compare/v1.5.1...v1.5.2
+
 # v1.5.1 (2026-07-09)
 
 ## What's Changed
