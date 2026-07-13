@@ -27,7 +27,16 @@
 		suscipit magni magnam dolorem, alias sequi! Cupiditate, laudantium?
 	</p>
 
-	<input appThemed type="text" label="Label" placeholder="Placeholder" />
+	<input appThemed type="text" label="Label" value="42" placeholder="Placeholder" />
+
+	<input
+		appThemed
+		type="text"
+		value="42"
+		[label]="someOptions()[4]?.label || ''"
+		placeholder="Placeholder"
+		disabled
+	/>
 
 	<select appThemed label="Number">
 		<option value="">Choose an option</option>
@@ -36,11 +45,15 @@
 		<option value="three">three</option>
 	</select>
 
-	<select appThemed label="Label">
-		<option value="one">one</option>
-		<option value="two">two</option>
-		<option value="three">three</option>
+	<select appThemed [label]="someOptions()[4]?.label || ''" #inputThemed>
+		@for (options of someOptions(); track options.value) {
+			<option [value]="options.value">
+				{{ options.label }}
+			</option>
+		}
 	</select>
+
+	<button appThemed (click)="changeValue()">Change value</button>
 
 	<select appThemed label="Day of the week">
 		<option value="">Choose an option</option>
@@ -49,6 +62,13 @@
 				{{ weekday | titlecase }}
 			</option>
 		}
+	</select>
+
+	<select>
+		<option value="" selected>Select a number</option>
+		<option value="one">one</option>
+		<option value="two">two</option>
+		<option value="three">three</option>
 	</select>
 
 	<select>

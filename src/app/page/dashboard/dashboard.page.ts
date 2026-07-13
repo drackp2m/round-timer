@@ -1,5 +1,5 @@
 import { TitleCasePipe } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, ElementRef, inject, signal, viewChild } from '@angular/core';
 
 import { PlayerColor, PlayerColorKey } from '@app/definition/model/player/player-color.enum';
 import { PlayerIcon, PlayerIconKey } from '@app/definition/model/player/player-icon.enum';
@@ -32,9 +32,19 @@ export class DashboardPage {
 		'sunday',
 	] as const;
 
+	readonly inputThemed = viewChild<ElementRef<HTMLSelectElement>>('inputThemed');
+
 	readonly currentWeekday = new Date()
 		.toLocaleDateString('en-US', { weekday: 'long' })
 		.toLowerCase();
+
+	readonly someOptions = signal([
+		{ value: 'one', label: 'One' },
+		{ value: 'two', label: 'Two' },
+		{ value: 'three', label: 'Three' },
+		{ value: 'four', label: 'Four' },
+		{ value: 'five', label: 'Five' },
+	]);
 
 	async createInitialData(): Promise<void> {
 		const game = new Game({
@@ -62,6 +72,23 @@ export class DashboardPage {
 		await Promise.all(
 			players.map((player) => this.playerRepository.insert('player', player.toObject())),
 		);
+	}
+
+	changeValue(): void {
+		const element = this.inputThemed()?.nativeElement;
+
+		if (undefined !== element) {
+			element.value = 'three';
+			element.disabled = true;
+		}
+
+		this.someOptions.set([
+			{ value: 'one', label: 'Uno' },
+			{ value: 'two', label: 'Dos' },
+			{ value: 'three', label: 'Tres' },
+			{ value: 'four', label: 'Cuatro' },
+			{ value: 'five', label: 'Cinco' },
+		]);
 	}
 
 	async eraseAllData(): Promise<void> {

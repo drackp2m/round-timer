@@ -1,4 +1,4 @@
-FROM node:26-alpine3.22 AS base
+FROM node:26.5-alpine3.24 AS base
 
 RUN apk add --no-cache build-base python3 openssl
 
@@ -39,7 +39,7 @@ RUN addgroup node root \
 
 USER node
 
-RUN sudo apk add --no-cache git openssh-client gnupg vim \
+RUN sudo apk add --no-cache git openssh-client gnupg vim ripgrep \
 			zsh zsh-theme-powerlevel10k
 
 RUN mkdir -p ~/.local/share/zsh/plugins \

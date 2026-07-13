@@ -1,129 +1,14 @@
-@use '../abstract/variable' as var;
+@use '../abstract/field';
 
 @layer component {
 	.app-input {
-		$input-horizontal-padding: var(--spacing-3);
-		$input-vertical-padding: var(--spacing-2);
-		$border-width: 1.5px;
-		$transition-duration: 0.25s;
+		@include field.shell(input);
 
-		position: relative;
-
-		input,
-		.border-container,
-		.label-container {
-			padding: $input-vertical-padding $input-horizontal-padding;
-		}
-
-		label {
-			span {
-				position: absolute;
-				font-size: var(--font-size-sm);
-				visibility: hidden;
-			}
-
-			input {
-				position: relative;
-				z-index: 1;
-				width: 100%;
-
-				&::placeholder {
-					opacity: 0;
-				}
-			}
-		}
-
-		.border-container,
-		.label-container {
-			position: absolute;
-			inset: 0;
-		}
-
-		.border-container {
-			overflow: hidden;
-
-			&::before {
-				content: '';
-
-				position: absolute;
-				inset: 0;
-
-				border: solid $border-width var(--color-contrast-mid);
-				border-radius: var(--border-radius-3);
-
-				clip-path: polygon(
-					0 0,
-					calc($input-horizontal-padding + var(--label-width) / 2) 0,
-					calc($input-horizontal-padding + var(--label-width) / 2) 2px,
-					calc($input-horizontal-padding + var(--label-width) / 2) 2px,
-					calc($input-horizontal-padding + var(--label-width) / 2) 0,
-					100% 0,
-					100% 100%,
-					0 100%
-				);
-
-				transition: clip-path $transition-duration ease-in-out;
-			}
-		}
-
-		.label {
-			transition:
-				transform $transition-duration ease-in-out,
-				font-size $transition-duration ease-in-out;
-		}
-
-		.placeholder {
-			transform: translateY(calc(var(--input-height) / 2));
-			color: var(--color-contrast-mid);
-			opacity: 0;
-			transition:
-				transform $transition-duration ease-in-out,
-				opacity $transition-duration ease-in-out;
-		}
-
-		&.focused,
-		&.filled {
-			.border-container {
-				&::before {
-					$clip-gap: 3px;
-
-					clip-path: polygon(
-						0 0,
-						calc($input-horizontal-padding - $clip-gap) 0,
-						calc($input-horizontal-padding - $clip-gap) 2px,
-						calc($input-horizontal-padding + var(--label-width) + $clip-gap) 2px,
-						calc($input-horizontal-padding + var(--label-width) + $clip-gap) 0,
-						100% 0,
-						100% 100%,
-						0 100%
-					);
-				}
-			}
-
-			.label {
-				transform: translateY(calc(-1 * var(--input-height) / 2 + 1px));
-				font-size: var(--font-size-sm);
-			}
-
-			.placeholder {
-				transform: translateY(0);
-				opacity: 1;
-			}
-		}
-
-		&:hover,
-		&.focused {
-			.border-container {
-				&::before {
-					border-color: var(--color-accent);
-				}
-			}
-		}
-
-		&.filled {
-			.placeholder {
+		// The native placeholder is replaced by the animated .value-overlay,
+		// which only shows while the label floats.
+		input {
+			&::placeholder {
 				opacity: 0;
-				transition: none;
 			}
 		}
 	}

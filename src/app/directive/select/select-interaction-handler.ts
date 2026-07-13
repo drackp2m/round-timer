@@ -2,7 +2,6 @@ import { SelectStore } from '@app/directive/select/select.store';
 
 export interface SelectInteractionHooks {
 	isInsideShell: (target: Node) => boolean;
-	getFocusElement: () => HTMLElement;
 	openDropdown: () => void;
 	closeDropdown: () => void;
 	selectOption: (value: string) => void;
@@ -37,8 +36,7 @@ export class SelectInteractionHandler {
 				break;
 
 			case 'Escape':
-				event.preventDefault();
-				this.hooks.closeDropdown();
+				this.handleEscape(event);
 
 				break;
 
@@ -64,29 +62,59 @@ export class SelectInteractionHandler {
 	}
 
 	attachOutsideListeners(): void {
-		window.addEventListener('pointerdown', this.onPointerDown);
+		window.addEventListener('pointerdown', this.onPointerDown, { capture: true });
 		window.addEventListener('mousemove', this.onMouseMove);
 	}
 
 	detachOutsideListeners(): void {
-		window.removeEventListener('pointerdown', this.onPointerDown);
+		window.removeEventListener('pointerdown', this.onPointerDown, { capture: true });
 		window.removeEventListener('mousemove', this.onMouseMove);
 	}
 
+	/**
+	 * Mimics native popup dismissal: the pointerdown that closes the dropdown
+	 * is swallowed before reaching its target (hence the capture phase), so
+	 * it neither moves the focus nor activates whatever sits under the
+	 * pointer — e.g. another select's shell.
+	 */
 	private readonly onPointerDown = (event: PointerEvent): void => {
 		if (this.hooks.isInsideShell(event.target as Node)) {
 			return;
 		}
 
-		const willCauseFocusLoss = document.activeElement === this.hooks.getFocusElement();
-
-		if (willCauseFocusLoss) {
-			event.preventDefault();
-			event.stopPropagation();
-		}
-
+		event.preventDefault();
+		event.stopPropagation();
+		this.swallowNextClick();
 		this.hooks.closeDropdown();
 	};
+
+	/**
+	 * A swallowed pointerdown still produces a click; consume it too so the
+	 * dismissing interaction stays inert end to end. Disarmed by the next
+	 * pointerdown in case the click never fires (e.g. the pointer was
+	 * dragged away before release).
+	 */
+	private swallowNextClick(): void {
+		const controller = new AbortController();
+		const { signal } = controller;
+
+		window.addEventListener(
+			'click',
+			(event) => {
+				event.preventDefault();
+				event.stopPropagation();
+				controller.abort();
+			},
+			{ capture: true, signal },
+		);
+		window.addEventListener(
+			'pointerdown',
+			() => {
+				controller.abort();
+			},
+			{ capture: true, signal },
+		);
+	}
 
 	private readonly onMouseMove = (event: MouseEvent): void => {
 		if (!this.store.isOpen()) {
@@ -99,6 +127,21 @@ export class SelectInteractionHandler {
 
 		this.store.clearHighlight();
 	};
+
+	/**
+	 * Escape only belongs to the select while its dropdown is open — and then
+	 * it must not leak further (one press closes a single layer, e.g. not
+	 * also a surrounding modal). Closed, it passes through untouched.
+	 */
+	private handleEscape(event: KeyboardEvent): void {
+		if (!this.store.isOpen()) {
+			return;
+		}
+
+		event.preventDefault();
+		event.stopPropagation();
+		this.hooks.closeDropdown();
+	}
 
 	private handleEnter(event: KeyboardEvent): void {
 		if (!this.store.isOpen()) {

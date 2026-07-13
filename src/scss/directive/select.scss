@@ -1,109 +1,23 @@
-@use '../abstract/variable' as var;
+@use '../abstract/field';
 
 @layer component {
 	.app-select {
-		$input-horizontal-padding: var(--spacing-3);
-		$input-vertical-padding: var(--spacing-2);
-		$border-width: 1.5px;
-		$border-radius: var(--border-radius-3);
-		$transition-duration: 0.25s;
+		@include field.shell(select);
 
-		position: relative;
-		border-radius: $border-radius;
-		transition: box-shadow $transition-duration ease-in-out;
+		cursor: pointer;
 
-		select,
-		.border-container,
-		.label-container {
-			padding: $input-vertical-padding $input-horizontal-padding;
-		}
-
-		label {
-			span {
-				position: absolute;
-				font-size: var(--font-size-sm);
-				visibility: hidden;
-			}
-
-			select {
-				pointer-events: none;
-				position: relative;
-				z-index: 1;
-				width: 100%;
-			}
-		}
-
-		.border-container,
-		.label-container {
-			position: absolute;
-			inset: 0;
-		}
-
-		label select,
-		.label-container {
+		// Focus and keyboard interaction belong to the native select; the
+		// wrapper is the pointer surface (see SelectShellComponent).
+		select {
 			pointer-events: none;
-		}
-
-		.border-container {
-			overflow: hidden;
-
-			&::before {
-				content: '';
-
-				position: absolute;
-				inset: 0;
-
-				border: solid $border-width var(--color-contrast-mid);
-				border-radius: $border-radius;
-
-				clip-path: polygon(
-					0 0,
-					calc($input-horizontal-padding + var(--label-width) / 2) 0,
-					calc($input-horizontal-padding + var(--label-width) / 2) 2px,
-					calc($input-horizontal-padding + var(--label-width) / 2) 2px,
-					calc($input-horizontal-padding + var(--label-width) / 2) 0,
-					100% 0,
-					100% 100%,
-					0 100%
-				);
-
-				transition: clip-path $transition-duration ease-in-out;
-			}
-		}
-
-		.label {
-			transition:
-				transform $transition-duration ease-in-out,
-				font-size $transition-duration ease-in-out;
-		}
-
-		.selected-option {
-			transform: translateY(calc(var(--input-height) / 2));
-			color: var(--color-contrast-mid);
-			opacity: 0;
-			transition:
-				transform $transition-duration ease-in-out,
-				opacity $transition-duration ease-in-out;
 		}
 
 		.search-overlay {
 			display: none;
-
-			input {
-				width: 100%;
-				padding: 0;
-				border: none;
-
-				font: inherit;
-				color: inherit;
-
-				background: none;
-				outline: none;
-			}
 		}
 
 		&.searching {
-			.selected-option {
+			.value-overlay {
 				display: none;
 			}
 
@@ -114,99 +28,37 @@
 			}
 		}
 
-		&.focused,
-		&.filled {
-			.border-container {
-				&::before {
-					$clip-gap: 3px;
-
-					clip-path: polygon(
-						0 0,
-						calc($input-horizontal-padding - $clip-gap) 0,
-						calc($input-horizontal-padding - $clip-gap) 2px,
-						calc($input-horizontal-padding + var(--label-width) + $clip-gap) 2px,
-						calc($input-horizontal-padding + var(--label-width) + $clip-gap) 0,
-						100% 0,
-						100% 100%,
-						0 100%
-					);
-				}
-			}
-
-			.label {
-				transform: translateY(calc(-1 * var(--input-height) / 2 + 1px));
-				font-size: var(--font-size-sm);
-			}
-
-			.selected-option {
-				transform: translateY(0);
-				opacity: 1;
-			}
-		}
-
-		&:hover,
-		&.focused {
-			$shadow: 0 0 6px
-				color-mix(
-					in oklab,
-					color-mix(in oklab, var(--color-accent) 30%, transparent) 80%,
-					rgb(255 210 75)
-				);
-
-			box-shadow:
-				$shadow,
-				inset $shadow;
-
-			.border-container {
-				&::before {
-					border-color: var(--color-accent);
-				}
-			}
-		}
-
-		&.filled {
-			.selected-option {
-				opacity: 0;
-				transition: none;
-			}
-		}
-
 		.app-select-options {
-			position: relative;
-			display: block;
+			position: absolute;
+			z-index: 2;
+			top: calc(100% - field.$border-width);
 
-			.options-container {
-				position: absolute;
-				z-index: 2;
-				transform: translateY(-1 * $border-width);
+			overflow: hidden auto;
 
-				overflow: scroll;
+			width: 100%;
+			max-height: 395px;
+			padding: var(--spacing-1) 0;
+			border: solid field.$border-width var(--color-contrast-mid);
+			border-radius: field.$border-radius;
 
-				width: 100%;
-				max-height: 395px;
-				padding: var(--spacing-1) 0;
-				border: solid 1.5px var(--color-contrast-mid);
-				border-radius: $border-radius;
+			background: var(--color-primary);
 
-				background: var(--color-primary);
+			.option {
+				padding: var(--spacing-1) var(--spacing-3);
 
-				.option {
-					padding: var(--spacing-1) var(--spacing-3);
-
-					&.highlighted {
-						background-color: var(--color-primary-mid);
-					}
-
-					&.disabled {
-						pointer-events: none;
-						opacity: 0.5;
-					}
+				&.highlighted {
+					background-color: var(--color-primary-mid);
 				}
 
-				.no-matches {
-					padding: var(--spacing-1) var(--spacing-3);
-					color: var(--color-contrast-mid);
+				&.disabled {
+					pointer-events: none;
+					opacity: 0.5;
 				}
+			}
+
+			.no-matches {
+				padding: var(--spacing-1) var(--spacing-3);
+				color: var(--color-contrast-mid);
 			}
 		}
 
@@ -217,16 +69,23 @@
 			}
 		}
 
+		.sr-status {
+			position: absolute;
+			overflow: hidden;
+			width: 1px;
+			height: 1px;
+		}
+
 		&:not(.open) {
-			.options-container {
+			.app-select-options {
 				display: none;
 			}
 		}
 
 		&.position-top {
-			.options-container {
-				bottom: 0;
-				transform: translateY(calc(-1 * var(--input-height) + $border-width));
+			.app-select-options {
+				top: auto;
+				bottom: calc(100% - field.$border-width);
 			}
 		}
 	}

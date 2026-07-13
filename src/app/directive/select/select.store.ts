@@ -17,6 +17,7 @@ interface SelectStoreProps {
 	isOpen: boolean;
 	focused: boolean;
 	filled: boolean;
+	disabled: boolean;
 }
 
 const initialState: SelectStoreProps = {
@@ -27,6 +28,7 @@ const initialState: SelectStoreProps = {
 	isOpen: false,
 	focused: false,
 	filled: false,
+	disabled: false,
 };
 
 /**
@@ -67,6 +69,10 @@ export class SelectStore extends signalStore({ protectedState: false }, withStat
 
 	setFocused(focused: boolean): void {
 		patchState(this, { focused });
+	}
+
+	setDisabled(disabled: boolean): void {
+		patchState(this, { disabled });
 	}
 
 	openDropdown(): void {
