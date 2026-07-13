@@ -1,0 +1,174 @@
+// Shared shell for the themed form fields (input, select): the wrapper the
+// directives build around the native control paints its own border, floats
+// the label into a notch carved out of that border (and of the glow) via
+// clip-path, and reveals a value overlay while the label floats.
+//
+// Expected DOM inside the wrapper that receives `shell($control)`:
+//   <control>          the native control, matched by the $control selector
+//   .border-container  border + notch (clip-path) + glow (box-shadow)
+//     .value-overlay   placeholder / selected text, shown while floating
+//   .label             visible floating label
+//   .label-measure     hidden single-line copy of the label, measured into
+//                      --label-width by the directive
+// State classes toggled by the directives on the wrapper itself:
+// `focused`, `filled`, `disabled`.
+
+$horizontal-padding: var(--spacing-3);
+$vertical-padding: var(--spacing-2);
+$border-width: 1.5px;
+$border-radius: var(--border-radius-3);
+$transition-duration: 0.25s;
+$clip-gap: 3px;
+
+@mixin shell($control) {
+	$glow: var(--glow-size);
+	$glow-neg: calc(-1 * var(--glow-size));
+
+	// Blur radius of the focus/hover glow. The same value drives how deep
+	// the label notch is carved out of the box-shadow — up into the outset
+	// half and down into the inset half — so the gap stays clean on both
+	// sides of the border and the clip always matches the glow's reach.
+	--glow-size: 6px;
+
+	// Notch edges shared by both clip-path states so they transition into
+	// each other. The end is capped at the field width minus the padding:
+	// a label longer than the field must not carve past the right border.
+	--notch-start: calc(#{$horizontal-padding} - #{$clip-gap});
+	--notch-end: min(
+		calc(#{$horizontal-padding} + var(--label-width) + #{$clip-gap}),
+		calc(100% - #{$horizontal-padding})
+	);
+	--notch-mid: calc((var(--notch-start) + var(--notch-end)) / 2);
+
+	position: relative;
+	border-radius: $border-radius;
+
+	#{$control},
+	.border-container,
+	.label {
+		padding: $vertical-padding $horizontal-padding;
+	}
+
+	#{$control} {
+		position: relative;
+		z-index: 1;
+		width: 100%;
+	}
+
+	// Measured with nowrap: an absolutely-positioned span cannot grow past
+	// its containing block, so a wrapping label would report the wrapper's
+	// width instead of the text's real single-line width.
+	.label-measure {
+		position: absolute;
+		font-size: var(--font-size-sm);
+		white-space: nowrap;
+		visibility: hidden;
+	}
+
+	.border-container,
+	.label {
+		position: absolute;
+		inset: 0;
+	}
+
+	.label {
+		pointer-events: none;
+
+		overflow: hidden;
+
+		text-overflow: ellipsis;
+		white-space: nowrap;
+
+		transition:
+			transform $transition-duration ease-in-out,
+			font-size $transition-duration ease-in-out;
+	}
+
+	// Border, notch (clip-path) and glow (box-shadow) live on the same
+	// element so the notch is carved out of the border AND the shadow.
+	.border-container {
+		overflow: hidden;
+
+		border: solid $border-width var(--color-contrast-mid);
+		border-radius: $border-radius;
+
+		clip-path: polygon(
+			$glow-neg $glow-neg,
+			var(--notch-mid) $glow-neg,
+			var(--notch-mid) $glow,
+			var(--notch-mid) $glow,
+			var(--notch-mid) $glow-neg,
+			calc(100% + $glow) $glow-neg,
+			calc(100% + $glow) calc(100% + $glow),
+			$glow-neg calc(100% + $glow)
+		);
+
+		transition:
+			clip-path $transition-duration ease-in-out,
+			box-shadow $transition-duration ease-in-out;
+	}
+
+	.value-overlay {
+		transform: translateY(calc(var(--input-height) / 2));
+		color: var(--color-contrast-mid);
+		opacity: 0;
+		transition:
+			transform $transition-duration ease-in-out,
+			opacity $transition-duration ease-in-out;
+	}
+
+	&.focused,
+	&.filled {
+		.border-container {
+			clip-path: polygon(
+				$glow-neg $glow-neg,
+				var(--notch-start) $glow-neg,
+				var(--notch-start) $glow,
+				var(--notch-end) $glow,
+				var(--notch-end) $glow-neg,
+				calc(100% + $glow) $glow-neg,
+				calc(100% + $glow) calc(100% + $glow),
+				$glow-neg calc(100% + $glow)
+			);
+		}
+
+		.label {
+			transform: translateY(calc(-1 * var(--input-height) / 2 + 1px));
+			font-size: var(--font-size-sm);
+		}
+
+		.value-overlay {
+			transform: translateY(0);
+			opacity: 1;
+		}
+	}
+
+	&:hover,
+	&.focused {
+		$shadow: 0 0 var(--glow-size)
+			color-mix(
+				in oklab,
+				color-mix(in oklab, var(--color-accent) 30%, transparent) 80%,
+				rgb(255 210 75)
+			);
+
+		.border-container {
+			border-color: var(--color-accent);
+			box-shadow:
+				$shadow,
+				inset $shadow;
+		}
+	}
+
+	&.filled {
+		.value-overlay {
+			opacity: 0;
+			transition: none;
+		}
+	}
+
+	&.disabled {
+		pointer-events: none;
+		opacity: 0.5;
+	}
+}

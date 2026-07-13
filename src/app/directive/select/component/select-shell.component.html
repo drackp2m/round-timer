@@ -11,7 +11,7 @@
 	<ng-content></ng-content>
 
 	<div class="border-container flex-row justify-between align-center" aria-hidden="true">
-		<span class="selected-option">{{ store.selectedText() }}</span>
+		<span class="value-overlay">{{ store.selectedText() }}</span>
 		<span class="search-overlay">{{ store.searchText() }}</span>
 		<app-svg icon="chevron-down" [size]="18" />
 	</div>

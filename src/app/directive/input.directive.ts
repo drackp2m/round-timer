@@ -37,12 +37,11 @@ export class InputDirective implements OnInit, AfterViewInit {
 	private readonly destroyRef = inject(DestroyRef);
 
 	private readonly wrapperElement: HTMLDivElement = this.createWrapper();
-	private readonly labelSpanElement: HTMLSpanElement = createTypedElement(this.renderer2, 'span');
+	private readonly labelSpanElement: HTMLSpanElement = this.createLabelMeasure();
 	private readonly labelElement: HTMLLabelElement = this.createLabel();
 	private readonly fakeLabelElement: HTMLSpanElement = this.createFakeLabel();
 	private readonly borderContainerElement: HTMLDivElement = this.createBorderContainer();
-	private readonly labelContainerElement: HTMLDivElement = this.creteLabelContainer();
-	private readonly placeholderElement: HTMLSpanElement = this.createPlaceholderSpan();
+	private readonly valueOverlayElement: HTMLSpanElement = this.createValueOverlay();
 
 	constructor() {
 		effect(() => {
@@ -157,10 +156,9 @@ export class InputDirective implements OnInit, AfterViewInit {
 		this.renderer2.removeChild(parentElement, inputElement);
 		this.renderer2.appendChild(this.labelElement, inputElement);
 		this.renderer2.appendChild(this.wrapperElement, this.labelElement);
-		this.renderer2.appendChild(this.labelContainerElement, this.fakeLabelElement);
-		this.renderer2.appendChild(this.borderContainerElement, this.placeholderElement);
+		this.renderer2.appendChild(this.borderContainerElement, this.valueOverlayElement);
 		this.renderer2.appendChild(this.wrapperElement, this.borderContainerElement);
-		this.renderer2.appendChild(this.wrapperElement, this.labelContainerElement);
+		this.renderer2.appendChild(this.wrapperElement, this.fakeLabelElement);
 
 		if (null !== nextSibling) {
 			this.renderer2.insertBefore(parentElement, this.wrapperElement, nextSibling);
@@ -177,9 +175,20 @@ export class InputDirective implements OnInit, AfterViewInit {
 		return element;
 	}
 
+	// The measure span lives inside the real label (which wraps the input),
+	// so the label keeps its text content while the visible floating label
+	// is the sibling `.label` element.
 	private createLabel(): HTMLLabelElement {
 		const element = createTypedElement(this.renderer2, 'label');
 		this.renderer2.appendChild(element, this.labelSpanElement);
+
+		return element;
+	}
+
+	private createLabelMeasure(): HTMLSpanElement {
+		const element = createTypedElement(this.renderer2, 'span');
+
+		this.renderer2.addClass(element, 'label-measure');
 
 		return element;
 	}
@@ -188,6 +197,7 @@ export class InputDirective implements OnInit, AfterViewInit {
 		const element = createTypedElement(this.renderer2, 'p') as HTMLSpanElement;
 
 		this.renderer2.addClass(element, 'label');
+		this.renderer2.setAttribute(element, 'aria-hidden', 'true');
 
 		return element;
 	}
@@ -197,32 +207,28 @@ export class InputDirective implements OnInit, AfterViewInit {
 
 		this.renderer2.addClass(element, 'border-container');
 		this.renderer2.addClass(element, 'flex-row');
+		this.renderer2.setAttribute(element, 'aria-hidden', 'true');
 
 		return element;
 	}
 
-	private creteLabelContainer(): HTMLDivElement {
-		const element = createTypedElement(this.renderer2, 'div');
-
-		this.renderer2.addClass(element, 'label-container');
-
-		return element;
-	}
-
-	private createPlaceholderSpan(): HTMLSpanElement {
+	private createValueOverlay(): HTMLSpanElement {
 		const element = createTypedElement(this.renderer2, 'span');
 
-		this.renderer2.addClass(element, 'placeholder');
+		this.renderer2.addClass(element, 'value-overlay');
 
 		return element;
 	}
 
+	// The visual label copies are decorative (aria-hidden / visibility:
+	// hidden), so the accessible name is set explicitly on the input.
 	private fillLabel(value: string): void {
 		this.renderer2.setProperty(this.labelSpanElement, 'textContent', value);
 		this.renderer2.setProperty(this.fakeLabelElement, 'textContent', value);
+		this.renderer2.setAttribute(this.elementRef.nativeElement, 'aria-label', value);
 	}
 
 	private fillPlaceholder(value: string): void {
-		this.renderer2.setProperty(this.placeholderElement, 'textContent', value);
+		this.renderer2.setProperty(this.valueOverlayElement, 'textContent', value);
 	}
 }

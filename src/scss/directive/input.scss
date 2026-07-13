@@ -1,151 +1,15 @@
-@use '../abstract/variable' as var;
+@use '../abstract/field';
 
 @layer component {
 	.app-input {
-		$input-horizontal-padding: var(--spacing-3);
-		$input-vertical-padding: var(--spacing-2);
-		$border-width: 1.5px;
-		$transition-duration: 0.25s;
-		$clip-gap: 3px;
+		@include field.shell(input);
 
-		// Notch edges shared by both clip-path states so they transition into
-		// each other. The end is capped at the field width minus the padding:
-		// a label longer than the field must not carve past the right border.
-		--notch-start: calc(#{$input-horizontal-padding} - #{$clip-gap});
-		--notch-end: min(
-			calc(#{$input-horizontal-padding} + var(--label-width) + #{$clip-gap}),
-			calc(100% - #{$input-horizontal-padding})
-		);
-		--notch-mid: calc((var(--notch-start) + var(--notch-end)) / 2);
-
-		position: relative;
-
-		input,
-		.border-container,
-		.label-container {
-			padding: $input-vertical-padding $input-horizontal-padding;
-		}
-
-		label {
-			// Measured with nowrap: an absolutely-positioned span cannot grow
-			// past its containing block, so a wrapping label would report the
-			// wrapper's width instead of the text's real single-line width.
-			span {
-				position: absolute;
-				font-size: var(--font-size-sm);
-				white-space: nowrap;
-				visibility: hidden;
-			}
-
-			input {
-				position: relative;
-				z-index: 1;
-				width: 100%;
-
-				&::placeholder {
-					opacity: 0;
-				}
-			}
-		}
-
-		.border-container,
-		.label-container {
-			position: absolute;
-			inset: 0;
-		}
-
-		.border-container {
-			overflow: hidden;
-
-			&::before {
-				content: '';
-
-				position: absolute;
-				inset: 0;
-
-				border: solid $border-width var(--color-contrast-mid);
-				border-radius: var(--border-radius-3);
-
-				clip-path: polygon(
-					0 0,
-					var(--notch-mid) 0,
-					var(--notch-mid) 2px,
-					var(--notch-mid) 2px,
-					var(--notch-mid) 0,
-					100% 0,
-					100% 100%,
-					0 100%
-				);
-
-				transition: clip-path $transition-duration ease-in-out;
-			}
-		}
-
-		.label {
-			overflow: hidden;
-			text-overflow: ellipsis;
-			white-space: nowrap;
-			transition:
-				transform $transition-duration ease-in-out,
-				font-size $transition-duration ease-in-out;
-		}
-
-		.placeholder {
-			transform: translateY(calc(var(--input-height) / 2));
-			color: var(--color-contrast-mid);
-			opacity: 0;
-			transition:
-				transform $transition-duration ease-in-out,
-				opacity $transition-duration ease-in-out;
-		}
-
-		&.focused,
-		&.filled {
-			.border-container {
-				&::before {
-					clip-path: polygon(
-						0 0,
-						var(--notch-start) 0,
-						var(--notch-start) 2px,
-						var(--notch-end) 2px,
-						var(--notch-end) 0,
-						100% 0,
-						100% 100%,
-						0 100%
-					);
-				}
-			}
-
-			.label {
-				transform: translateY(calc(-1 * var(--input-height) / 2 + 1px));
-				font-size: var(--font-size-sm);
-			}
-
-			.placeholder {
-				transform: translateY(0);
-				opacity: 1;
-			}
-		}
-
-		&:hover,
-		&.focused {
-			.border-container {
-				&::before {
-					border-color: var(--color-accent);
-				}
-			}
-		}
-
-		&.filled {
-			.placeholder {
+		// The native placeholder is replaced by the animated .value-overlay,
+		// which only shows while the label floats.
+		input {
+			&::placeholder {
 				opacity: 0;
-				transition: none;
 			}
-		}
-
-		&.disabled {
-			pointer-events: none;
-			opacity: 0.5;
 		}
 	}
 
