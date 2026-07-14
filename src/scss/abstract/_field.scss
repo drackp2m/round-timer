@@ -5,7 +5,11 @@ $border-radius: var(--border-radius-3);
 $transition-duration: 0.25s;
 $clip-gap: 3px;
 
-@mixin shell($control) {
+// $control: the native form element living inside the wrapping label.
+// $slider: the element that slides down half the shell height while the
+// field is idle and empty — the control itself for the input, the value
+// overlay for the select.
+@mixin shell($control, $slider: $control) {
 	$glow: var(--glow-size);
 	$glow-neg: calc(-1 * var(--glow-size));
 
@@ -31,8 +35,28 @@ $clip-gap: 3px;
 
 	#{$control} {
 		position: relative;
-		z-index: 1;
 		width: 100%;
+	}
+
+	// While idle and empty the field hides its value layer by sliding it
+	// down; each caller styles how its text fades on top of this.
+	#{$slider} {
+		transform: translateY(calc(var(--input-height) / 2));
+		transition: transform $transition-duration ease-in-out;
+	}
+
+	// The real label wraps the control: as a block it spans the whole shell
+	// (it is the field's hit area) and clips the control while it slides
+	// down, so nothing shows past the rounded border. The clip-path is
+	// needed on top of overflow because browsers hit-test the rounded
+	// overflow clip only rectangularly against the control's own stacking
+	// context, which left the bottom corners focusable from outside the
+	// border.
+	> label {
+		overflow: hidden;
+		display: block;
+		border-radius: $border-radius;
+		clip-path: inset(0 round $border-radius);
 	}
 
 	.label-measure {
@@ -66,6 +90,10 @@ $clip-gap: 3px;
 	}
 
 	.border-container {
+		// It sits absolutely over the whole field, so it would swallow the
+		// clicks meant for the wrapping label underneath.
+		pointer-events: none;
+
 		overflow: hidden;
 		display: flex;
 		align-items: center;
@@ -91,6 +119,10 @@ $clip-gap: 3px;
 
 	&.focused,
 	&.filled {
+		#{$slider} {
+			transform: translateY(0);
+		}
+
 		.border-container {
 			clip-path: polygon(
 				$glow-neg $glow-neg,

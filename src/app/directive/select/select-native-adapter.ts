@@ -109,16 +109,18 @@ export class SelectNativeAdapter {
 		return this.selectElement.disabled;
 	}
 
-	setExpanded(expanded: boolean): void {
-		this.selectElement.setAttribute('aria-expanded', expanded.toString());
-	}
-
 	applyValue(value: string): void {
 		this.selectElement.value = value;
 		this.selectElement.dispatchEvent(new Event('change', { bubbles: true }));
 	}
 
-	focus(): void {
-		this.selectElement.focus();
+	/**
+	 * The select keeps carrying the form value but plays no interactive role
+	 * (the shell's combobox search input owns focus and keyboard), so it must
+	 * be unreachable for both Tab and assistive technology.
+	 */
+	hide(): void {
+		this.selectElement.tabIndex = -1;
+		this.selectElement.setAttribute('aria-hidden', 'true');
 	}
 }

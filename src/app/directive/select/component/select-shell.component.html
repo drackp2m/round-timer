@@ -4,25 +4,47 @@
 	[class.focused]="store.focused()"
 	[class.filled]="store.filled()"
 	[class.open]="store.isOpen()"
-	[class.searching]="'' !== store.searchText()"
 	[class.position-top]="positionTop()"
 	[class.disabled]="store.disabled()"
 >
-	<ng-content></ng-content>
+	<!-- Same structure as the input directive builds: the real label wraps
+	the control (a combobox search input owning focus, keyboard and text
+	rendering) plus the hidden measure span, while the visible floating label
+	is the decorative sibling `.label` element. The projected native select
+	only carries the form value. -->
+	<label [attr.for]="searchInputId()">
+		<span #labelText class="label-measure" aria-hidden="true">{{ label() }}</span>
+		<input
+			#searchInput
+			class="search-input"
+			type="text"
+			role="combobox"
+			autocomplete="off"
+			aria-autocomplete="list"
+			[id]="searchInputId()"
+			[attr.aria-controls]="listboxId()"
+			[attr.aria-expanded]="store.isOpen()"
+			[attr.aria-label]="label()"
+			[placeholder]="placeholder()"
+			[value]="displayText()"
+			[disabled]="store.disabled()"
+			(focus)="onSearchFocus()"
+			(blur)="onSearchBlur()"
+			(input)="onSearchInput($event)"
+			(keydown)="searchKeydown.emit($event)"
+		/>
+		<ng-content></ng-content>
+	</label>
 
-	<div class="border-container flex-row justify-between align-center" aria-hidden="true">
-		<span class="value-overlay">{{ store.selectedText() }}</span>
-		<span class="search-overlay">{{ store.searchText() }}</span>
+	<div class="border-container flex-row align-center" aria-hidden="true">
 		<app-svg icon="chevron-down" [size]="18" />
 	</div>
 
-	<label class="label" [attr.for]="selectId()">{{ label() }}</label>
-
-	<span #labelText class="label-measure" aria-hidden="true">{{ label() }}</span>
+	<p class="label" aria-hidden="true">{{ label() }}</p>
 
 	<div class="sr-status" aria-live="polite">{{ announcement() }}</div>
 
-	<div class="app-select-options" aria-hidden="true">
+	<div class="app-select-options" aria-hidden="true" [id]="listboxId()">
 		@for (option of store.visibleOptions(); track option.value; let index = $index) {
 			<div
 				class="option"

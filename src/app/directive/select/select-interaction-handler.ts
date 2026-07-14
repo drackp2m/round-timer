@@ -8,9 +8,9 @@ export interface SelectInteractionHooks {
 }
 
 /**
- * Translates raw user events (keydown on the native select, pointer/mouse
- * activity outside the shell while open) into store updates and dropdown
- * actions. Holds no DOM or option state itself.
+ * Translates raw user events (keydown on the shell's search input,
+ * pointer/mouse activity outside the shell while open) into store updates
+ * and dropdown actions. Holds no DOM or option state itself.
  */
 export class SelectInteractionHandler {
 	constructor(
@@ -47,12 +47,6 @@ export class SelectInteractionHandler {
 
 			case 'ArrowUp':
 				this.handleArrow(event, -1);
-
-				break;
-
-			case 'Backspace':
-				event.preventDefault();
-				this.store.removeSearchChar();
 
 				break;
 
@@ -152,7 +146,16 @@ export class SelectInteractionHandler {
 		this.confirmHighlighted();
 	}
 
+	/**
+	 * Space only toggles/confirms while the search box is empty; once the
+	 * user is typing it stays a regular character, handled natively by the
+	 * search input.
+	 */
 	private handleSpace(event: KeyboardEvent): void {
+		if ('' !== this.store.searchText()) {
+			return;
+		}
+
 		event.preventDefault();
 
 		if (this.store.isOpen()) {
@@ -181,18 +184,25 @@ export class SelectInteractionHandler {
 		}
 	}
 
+	/**
+	 * While open, typing belongs natively to the real search input (any
+	 * character, paste included). Closed, a printable key opens the dropdown
+	 * seeded with that character — the input still displays the selected
+	 * value at that moment, so the default insertion must be suppressed.
+	 * Modifier chords are left to the browser, except AltGr (reported as
+	 * ctrl+alt), which is how several layouts type regular characters.
+	 */
 	private handleSearchKey(event: KeyboardEvent): void {
-		if (!/^[a-z0-9]$/i.test(event.key)) {
+		const isAltGr = event.ctrlKey && event.altKey;
+		const isShortcut = (event.ctrlKey || event.metaKey) && !isAltGr;
+
+		if (this.store.isOpen() || 1 !== event.key.length || isShortcut) {
 			return;
 		}
 
 		event.preventDefault();
-
-		if (!this.store.isOpen()) {
-			this.hooks.openDropdown();
-		}
-
-		this.store.appendSearchChar(event.key);
+		this.hooks.openDropdown();
+		this.store.setSearchText(event.key);
 	}
 
 	private confirmHighlighted(): void {

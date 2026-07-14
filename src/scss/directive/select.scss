@@ -2,54 +2,46 @@
 
 @layer component {
 	.app-select {
-		@include field.shell(select);
+		@include field.shell('.search-input');
 
 		cursor: pointer;
 
-		// Focus and keyboard interaction belong to the native select; the
-		// wrapper is the pointer surface (see SelectShellComponent).
+		// The native select keeps carrying the form value, but the combobox
+		// search input owns focus, keyboard and text rendering (see
+		// SelectShellComponent): the select is just an invisible, inert tag.
 		select {
 			pointer-events: none;
-		}
-
-		.value-overlay {
-			transform: translateY(calc(var(--input-height) / 2));
-			color: var(--color-contrast-mid);
+			position: absolute;
 			opacity: 0;
-			transition:
-				transform field.$transition-duration ease-in-out,
-				opacity field.$transition-duration ease-in-out;
 		}
 
+		.search-input {
+			cursor: text;
+
+			// Room for the chevron, which sits at the end of the border layer.
+			padding-right: calc(#{field.$horizontal-padding} + 24px);
+
+			// Same trick as the themed input: the placeholder hides via color
+			// (never via opacity or display) so it can fade in and out.
+			&::placeholder {
+				color: transparent;
+				transition: color field.$transition-duration ease-in-out;
+			}
+		}
+
+		// While open the field is always in search mode (the search starts
+		// empty), so the placeholder invites typing even when an option is
+		// already selected.
 		&.focused,
-		&.filled {
-			.value-overlay {
-				transform: translateY(0);
-				opacity: 1;
+		&.open {
+			.search-input::placeholder {
+				color: var(--color-contrast-mid);
 			}
 		}
 
-		&.filled {
-			.value-overlay {
-				opacity: 0;
-				transition: none;
-			}
-		}
-
-		.search-overlay {
-			display: none;
-		}
-
-		&.searching {
-			.value-overlay {
-				display: none;
-			}
-
-			.search-overlay {
-				display: inline-flex;
-				flex: 1;
-				align-items: center;
-			}
+		// Only the chevron remains inside the border layer.
+		.border-container {
+			justify-content: flex-end;
 		}
 
 		.app-select-options {
@@ -83,13 +75,6 @@
 			.no-matches {
 				padding: var(--spacing-1) var(--spacing-3);
 				color: var(--color-contrast-mid);
-			}
-		}
-
-		&:not(.filled),
-		&.searching {
-			select {
-				color: transparent;
 			}
 		}
 

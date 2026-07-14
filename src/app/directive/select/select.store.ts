@@ -125,17 +125,8 @@ export class SelectStore extends signalStore({ protectedState: false }, withStat
 		return highlighted;
 	}
 
-	appendSearchChar(char: string): void {
-		patchState(this, { searchText: this.searchText() + char });
-		this.highlightFirstMatch();
-	}
-
-	removeSearchChar(): void {
-		if ('' === this.searchText()) {
-			return;
-		}
-
-		patchState(this, { searchText: this.searchText().slice(0, -1) });
+	setSearchText(searchText: string): void {
+		patchState(this, { searchText });
 		this.highlightFirstMatch();
 	}
 

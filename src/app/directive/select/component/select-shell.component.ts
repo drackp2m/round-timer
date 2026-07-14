@@ -25,9 +25,9 @@ import { ViewportService } from '@app/service/viewport.service';
  * layout concerns: measuring the label/input CSS variables and deciding
  * whether the dropdown should open upwards.
  *
- * Pointer events are handled at the host level: the shell is a pointer-only
- * surface, while focus and keyboard interaction belong to the projected
- * native select — the shell itself must never be focusable.
+ * Pointer events are handled at the host level. Focus, keyboard and text
+ * rendering belong to the shell's own combobox search input; the projected
+ * native select only carries the form value.
  */
 @Component({
 	selector: 'app-select-shell',
@@ -37,13 +37,31 @@ import { ViewportService } from '@app/service/viewport.service';
 export class SelectShellComponent {
 	readonly label = input.required<string>();
 	readonly selectId = input.required<string>();
+	readonly placeholder = input.required<string>();
 	readonly optionTemplate = input<TemplateRef<{ $implicit: SelectOptionViewModel }>>();
 
 	readonly optionSelected = output<string>();
 	readonly toggleRequested = output();
+	readonly closeRequested = output();
+	readonly searchKeydown = output<KeyboardEvent>();
 
 	protected readonly store = inject(SelectStore);
 	protected readonly positionTop = signal(false);
+	protected readonly searchInputId = computed<string>(() => `${this.selectId()}-search`);
+	protected readonly listboxId = computed<string>(() => `${this.selectId()}-listbox`);
+
+	/**
+	 * The field's single visible text: the live search while open (it always
+	 * starts empty — the search is cleared on close), the selected option's
+	 * text once closed, or nothing at all so the placeholder shows through.
+	 */
+	protected readonly displayText = computed<string>(() => {
+		if (this.store.isOpen()) {
+			return this.store.searchText();
+		}
+
+		return this.store.filled() ? this.store.selectedText() : '';
+	});
 
 	/**
 	 * Screen-reader feedback while the dropdown is open: the custom listbox
@@ -74,6 +92,8 @@ export class SelectShellComponent {
 	private readonly destroyRef = inject(DestroyRef);
 	private readonly wrapper = viewChild<ElementRef<HTMLElement>>('wrapper');
 	private readonly labelText = viewChild<ElementRef<HTMLElement>>('labelText');
+	private readonly searchInput = viewChild<ElementRef<HTMLInputElement>>('searchInput');
+	private readonly coarsePointer = window.matchMedia('(pointer: coarse)').matches;
 	private togglesOnClick = false;
 	private receivedPointerDown = false;
 
@@ -104,6 +124,13 @@ export class SelectShellComponent {
 		this.togglesOnClick = false;
 
 		if (this.isInsideOptions(event.target)) {
+			return;
+		}
+
+		// Pointer interactions inside the real search input must stay fully
+		// native (focus, caret placement, text selection); whether the
+		// dropdown opens is decided on click.
+		if (this.isInsideSearchInput(event.target)) {
 			return;
 		}
 
@@ -139,11 +166,30 @@ export class SelectShellComponent {
 		this.receivedPointerDown = false;
 		this.togglesOnClick = false;
 
-		if (!togglesNow || this.isInsideOptions(event.target)) {
+		if (this.isInsideOptions(event.target)) {
+			return;
+		}
+
+		// A click inside the search input only ever opens the dropdown
+		// (closing it or moving the caret is native business) — and not when
+		// the user just finished dragging a text selection to copy the value.
+		if (this.isInsideSearchInput(event.target)) {
+			if (!this.store.isOpen() && !this.hasTextSelection()) {
+				this.toggleRequested.emit();
+			}
+
+			return;
+		}
+
+		if (!togglesNow) {
 			return;
 		}
 
 		this.toggleRequested.emit();
+	}
+
+	focusSearchInput(): void {
+		this.searchInput()?.nativeElement.focus();
 	}
 
 	selectOption(option: SelectOptionViewModel): void {
@@ -158,8 +204,40 @@ export class SelectShellComponent {
 		}
 	}
 
+	protected onSearchFocus(): void {
+		this.store.setFocused(true);
+	}
+
+	protected onSearchBlur(): void {
+		this.store.setFocused(false);
+		this.closeRequested.emit();
+	}
+
+	protected onSearchInput(event: Event): void {
+		const value = (event.target as HTMLInputElement).value;
+
+		// Editing can also start while closed (paste, IME composition): the
+		// dropdown must open — which clears the previous search — before the
+		// new text lands in the store.
+		if (!this.store.isOpen()) {
+			this.toggleRequested.emit();
+		}
+
+		this.store.setSearchText(value);
+	}
+
 	private isInsideOptions(target: EventTarget | null): boolean {
 		return null !== (target as HTMLElement).closest('.app-select-options');
+	}
+
+	private isInsideSearchInput(target: EventTarget | null): boolean {
+		return null !== (target as HTMLElement).closest('.search-input');
+	}
+
+	private hasTextSelection(): boolean {
+		const element = this.searchInput()?.nativeElement;
+
+		return undefined !== element && element.selectionStart !== element.selectionEnd;
 	}
 
 	/**
@@ -205,7 +283,16 @@ export class SelectShellComponent {
 		);
 	}
 
+	/**
+	 * Coarse-pointer devices always open upwards: focusing the search input
+	 * pops the virtual keyboard and the browser auto-scrolls the field into
+	 * view, which would fight a downward dropdown.
+	 */
 	private isPositionedTop(): boolean {
+		if (this.coarsePointer) {
+			return true;
+		}
+
 		const wrapperElement = this.wrapper()?.nativeElement;
 
 		if (undefined === wrapperElement) {
