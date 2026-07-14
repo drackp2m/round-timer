@@ -84,9 +84,18 @@ export class SelectInteractionHandler {
 	 * Space only toggles/confirms while the search box is empty; once the
 	 * user is typing it stays a regular character, handled natively by the
 	 * search input. Mid type-ahead it is one more character of the query
-	 * ("new york"), not a toggle.
+	 * ("new york"), not a toggle. But arrowing through the options declares
+	 * the intent to pick one, and Space then confirms the highlight even
+	 * mid-search / mid-type-ahead.
 	 */
 	private handleSpace(event: KeyboardEvent): void {
+		if (this.store.isOpen() && this.store.arrowNavigated()) {
+			event.preventDefault();
+			this.confirmHighlighted();
+
+			return;
+		}
+
 		if ('' !== this.store.searchText()) {
 			return;
 		}

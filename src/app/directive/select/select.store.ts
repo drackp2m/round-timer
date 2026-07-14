@@ -20,6 +20,7 @@ interface SelectStoreProps {
 	disabled: boolean;
 	searchableOverride: boolean | null;
 	keyboardNavigating: boolean;
+	arrowNavigated: boolean;
 }
 
 const initialState: SelectStoreProps = {
@@ -33,6 +34,7 @@ const initialState: SelectStoreProps = {
 	disabled: false,
 	searchableOverride: null,
 	keyboardNavigating: false,
+	arrowNavigated: false,
 };
 
 const searchableOptionsThreshold = 12;
@@ -44,12 +46,20 @@ const searchableOptionsThreshold = 12;
  */
 @Injectable()
 export class SelectStore extends signalStore({ protectedState: false }, withState(initialState)) {
+	/**
+	 * Options the dropdown renders: all of them while the search is empty,
+	 * the matching ones while searching — where the empty placeholder option
+	 * never counts as a match.
+	 */
 	readonly visibleOptions = computed<SelectOptionViewModel[]>(() => {
 		const search = this.searchText().trim().toLowerCase();
 		const highlightedIndex = this.highlightedIndex();
 
 		return this.options()
-			.filter((option) => '' === search || option.label.toLowerCase().includes(search))
+			.filter(
+				(option) =>
+					'' === search || ('' !== option.value && option.label.toLowerCase().includes(search)),
+			)
 			.map((option, index) => ({ ...option, highlighted: index === highlightedIndex }));
 	});
 
@@ -114,6 +124,7 @@ export class SelectStore extends signalStore({ protectedState: false }, withStat
 			highlightedIndex: null,
 			searchText: '',
 			keyboardNavigating: false,
+			arrowNavigated: false,
 		});
 	}
 
@@ -126,7 +137,14 @@ export class SelectStore extends signalStore({ protectedState: false }, withStat
 		patchState(this, { keyboardNavigating });
 	}
 
+	/**
+	 * Arrow navigation also declares the intent to pick the highlight (see
+	 * `arrowNavigated`): Space then confirms it instead of behaving as one
+	 * more search / type-ahead character. Typing again withdraws the intent.
+	 */
 	moveHighlight(step: 1 | -1): void {
+		patchState(this, { arrowNavigated: true });
+
 		const visible = this.visibleOptions();
 		const start = (this.highlightedIndex() ?? (1 === step ? -1 : visible.length)) + step;
 
@@ -156,6 +174,8 @@ export class SelectStore extends signalStore({ protectedState: false }, withStat
 	 * highlight untouched, like a native select.
 	 */
 	highlightTypeahead(query: string): void {
+		patchState(this, { arrowNavigated: false });
+
 		const search = query.toLowerCase();
 		const index = this.visibleOptions().findIndex(
 			(option) =>
@@ -186,7 +206,7 @@ export class SelectStore extends signalStore({ protectedState: false }, withStat
 	}
 
 	setSearchText(searchText: string): void {
-		patchState(this, { searchText });
+		patchState(this, { searchText, arrowNavigated: false });
 		this.highlightFirstMatch();
 	}
 
