@@ -39,18 +39,8 @@ const initialState: SelectStoreProps = {
 
 const searchableOptionsThreshold = 12;
 
-/**
- * Single source of truth for one select's reactive UI state: the option
- * list, the open/focused/filled flags, the search text and the highlight.
- * Provided per directive instance; the shell component reads it directly.
- */
 @Injectable()
 export class SelectStore extends signalStore({ protectedState: false }, withState(initialState)) {
-	/**
-	 * Options the dropdown renders: all of them while the search is empty,
-	 * the matching ones while searching — where the empty placeholder option
-	 * never counts as a match.
-	 */
 	readonly visibleOptions = computed<SelectOptionViewModel[]>(() => {
 		const search = this.searchText().trim().toLowerCase();
 		const highlightedIndex = this.highlightedIndex();
@@ -63,12 +53,6 @@ export class SelectStore extends signalStore({ protectedState: false }, withStat
 			.map((option, index) => ({ ...option, highlighted: index === highlightedIndex }));
 	});
 
-	/**
-	 * Whether the field offers text search: forced by the consumer through
-	 * the `searchable` attribute when present, otherwise enabled
-	 * automatically for long option lists (the empty placeholder option
-	 * doesn't count).
-	 */
 	readonly searchable = computed<boolean>(() => {
 		const override = this.searchableOverride();
 

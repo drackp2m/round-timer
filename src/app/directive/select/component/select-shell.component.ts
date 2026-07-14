@@ -139,6 +139,7 @@ export class SelectShellComponent {
 			// The `.open` class reaches the DOM after this effect runs; wait a
 			// frame so the dropdown has layout before measuring against it.
 			requestAnimationFrame(() => {
+				this.dropdownScroller.applyRowHeight(this.firstRealOptionIndex());
 				this.dropdownScroller.centerHighlighted();
 			});
 		});
@@ -226,6 +227,10 @@ export class SelectShellComponent {
 		}
 
 		this.store.setSearchText(value);
+	}
+
+	private firstRealOptionIndex(): number {
+		return this.store.visibleOptions().findIndex((option) => '' !== option.value);
 	}
 
 	private hasTextSelection(): boolean {

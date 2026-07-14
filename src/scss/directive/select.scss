@@ -48,10 +48,14 @@
 			// instead of hitting an opaque strip; scroll-padding makes the
 			// mandatory snap rest the rows that padding below the edge, showing
 			// a sliver of the previous/next row through the gap. The height is
-			// that padding plus an exact multiple of the row height (one line
-			// of text plus its paddings), so the scroll can never rest with a
-			// row half-cut.
+			// that padding plus an exact multiple of the row height — measured
+			// from the first real option each time the dropdown opens (see
+			// SelectDropdownScroller; the one-line formula below is only the
+			// pre-measure fallback) — so the scroll can never rest with a row
+			// half-cut.
 			.options-scroller {
+				--option-height: calc(1lh + var(--spacing-1) * 2);
+
 				scroll-padding-block: var(--spacing-1);
 				scroll-snap-type: y mandatory;
 
@@ -61,7 +65,7 @@
 				overscroll-behavior: contain;
 
 				max-height: calc(
-					var(--max-visible-options, 9) * (1lh + var(--spacing-1) * 2) + var(--spacing-1) * 2
+					var(--max-visible-options, 9) * var(--option-height) + var(--spacing-1) * 2
 				);
 				padding: var(--spacing-1) 0;
 
@@ -75,7 +79,9 @@
 				scroll-snap-align: start;
 
 				overflow: hidden;
+				align-content: center;
 
+				min-height: var(--option-height);
 				padding: var(--spacing-1) var(--spacing-3);
 
 				text-overflow: ellipsis;

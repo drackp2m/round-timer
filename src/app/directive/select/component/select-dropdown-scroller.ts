@@ -6,6 +6,24 @@
 export class SelectDropdownScroller {
 	constructor(private readonly getScroller: () => HTMLElement | undefined) {}
 
+	applyRowHeight(rowIndex: number): void {
+		const scroller = this.getScroller();
+
+		if (undefined === scroller || 0 > rowIndex) {
+			return;
+		}
+
+		const option = scroller.querySelectorAll<HTMLElement>('.option')[rowIndex];
+
+		if (undefined === option) {
+			return;
+		}
+
+		const height = option.getBoundingClientRect().height;
+
+		scroller.style.setProperty('--option-height', `${height.toString()}px`);
+	}
+
 	/**
 	 * Opening the dropdown starts the list centered on the highlighted option
 	 * — the current selection, or the type-ahead match when a keystroke
