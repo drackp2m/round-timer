@@ -37,8 +37,12 @@ $clip-gap: 3px;
 
 	.label-measure {
 		position: absolute;
+		top: 0;
+		left: 0;
+
 		font-size: var(--font-size-sm);
 		white-space: nowrap;
+
 		visibility: hidden;
 	}
 
@@ -85,15 +89,6 @@ $clip-gap: 3px;
 			box-shadow $transition-duration ease-in-out;
 	}
 
-	.value-overlay {
-		transform: translateY(calc(var(--input-height) / 2));
-		color: var(--color-contrast-mid);
-		opacity: 0;
-		transition:
-			transform $transition-duration ease-in-out,
-			opacity $transition-duration ease-in-out;
-	}
-
 	&.focused,
 	&.filled {
 		.border-container {
@@ -113,11 +108,6 @@ $clip-gap: 3px;
 			transform: translateY(calc(-1 * var(--input-height) / 2 + 1px));
 			font-size: var(--font-size-sm);
 		}
-
-		.value-overlay {
-			transform: translateY(0);
-			opacity: 1;
-		}
 	}
 
 	&:hover,
@@ -134,13 +124,6 @@ $clip-gap: 3px;
 			box-shadow:
 				$shadow,
 				inset $shadow;
-		}
-	}
-
-	&.filled {
-		.value-overlay {
-			opacity: 0;
-			transition: none;
 		}
 	}
 

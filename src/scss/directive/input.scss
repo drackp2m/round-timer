@@ -4,11 +4,44 @@
 	.app-input {
 		@include field.shell(input);
 
-		// The native placeholder is replaced by the animated .value-overlay,
-		// which only shows while the label floats.
+		// The real label is the field's hit area: as a block it spans the
+		// whole shell (an inline label only measures its line box, leaving the
+		// top dead to hover/click), and it clips the input while it slides
+		// down so nothing shows past the rounded border.
+		label {
+			overflow: hidden;
+			display: block;
+			border-radius: field.$border-radius;
+		}
+
+		// The border container sits absolutely over the whole field, so it
+		// would swallow the clicks meant for the label underneath (the input
+		// itself escapes it via its own z-index).
+		.border-container {
+			pointer-events: none;
+		}
+
+		// While idle and empty the input hides by sliding down with its
+		// placeholder color faded out (never via opacity, so the caret stays
+		// crisp the moment the field gains focus and rises into place).
 		input {
+			transform: translateY(calc(var(--input-height) / 2));
+			transition: transform field.$transition-duration ease-in-out;
+
 			&::placeholder {
-				opacity: 0;
+				color: transparent;
+				transition: color field.$transition-duration ease-in-out;
+			}
+		}
+
+		&.focused,
+		&.filled {
+			input {
+				transform: translateY(0);
+
+				&::placeholder {
+					color: var(--color-contrast-mid);
+				}
 			}
 		}
 	}

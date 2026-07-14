@@ -12,6 +12,30 @@
 			pointer-events: none;
 		}
 
+		.value-overlay {
+			transform: translateY(calc(var(--input-height) / 2));
+			color: var(--color-contrast-mid);
+			opacity: 0;
+			transition:
+				transform field.$transition-duration ease-in-out,
+				opacity field.$transition-duration ease-in-out;
+		}
+
+		&.focused,
+		&.filled {
+			.value-overlay {
+				transform: translateY(0);
+				opacity: 1;
+			}
+		}
+
+		&.filled {
+			.value-overlay {
+				opacity: 0;
+				transition: none;
+			}
+		}
+
 		.search-overlay {
 			display: none;
 		}
