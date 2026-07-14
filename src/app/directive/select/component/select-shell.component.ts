@@ -16,14 +16,18 @@ import {
 } from '@angular/core';
 
 import { SvgComponent } from '@app/component/svg.component';
+import { SelectDropdownScroller } from '@app/directive/select/component/select-dropdown-scroller';
+import { SelectShellGestures } from '@app/directive/select/component/select-shell-gestures';
+import { SelectShellLayout } from '@app/directive/select/component/select-shell-layout';
 import { SelectOptionViewModel, SelectStore } from '@app/directive/select/select.store';
 import { ViewportService } from '@app/service/viewport.service';
 
 /**
  * Themed shell rendered around the native `<select>` (projected via
- * `ng-content`). Reads the shared SelectStore directly and owns its own
- * layout concerns: measuring the label/input CSS variables and deciding
- * whether the dropdown should open upwards.
+ * `ng-content`). Reads the shared SelectStore directly and delegates its
+ * concerns to plain collaborators: pointer gestures (SelectShellGestures),
+ * CSS variable measuring and dropdown positioning (SelectShellLayout) and
+ * dropdown scrolling (SelectDropdownScroller).
  *
  * Pointer events are handled at the host level. Focus, keyboard and text
  * rendering belong to the shell's own combobox search input; the projected
@@ -38,6 +42,7 @@ export class SelectShellComponent {
 	readonly label = input.required<string>();
 	readonly selectId = input.required<string>();
 	readonly placeholder = input.required<string>();
+	readonly maxVisibleOptions = input(9);
 	readonly optionTemplate = input<TemplateRef<{ $implicit: SelectOptionViewModel }>>();
 
 	readonly optionSelected = output<string>();
@@ -95,13 +100,27 @@ export class SelectShellComponent {
 	private readonly wrapper = viewChild<ElementRef<HTMLElement>>('wrapper');
 	private readonly labelText = viewChild<ElementRef<HTMLElement>>('labelText');
 	private readonly searchInput = viewChild<ElementRef<HTMLInputElement>>('searchInput');
-	private readonly coarsePointer = window.matchMedia('(pointer: coarse)').matches;
-	private togglesOnClick = false;
-	private receivedPointerDown = false;
+	private readonly optionsScroller = viewChild<ElementRef<HTMLElement>>('optionsScroller');
+
+	private readonly gestures = new SelectShellGestures(this.store, {
+		hasTextSelection: () => this.hasTextSelection(),
+		requestToggle: () => {
+			this.toggleRequested.emit();
+		},
+	});
+
+	private readonly layout = new SelectShellLayout(this.store, {
+		wrapper: () => this.wrapper()?.nativeElement,
+		labelText: () => this.labelText()?.nativeElement,
+	});
+
+	private readonly dropdownScroller = new SelectDropdownScroller(
+		() => this.optionsScroller()?.nativeElement,
+	);
 
 	constructor() {
 		afterNextRender(() => {
-			this.observeSizeChanges();
+			this.destroyRef.onDestroy(this.layout.observeSizeChanges());
 		});
 
 		effect(() => {
@@ -109,85 +128,35 @@ export class SelectShellComponent {
 			this.viewportService.routerOutletScroll();
 			this.viewportService.windowResized();
 
-			this.positionTop.set(this.isPositionedTop());
+			this.positionTop.set(this.layout.isPositionedTop());
+		});
+
+		effect(() => {
+			if (!this.store.isOpen()) {
+				return;
+			}
+
+			// The `.open` class reaches the DOM after this effect runs; wait a
+			// frame so the dropdown has layout before measuring against it.
+			requestAnimationFrame(() => {
+				this.dropdownScroller.centerHighlighted();
+			});
 		});
 	}
 
-	/**
-	 * For direct pointers (finger, stylus), `pointerdown` fires before the
-	 * browser knows whether the gesture is a tap or a scroll, so toggling is
-	 * deferred to `click` (which never fires after a pan). Skipping
-	 * `preventDefault()` there also lets the browser blur whatever element
-	 * currently holds the focus.
-	 */
 	@HostListener('pointerdown', ['$event'])
 	onWrapperPointerDown(event: PointerEvent): void {
-		this.receivedPointerDown = true;
-		this.togglesOnClick = false;
-
-		if (this.isInsideOptions(event.target)) {
-			return;
-		}
-
-		// Pointer interactions inside the real search input must stay fully
-		// native (focus, caret placement, text selection); whether the
-		// dropdown opens is decided on click.
-		if (this.isInsideSearchInput(event.target)) {
-			return;
-		}
-
-		if ('touch' === event.pointerType || 'pen' === event.pointerType) {
-			this.togglesOnClick = true;
-
-			return;
-		}
-
-		event.preventDefault();
-		this.toggleRequested.emit();
+		this.gestures.handlePointerDown(event);
 	}
 
-	// The gesture turned into a scroll: no click will follow, so the pending
-	// state must be discarded before the next interaction.
 	@HostListener('pointercancel')
 	onWrapperPointerCancel(): void {
-		this.receivedPointerDown = false;
-		this.togglesOnClick = false;
+		this.gestures.handlePointerCancel();
 	}
 
-	/**
-	 * Toggling from `click` covers two cases: direct-pointer taps (deferred
-	 * from pointerdown once the gesture is known not to be a scroll) and
-	 * clicks that arrive with no pointerdown at all — Safari suppresses only
-	 * the pointerdown of the click that dismisses a native select popup,
-	 * while assistive tech emits bare synthetic clicks.
-	 */
 	@HostListener('click', ['$event'])
 	onWrapperClick(event: MouseEvent): void {
-		const togglesNow = this.togglesOnClick || !this.receivedPointerDown;
-
-		this.receivedPointerDown = false;
-		this.togglesOnClick = false;
-
-		if (this.isInsideOptions(event.target)) {
-			return;
-		}
-
-		// A click inside the search input only ever opens the dropdown
-		// (closing it or moving the caret is native business) — and not when
-		// the user just finished dragging a text selection to copy the value.
-		if (this.isInsideSearchInput(event.target)) {
-			if (!this.store.isOpen() && !this.hasTextSelection()) {
-				this.toggleRequested.emit();
-			}
-
-			return;
-		}
-
-		if (!togglesNow) {
-			return;
-		}
-
-		this.toggleRequested.emit();
+		this.gestures.handleClick(event);
 	}
 
 	focusSearchInput(): void {
@@ -201,8 +170,39 @@ export class SelectShellComponent {
 	}
 
 	hoverOption(option: SelectOptionViewModel, index: number): void {
-		if (!option.disabled) {
-			this.store.highlightAt(index);
+		// While the keyboard owns the highlight, hovers are ignored: the
+		// capture-phase mousemove listener (SelectOutsideDismissal) has
+		// already released the flag by now if the pointer really moved.
+		if (this.store.keyboardNavigating() || option.disabled) {
+			return;
+		}
+
+		this.store.highlightAt(index);
+	}
+
+	/**
+	 * The keydown is handled synchronously by the directive's interaction
+	 * handler during `emit`, so right after it the store already points at
+	 * the new highlight and the scroll can follow it. Skipped when the arrow
+	 * just opened the dropdown: the centering-on-open effect takes over.
+	 */
+	protected onSearchKeydown(event: KeyboardEvent): void {
+		const wasOpen = this.store.isOpen();
+		const previousHighlight = this.store.highlightedIndex();
+
+		this.searchKeydown.emit(event);
+
+		if (!wasOpen) {
+			return;
+		}
+
+		if ('ArrowDown' === event.code) {
+			this.dropdownScroller.followHighlight(this.store.highlightedIndex(), 1);
+		} else if ('ArrowUp' === event.code) {
+			this.dropdownScroller.followHighlight(this.store.highlightedIndex(), -1);
+		} else if (this.store.highlightedIndex() !== previousHighlight) {
+			// Type-ahead (and Tab) jumps can land anywhere in the list.
+			this.dropdownScroller.ensureHighlightVisible(this.store.highlightedIndex());
 		}
 	}
 
@@ -228,85 +228,9 @@ export class SelectShellComponent {
 		this.store.setSearchText(value);
 	}
 
-	private isInsideOptions(target: EventTarget | null): boolean {
-		return null !== (target as HTMLElement).closest('.app-select-options');
-	}
-
-	private isInsideSearchInput(target: EventTarget | null): boolean {
-		return null !== (target as HTMLElement).closest('.search-input');
-	}
-
 	private hasTextSelection(): boolean {
 		const element = this.searchInput()?.nativeElement;
 
 		return undefined !== element && element.selectionStart !== element.selectionEnd;
-	}
-
-	/**
-	 * The label width is not static: translations resolve asynchronously, the
-	 * language can change at runtime and web fonts reflow the text once they
-	 * load. A ResizeObserver on the hidden measure span (and on the wrapper,
-	 * for the height) re-measures on every such change — including the initial
-	 * layout, since observers fire once on `observe()`.
-	 */
-	private observeSizeChanges(): void {
-		const wrapperElement = this.wrapper()?.nativeElement;
-		const labelElement = this.labelText()?.nativeElement;
-
-		if (undefined === wrapperElement || undefined === labelElement) {
-			return;
-		}
-
-		const observer = new ResizeObserver(() => {
-			this.applySizeVariables();
-		});
-
-		observer.observe(labelElement);
-		observer.observe(wrapperElement);
-
-		this.destroyRef.onDestroy(() => {
-			observer.disconnect();
-		});
-	}
-
-	private applySizeVariables(): void {
-		const wrapperElement = this.wrapper()?.nativeElement;
-
-		if (undefined === wrapperElement) {
-			return;
-		}
-
-		const labelWidth = this.labelText()?.nativeElement.offsetWidth ?? 0;
-
-		wrapperElement.style.setProperty('--label-width', `${labelWidth.toString()}px`);
-		wrapperElement.style.setProperty(
-			'--input-height',
-			`${wrapperElement.offsetHeight.toString()}px`,
-		);
-	}
-
-	/**
-	 * Coarse-pointer devices always open upwards while the field is
-	 * searchable: focusing the editable input pops the virtual keyboard and
-	 * the browser auto-scrolls the field into view, which would fight a
-	 * downward dropdown. A read-only combobox never summons the keyboard,
-	 * so it positions freely.
-	 */
-	private isPositionedTop(): boolean {
-		if (this.coarsePointer && this.store.searchable()) {
-			return true;
-		}
-
-		const wrapperElement = this.wrapper()?.nativeElement;
-
-		if (undefined === wrapperElement) {
-			return false;
-		}
-
-		const rect = wrapperElement.getBoundingClientRect();
-		const viewportMidpoint = window.innerHeight / 2;
-		const elementMidpoint = rect.top + rect.height / 2;
-
-		return elementMidpoint >= viewportMidpoint;
 	}
 }

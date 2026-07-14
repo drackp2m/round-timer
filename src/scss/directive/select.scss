@@ -38,18 +38,48 @@
 			z-index: 2;
 			top: calc(100% - field.$border-width);
 
-			overflow: hidden auto;
-
 			width: 100%;
-			max-height: 395px;
-			padding: var(--spacing-1) 0;
 			border: solid field.$border-width var(--color-contrast-mid);
 			border-radius: field.$border-radius;
 
 			background: var(--color-primary);
 
+			// The scroller owns the vertical padding so rows scroll through it
+			// instead of hitting an opaque strip; scroll-padding makes the
+			// mandatory snap rest the rows that padding below the edge, showing
+			// a sliver of the previous/next row through the gap. The height is
+			// that padding plus an exact multiple of the row height (one line
+			// of text plus its paddings), so the scroll can never rest with a
+			// row half-cut.
+			.options-scroller {
+				scroll-padding-block: var(--spacing-1);
+				scroll-snap-type: y mandatory;
+
+				position: relative;
+
+				overflow: hidden auto;
+				overscroll-behavior: contain;
+
+				max-height: calc(
+					var(--max-visible-options, 9) * (1lh + var(--spacing-1) * 2) + var(--spacing-1) * 2
+				);
+				padding: var(--spacing-1) 0;
+
+				// Rows paint edge to edge, so the scroller clips them with its
+				// own rounded corners — the inner radius, so the frame's border
+				// stays untouched and visible in front of the highlight.
+				border-radius: calc(field.$border-radius - field.$border-width);
+			}
+
 			.option {
+				scroll-snap-align: start;
+
+				overflow: hidden;
+
 				padding: var(--spacing-1) var(--spacing-3);
+
+				text-overflow: ellipsis;
+				white-space: nowrap;
 
 				&.highlighted {
 					background-color: var(--color-primary-mid);

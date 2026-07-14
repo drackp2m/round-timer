@@ -19,6 +19,7 @@ interface SelectStoreProps {
 	filled: boolean;
 	disabled: boolean;
 	searchableOverride: boolean | null;
+	keyboardNavigating: boolean;
 }
 
 const initialState: SelectStoreProps = {
@@ -31,6 +32,7 @@ const initialState: SelectStoreProps = {
 	filled: false,
 	disabled: false,
 	searchableOverride: null,
+	keyboardNavigating: false,
 };
 
 const searchableOptionsThreshold = 12;
@@ -107,7 +109,21 @@ export class SelectStore extends signalStore({ protectedState: false }, withStat
 	}
 
 	closeDropdown(): void {
-		patchState(this, { isOpen: false, highlightedIndex: null, searchText: '' });
+		patchState(this, {
+			isOpen: false,
+			highlightedIndex: null,
+			searchText: '',
+			keyboardNavigating: false,
+		});
+	}
+
+	/**
+	 * While true, the keyboard owns the highlight and mouse hovers are
+	 * ignored — set on arrow navigation, released when the pointer actually
+	 * moves (see SelectOutsideDismissal).
+	 */
+	setKeyboardNavigating(keyboardNavigating: boolean): void {
+		patchState(this, { keyboardNavigating });
 	}
 
 	moveHighlight(step: 1 | -1): void {
@@ -131,6 +147,24 @@ export class SelectStore extends signalStore({ protectedState: false }, withStat
 		);
 
 		this.highlightAt(index);
+	}
+
+	/**
+	 * Moves the highlight to the first enabled option whose label starts
+	 * with the type-ahead query, case-insensitively (the empty placeholder
+	 * option doesn't count). A query without matches leaves the current
+	 * highlight untouched, like a native select.
+	 */
+	highlightTypeahead(query: string): void {
+		const search = query.toLowerCase();
+		const index = this.visibleOptions().findIndex(
+			(option) =>
+				'' !== option.value && !option.disabled && option.label.toLowerCase().startsWith(search),
+		);
+
+		if (-1 !== index) {
+			this.highlightAt(index);
+		}
 	}
 
 	highlightAt(index: number): void {

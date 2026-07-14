@@ -17,6 +17,7 @@ import {
 import { SelectShellComponent } from '@app/directive/select/component/select-shell.component';
 import { SelectInteractionHandler } from '@app/directive/select/select-interaction-handler';
 import { SelectNativeAdapter } from '@app/directive/select/select-native-adapter';
+import { SelectOutsideDismissal } from '@app/directive/select/select-outside-dismissal';
 import { SelectOptionViewModel, SelectStore } from '@app/directive/select/select.store';
 
 let nextSelectId = 0;
@@ -35,12 +36,8 @@ let nextSelectId = 0;
 export class SelectDirective implements AfterViewInit, OnDestroy {
 	readonly label = input.required<string>();
 	readonly placeholder = input('Choose an option');
-	/**
-	 * Whether the field offers text search: bare attribute forces it on,
-	 * `[searchable]="false"` forces it off; without it, long option lists
-	 * decide automatically (see SelectStore).
-	 */
 	readonly searchable = input<boolean | null, unknown>(null, { transform: booleanAttribute });
+	readonly maxVisibleOptions = input(9);
 	readonly optionTemplate = input<TemplateRef<{ $implicit: SelectOptionViewModel }>>();
 
 	private readonly elementRef = inject<ElementRef<HTMLSelectElement>>(ElementRef);
@@ -50,7 +47,6 @@ export class SelectDirective implements AfterViewInit, OnDestroy {
 	private readonly nativeAdapter = new SelectNativeAdapter(this.elementRef.nativeElement);
 
 	private readonly interaction = new SelectInteractionHandler(this.store, {
-		isInsideShell: (target) => this.shellElement?.contains(target) ?? false,
 		openDropdown: () => {
 			this.openDropdown();
 		},
@@ -62,6 +58,13 @@ export class SelectDirective implements AfterViewInit, OnDestroy {
 		},
 	});
 
+	private readonly dismissal = new SelectOutsideDismissal(this.store, {
+		isInsideShell: (target) => this.shellElement?.contains(target) ?? false,
+		closeDropdown: () => {
+			this.closeDropdown();
+		},
+	});
+
 	private shellRef: ComponentRef<SelectShellComponent> | null = null;
 	private shellElement: HTMLElement | null = null;
 
@@ -69,6 +72,7 @@ export class SelectDirective implements AfterViewInit, OnDestroy {
 		effect(() => {
 			this.shellRef?.setInput('label', this.label());
 			this.shellRef?.setInput('placeholder', this.placeholder());
+			this.shellRef?.setInput('maxVisibleOptions', this.maxVisibleOptions());
 			this.shellRef?.setInput('optionTemplate', this.optionTemplate());
 			this.store.setSearchableOverride(this.searchable());
 		});
@@ -94,7 +98,7 @@ export class SelectDirective implements AfterViewInit, OnDestroy {
 
 	ngOnDestroy(): void {
 		this.nativeAdapter.stopObservingOptionChanges();
-		this.interaction.detachOutsideListeners();
+		this.dismissal.detach();
 	}
 
 	private syncFromNativeSelect(): void {
@@ -120,6 +124,7 @@ export class SelectDirective implements AfterViewInit, OnDestroy {
 		componentRef.setInput('label', this.label());
 		componentRef.setInput('selectId', selectId);
 		componentRef.setInput('placeholder', this.placeholder());
+		componentRef.setInput('maxVisibleOptions', this.maxVisibleOptions());
 		componentRef.setInput('optionTemplate', this.optionTemplate());
 
 		componentRef.instance.optionSelected.subscribe((value) => {
@@ -161,12 +166,12 @@ export class SelectDirective implements AfterViewInit, OnDestroy {
 
 	private openDropdown(): void {
 		this.store.openDropdown();
-		this.interaction.attachOutsideListeners();
+		this.dismissal.attach();
 	}
 
 	private closeDropdown(): void {
 		this.store.closeDropdown();
-		this.interaction.detachOutsideListeners();
+		this.dismissal.detach();
 	}
 
 	private selectOption(value: string): void {

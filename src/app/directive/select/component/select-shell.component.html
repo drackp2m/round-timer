@@ -32,7 +32,7 @@
 			(focus)="onSearchFocus()"
 			(blur)="onSearchBlur()"
 			(input)="onSearchInput($event)"
-			(keydown)="searchKeydown.emit($event)"
+			(keydown)="onSearchKeydown($event)"
 		/>
 		<ng-content></ng-content>
 	</label>
@@ -45,27 +45,34 @@
 
 	<div class="sr-status" aria-live="polite">{{ announcement() }}</div>
 
-	<div class="app-select-options" aria-hidden="true" [id]="listboxId()">
-		@for (option of store.visibleOptions(); track option.value; let index = $index) {
-			<div
-				class="option"
-				tabindex="-1"
-				[class.disabled]="option.disabled"
-				[class.selected]="option.selected"
-				[class.highlighted]="option.highlighted"
-				(mousedown)="$event.preventDefault()"
-				(mousemove)="hoverOption(option, index)"
-				(click)="selectOption(option)"
-				(keydown.enter)="selectOption(option)"
-			>
-				@if (optionTemplate(); as template) {
-					<ng-container *ngTemplateOutlet="template; context: { $implicit: option }" />
-				} @else {
-					{{ option.label }}
-				}
-			</div>
-		} @empty {
-			<div class="no-matches">No matches found</div>
-		}
+	<div
+		class="app-select-options"
+		aria-hidden="true"
+		[id]="listboxId()"
+		[style.--max-visible-options]="maxVisibleOptions()"
+	>
+		<div #optionsScroller class="options-scroller">
+			@for (option of store.visibleOptions(); track option.value; let index = $index) {
+				<div
+					class="option"
+					tabindex="-1"
+					[class.disabled]="option.disabled"
+					[class.selected]="option.selected"
+					[class.highlighted]="option.highlighted"
+					(mousedown)="$event.preventDefault()"
+					(mousemove)="hoverOption(option, index)"
+					(click)="selectOption(option)"
+					(keydown.enter)="selectOption(option)"
+				>
+					@if (optionTemplate(); as template) {
+						<ng-container *ngTemplateOutlet="template; context: { $implicit: option }" />
+					} @else {
+						{{ option.label }}
+					}
+				</div>
+			} @empty {
+				<div class="no-matches">No matches found</div>
+			}
+		</div>
 	</div>
 </div>
