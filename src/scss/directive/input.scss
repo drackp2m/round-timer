@@ -3,14 +3,6 @@
 @layer component {
 	.app-input {
 		@include field.shell(input);
-
-		// The native placeholder is replaced by the animated .value-overlay,
-		// which only shows while the label floats.
-		input {
-			&::placeholder {
-				opacity: 0;
-			}
-		}
 	}
 
 	.app-radio {

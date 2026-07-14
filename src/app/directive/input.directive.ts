@@ -14,6 +14,8 @@ import {
 import { createTypedElement } from '@app/util/renderer';
 
 type InputDirectiveType = 'email' | 'number' | 'password' | 'search' | 'tel' | 'text' | 'url';
+let nextInputId = 0;
+
 const selector =
 	'input[appThemed][type=email],' +
 	'input[appThemed][type=number],' +
@@ -41,7 +43,6 @@ export class InputDirective implements OnInit, AfterViewInit {
 	private readonly labelElement: HTMLLabelElement = this.createLabel();
 	private readonly fakeLabelElement: HTMLSpanElement = this.createFakeLabel();
 	private readonly borderContainerElement: HTMLDivElement = this.createBorderContainer();
-	private readonly valueOverlayElement: HTMLSpanElement = this.createValueOverlay();
 
 	constructor() {
 		effect(() => {
@@ -77,6 +78,7 @@ export class InputDirective implements OnInit, AfterViewInit {
 	}
 
 	ngOnInit() {
+		this.ensureId();
 		this.prepareWrapper();
 	}
 
@@ -142,6 +144,19 @@ export class InputDirective implements OnInit, AfterViewInit {
 		}
 	}
 
+	// Same mechanism as the select shell: keep any id provided by the
+	// consumer, otherwise generate one so the label can point at the input
+	// explicitly (on top of the implicit wrapping association).
+	private ensureId(): void {
+		const inputElement = this.elementRef.nativeElement;
+
+		if ('' === inputElement.id) {
+			this.renderer2.setAttribute(inputElement, 'id', `app-input-${(nextInputId++).toString()}`);
+		}
+
+		this.renderer2.setAttribute(this.labelElement, 'for', inputElement.id);
+	}
+
 	private setCSSVariable(name: string, value: string) {
 		this.wrapperElement.style.setProperty(name, value);
 	}
@@ -156,7 +171,6 @@ export class InputDirective implements OnInit, AfterViewInit {
 		this.renderer2.removeChild(parentElement, inputElement);
 		this.renderer2.appendChild(this.labelElement, inputElement);
 		this.renderer2.appendChild(this.wrapperElement, this.labelElement);
-		this.renderer2.appendChild(this.borderContainerElement, this.valueOverlayElement);
 		this.renderer2.appendChild(this.wrapperElement, this.borderContainerElement);
 		this.renderer2.appendChild(this.wrapperElement, this.fakeLabelElement);
 
@@ -212,14 +226,6 @@ export class InputDirective implements OnInit, AfterViewInit {
 		return element;
 	}
 
-	private createValueOverlay(): HTMLSpanElement {
-		const element = createTypedElement(this.renderer2, 'span');
-
-		this.renderer2.addClass(element, 'value-overlay');
-
-		return element;
-	}
-
 	// The visual label copies are decorative (aria-hidden / visibility:
 	// hidden), so the accessible name is set explicitly on the input.
 	private fillLabel(value: string): void {
@@ -229,6 +235,6 @@ export class InputDirective implements OnInit, AfterViewInit {
 	}
 
 	private fillPlaceholder(value: string): void {
-		this.renderer2.setProperty(this.valueOverlayElement, 'textContent', value);
+		this.renderer2.setAttribute(this.elementRef.nativeElement, 'placeholder', value);
 	}
 }

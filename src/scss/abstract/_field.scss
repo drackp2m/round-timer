@@ -5,7 +5,7 @@ $border-radius: var(--border-radius-3);
 $transition-duration: 0.25s;
 $clip-gap: 3px;
 
-@mixin shell($control) {
+@mixin shell($control, $slider: $control) {
 	$glow: var(--glow-size);
 	$glow-neg: calc(-1 * var(--glow-size));
 
@@ -31,14 +31,34 @@ $clip-gap: 3px;
 
 	#{$control} {
 		position: relative;
-		z-index: 1;
 		width: 100%;
+	}
+
+	#{$slider} {
+		transform: translateY(calc(var(--input-height) / 2));
+		transition: transform $transition-duration ease-in-out;
+	}
+
+	#{$control}::placeholder {
+		color: transparent;
+		transition: color $transition-duration ease-in-out;
+	}
+
+	> label {
+		overflow: hidden;
+		display: block;
+		border-radius: $border-radius;
+		clip-path: inset(0 round $border-radius);
 	}
 
 	.label-measure {
 		position: absolute;
+		top: 0;
+		left: 0;
+
 		font-size: var(--font-size-sm);
 		white-space: nowrap;
+
 		visibility: hidden;
 	}
 
@@ -62,6 +82,8 @@ $clip-gap: 3px;
 	}
 
 	.border-container {
+		pointer-events: none;
+
 		overflow: hidden;
 		display: flex;
 		align-items: center;
@@ -85,17 +107,12 @@ $clip-gap: 3px;
 			box-shadow $transition-duration ease-in-out;
 	}
 
-	.value-overlay {
-		transform: translateY(calc(var(--input-height) / 2));
-		color: var(--color-contrast-mid);
-		opacity: 0;
-		transition:
-			transform $transition-duration ease-in-out,
-			opacity $transition-duration ease-in-out;
-	}
-
 	&.focused,
 	&.filled {
+		#{$slider} {
+			transform: translateY(0);
+		}
+
 		.border-container {
 			clip-path: polygon(
 				$glow-neg $glow-neg,
@@ -113,10 +130,11 @@ $clip-gap: 3px;
 			transform: translateY(calc(-1 * var(--input-height) / 2 + 1px));
 			font-size: var(--font-size-sm);
 		}
+	}
 
-		.value-overlay {
-			transform: translateY(0);
-			opacity: 1;
+	&.focused {
+		#{$control}::placeholder {
+			color: var(--color-contrast-mid);
 		}
 	}
 
@@ -134,13 +152,6 @@ $clip-gap: 3px;
 			box-shadow:
 				$shadow,
 				inset $shadow;
-		}
-	}
-
-	&.filled {
-		.value-overlay {
-			opacity: 0;
-			transition: none;
 		}
 	}
 

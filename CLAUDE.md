@@ -8,6 +8,8 @@ Angular 22 (standalone components, signals) with `@ngrx/signals` for state store
 
 ## Commands
 
+**NEVER run tests, linters, or the app on your own.** Unless the user explicitly asks for it in a specific instruction, do NOT execute: `pnpm test` (or any Vitest run), `pnpm lint` / `pnpm lint:fix` (nor ESLint, Prettier, or Stylelint directly or on individual files), `pnpm start` / `ng serve` / `pnpm build`, nor install browsers (Chrome, Chromium, Playwright, etc.) or any other tooling to "see the web page" or manually verify changes. The USER is the only one who runs and verifies things. The commands below are documented for reference only.
+
 Package manager is **pnpm** (pinned to `11.9.0` via `packageManager` in package.json) — never use npm or yarn.
 
 - `pnpm start` — dev server (`ng serve`)
@@ -38,6 +40,11 @@ TypeScript is strict beyond Angular CLI defaults: `noUncheckedIndexedAccess`, `e
 - Keep files under 250 lines and functions under 75 lines (ESLint warns, doesn't fail — warnings are advisory and don't break `ng lint`/CI; only ESLint errors do).
 - Prettier: printWidth 100, single quotes, trailing commas everywhere, Angular parser for `*.html`.
 - SCSS: `stylelint-config-standard-scss` + `stylelint-config-clean-order`; short hex colors, no named colors.
+- **Do NOT add comments (or docstrings/JSDoc) to the code you generate.** No exceptions unless the user explicitly asks for a comment.
+
+## Communication
+
+**Explain things ONCE — never repeat yourself.** Do not narrate an explanation while thinking/editing files and then restate the same explanation again in the closing summary. Decide where and when to explain each thing and say it a single time.
 
 ## Commits and branches
 

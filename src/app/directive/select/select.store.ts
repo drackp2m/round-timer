@@ -18,6 +18,9 @@ interface SelectStoreProps {
 	focused: boolean;
 	filled: boolean;
 	disabled: boolean;
+	searchableOverride: boolean | null;
+	keyboardNavigating: boolean;
+	arrowNavigated: boolean;
 }
 
 const initialState: SelectStoreProps = {
@@ -29,13 +32,13 @@ const initialState: SelectStoreProps = {
 	focused: false,
 	filled: false,
 	disabled: false,
+	searchableOverride: null,
+	keyboardNavigating: false,
+	arrowNavigated: false,
 };
 
-/**
- * Single source of truth for one select's reactive UI state: the option
- * list, the open/focused/filled flags, the search text and the highlight.
- * Provided per directive instance; the shell component reads it directly.
- */
+const searchableOptionsThreshold = 12;
+
 @Injectable()
 export class SelectStore extends signalStore({ protectedState: false }, withState(initialState)) {
 	readonly visibleOptions = computed<SelectOptionViewModel[]>(() => {
@@ -43,9 +46,28 @@ export class SelectStore extends signalStore({ protectedState: false }, withStat
 		const highlightedIndex = this.highlightedIndex();
 
 		return this.options()
-			.filter((option) => '' === search || option.label.toLowerCase().includes(search))
+			.filter(
+				(option) =>
+					'' === search || ('' !== option.value && option.label.toLowerCase().includes(search)),
+			)
 			.map((option, index) => ({ ...option, highlighted: index === highlightedIndex }));
 	});
+
+	readonly searchable = computed<boolean>(() => {
+		const override = this.searchableOverride();
+
+		if (null !== override) {
+			return override;
+		}
+
+		const realOptions = this.options().filter((option) => '' !== option.value);
+
+		return searchableOptionsThreshold < realOptions.length;
+	});
+
+	setSearchableOverride(searchableOverride: boolean | null): void {
+		patchState(this, { searchableOverride });
+	}
 
 	setOptionsFromSelect(selectElement: HTMLSelectElement): void {
 		const options: SelectOptionViewModel[] = Array.from(selectElement.options).map((option) => ({
@@ -81,10 +103,32 @@ export class SelectStore extends signalStore({ protectedState: false }, withStat
 	}
 
 	closeDropdown(): void {
-		patchState(this, { isOpen: false, highlightedIndex: null, searchText: '' });
+		patchState(this, {
+			isOpen: false,
+			highlightedIndex: null,
+			searchText: '',
+			keyboardNavigating: false,
+			arrowNavigated: false,
+		});
 	}
 
+	/**
+	 * While true, the keyboard owns the highlight and mouse hovers are
+	 * ignored — set on arrow navigation, released when the pointer actually
+	 * moves (see SelectOutsideDismissal).
+	 */
+	setKeyboardNavigating(keyboardNavigating: boolean): void {
+		patchState(this, { keyboardNavigating });
+	}
+
+	/**
+	 * Arrow navigation also declares the intent to pick the highlight (see
+	 * `arrowNavigated`): Space then confirms it instead of behaving as one
+	 * more search / type-ahead character. Typing again withdraws the intent.
+	 */
 	moveHighlight(step: 1 | -1): void {
+		patchState(this, { arrowNavigated: true });
+
 		const visible = this.visibleOptions();
 		const start = (this.highlightedIndex() ?? (1 === step ? -1 : visible.length)) + step;
 
@@ -107,6 +151,26 @@ export class SelectStore extends signalStore({ protectedState: false }, withStat
 		this.highlightAt(index);
 	}
 
+	/**
+	 * Moves the highlight to the first enabled option whose label starts
+	 * with the type-ahead query, case-insensitively (the empty placeholder
+	 * option doesn't count). A query without matches leaves the current
+	 * highlight untouched, like a native select.
+	 */
+	highlightTypeahead(query: string): void {
+		patchState(this, { arrowNavigated: false });
+
+		const search = query.toLowerCase();
+		const index = this.visibleOptions().findIndex(
+			(option) =>
+				'' !== option.value && !option.disabled && option.label.toLowerCase().startsWith(search),
+		);
+
+		if (-1 !== index) {
+			this.highlightAt(index);
+		}
+	}
+
 	highlightAt(index: number): void {
 		patchState(this, { highlightedIndex: -1 === index ? null : index });
 	}
@@ -125,17 +189,8 @@ export class SelectStore extends signalStore({ protectedState: false }, withStat
 		return highlighted;
 	}
 
-	appendSearchChar(char: string): void {
-		patchState(this, { searchText: this.searchText() + char });
-		this.highlightFirstMatch();
-	}
-
-	removeSearchChar(): void {
-		if ('' === this.searchText()) {
-			return;
-		}
-
-		patchState(this, { searchText: this.searchText().slice(0, -1) });
+	setSearchText(searchText: string): void {
+		patchState(this, { searchText, arrowNavigated: false });
 		this.highlightFirstMatch();
 	}
 

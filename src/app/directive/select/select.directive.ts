@@ -8,6 +8,7 @@ import {
 	OnDestroy,
 	TemplateRef,
 	ViewContainerRef,
+	booleanAttribute,
 	effect,
 	inject,
 	input,
@@ -16,14 +17,16 @@ import {
 import { SelectShellComponent } from '@app/directive/select/component/select-shell.component';
 import { SelectInteractionHandler } from '@app/directive/select/select-interaction-handler';
 import { SelectNativeAdapter } from '@app/directive/select/select-native-adapter';
+import { SelectOutsideDismissal } from '@app/directive/select/select-outside-dismissal';
 import { SelectOptionViewModel, SelectStore } from '@app/directive/select/select.store';
 
 let nextSelectId = 0;
 
 /**
  * Progressive enhancement over a native `<select>`: keeps the native element
- * as the source of truth (focus, forms, a11y) while rendering a themed shell
- * with a custom dropdown around it. Orchestrates the store, the shell
+ * as the form's source of truth (value, options) while the themed shell
+ * renders a combobox around it — a real search input that owns focus and
+ * keyboard, plus a custom dropdown. Orchestrates the store, the shell
  * component and the interaction handler.
  */
 @Directive({
@@ -33,6 +36,8 @@ let nextSelectId = 0;
 export class SelectDirective implements AfterViewInit, OnDestroy {
 	readonly label = input.required<string>();
 	readonly placeholder = input('Choose an option');
+	readonly searchable = input<boolean | null, unknown>(null, { transform: booleanAttribute });
+	readonly maxVisibleOptions = input(9);
 	readonly optionTemplate = input<TemplateRef<{ $implicit: SelectOptionViewModel }>>();
 
 	private readonly elementRef = inject<ElementRef<HTMLSelectElement>>(ElementRef);
@@ -40,17 +45,8 @@ export class SelectDirective implements AfterViewInit, OnDestroy {
 	private readonly injector = inject(Injector);
 	private readonly store = inject(SelectStore);
 	private readonly nativeAdapter = new SelectNativeAdapter(this.elementRef.nativeElement);
-	/**
-	 * Device-level proxy for platforms where giving the native select real
-	 * DOM focus opens the native picker (iOS/iPadOS). That side effect
-	 * depends on the OS, not on the pointer of a given interaction — an iPad
-	 * trackpad click must avoid real focus too — hence a media query here
-	 * while the shell reads each event's pointerType for gesture handling.
-	 */
-	private readonly coarsePointer = window.matchMedia('(pointer: coarse)').matches;
 
 	private readonly interaction = new SelectInteractionHandler(this.store, {
-		isInsideShell: (target) => this.shellElement?.contains(target) ?? false,
 		openDropdown: () => {
 			this.openDropdown();
 		},
@@ -62,29 +58,24 @@ export class SelectDirective implements AfterViewInit, OnDestroy {
 		},
 	});
 
+	private readonly dismissal = new SelectOutsideDismissal(this.store, {
+		isInsideShell: (target) => this.shellElement?.contains(target) ?? false,
+		closeDropdown: () => {
+			this.closeDropdown();
+		},
+	});
+
 	private shellRef: ComponentRef<SelectShellComponent> | null = null;
 	private shellElement: HTMLElement | null = null;
 
 	constructor() {
 		effect(() => {
 			this.shellRef?.setInput('label', this.label());
+			this.shellRef?.setInput('placeholder', this.placeholder());
+			this.shellRef?.setInput('maxVisibleOptions', this.maxVisibleOptions());
 			this.shellRef?.setInput('optionTemplate', this.optionTemplate());
-
-			// The visible label text lives in the shell's visual layers, which
-			// are hidden from the accessibility tree — without this the select
-			// would have no accessible name.
-			this.elementRef.nativeElement.setAttribute('aria-label', this.label());
+			this.store.setSearchableOverride(this.searchable());
 		});
-	}
-
-	@HostListener('focus')
-	onFocus() {
-		this.store.setFocused(true);
-	}
-
-	@HostListener('blur')
-	onBlur() {
-		this.store.setFocused(false);
 	}
 
 	@HostListener('input')
@@ -93,14 +84,9 @@ export class SelectDirective implements AfterViewInit, OnDestroy {
 		this.store.updateSelection(this.nativeAdapter.getValue(), this.nativeAdapter.getSelectedText());
 	}
 
-	@HostListener('keydown', ['$event'])
-	onKeyDown(event: KeyboardEvent) {
-		this.interaction.handleKeydown(event);
-	}
-
 	ngAfterViewInit(): void {
+		this.nativeAdapter.hide();
 		this.syncFromNativeSelect();
-		this.nativeAdapter.setExpanded(false);
 		this.nativeAdapter.observeValueWrites(() => {
 			this.onNativeValueChange();
 		});
@@ -112,7 +98,7 @@ export class SelectDirective implements AfterViewInit, OnDestroy {
 
 	ngOnDestroy(): void {
 		this.nativeAdapter.stopObservingOptionChanges();
-		this.interaction.detachOutsideListeners();
+		this.dismissal.detach();
 	}
 
 	private syncFromNativeSelect(): void {
@@ -137,6 +123,8 @@ export class SelectDirective implements AfterViewInit, OnDestroy {
 
 		componentRef.setInput('label', this.label());
 		componentRef.setInput('selectId', selectId);
+		componentRef.setInput('placeholder', this.placeholder());
+		componentRef.setInput('maxVisibleOptions', this.maxVisibleOptions());
 		componentRef.setInput('optionTemplate', this.optionTemplate());
 
 		componentRef.instance.optionSelected.subscribe((value) => {
@@ -144,6 +132,14 @@ export class SelectDirective implements AfterViewInit, OnDestroy {
 		});
 		componentRef.instance.toggleRequested.subscribe(() => {
 			this.toggleDropdown();
+		});
+		componentRef.instance.searchKeydown.subscribe((event) => {
+			this.interaction.handleKeydown(event);
+		});
+		componentRef.instance.closeRequested.subscribe(() => {
+			if (this.store.isOpen()) {
+				this.closeDropdown();
+			}
 		});
 
 		componentRef.changeDetectorRef.detectChanges();
@@ -157,11 +153,7 @@ export class SelectDirective implements AfterViewInit, OnDestroy {
 			return;
 		}
 
-		if (this.coarsePointer) {
-			this.blurActiveElement();
-		} else {
-			this.nativeAdapter.focus();
-		}
+		this.shellRef?.instance.focusSearchInput();
 
 		if (this.store.isOpen()) {
 			this.closeDropdown();
@@ -170,45 +162,16 @@ export class SelectDirective implements AfterViewInit, OnDestroy {
 		}
 
 		this.openDropdown();
-
-		// When the native select could not take real focus (skipped or
-		// refused), the focused look is simulated in the store instead.
-		if (!this.hasNativeFocus()) {
-			this.store.setFocused(true);
-		}
 	}
 
 	private openDropdown(): void {
 		this.store.openDropdown();
-		this.interaction.attachOutsideListeners();
-		this.nativeAdapter.setExpanded(true);
+		this.dismissal.attach();
 	}
 
 	private closeDropdown(): void {
 		this.store.closeDropdown();
-		this.interaction.detachOutsideListeners();
-		this.nativeAdapter.setExpanded(false);
-
-		if (!this.hasNativeFocus()) {
-			this.store.setFocused(false);
-		}
-	}
-
-	private hasNativeFocus(): boolean {
-		return document.activeElement === this.elementRef.nativeElement;
-	}
-
-	/**
-	 * On coarse-pointer platforms the native select never receives real DOM
-	 * focus (it would open the native dropdown on iOS), so whatever element
-	 * held the focus before tapping the shell must be blurred by hand.
-	 */
-	private blurActiveElement(): void {
-		const activeElement = document.activeElement;
-
-		if (activeElement instanceof HTMLElement && !this.hasNativeFocus()) {
-			activeElement.blur();
-		}
+		this.dismissal.detach();
 	}
 
 	private selectOption(value: string): void {

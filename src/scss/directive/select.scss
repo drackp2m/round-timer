@@ -2,30 +2,35 @@
 
 @layer component {
 	.app-select {
-		@include field.shell(select);
+		@include field.shell('.search-input');
 
-		cursor: pointer;
-
-		// Focus and keyboard interaction belong to the native select; the
-		// wrapper is the pointer surface (see SelectShellComponent).
+		// The native select keeps carrying the form value, but the combobox
+		// search input owns focus, keyboard and text rendering (see
+		// SelectShellComponent): the select is just an invisible, inert tag
+		// anchored over the field. It must stay bounded: even at opacity 0
+		// its intrinsic width (the longest option) creates scroll overflow,
+		// and being absolute it escapes the label's clip.
 		select {
 			pointer-events: none;
+
+			position: absolute;
+			top: 0;
+			left: 0;
+
+			max-width: 100%;
+			max-height: 100%;
+
+			opacity: 0;
 		}
 
-		.search-overlay {
-			display: none;
+		.search-input {
+			// Room for the chevron, which sits at the end of the border layer.
+			padding-right: calc(#{field.$horizontal-padding} + 24px);
 		}
 
-		&.searching {
-			.value-overlay {
-				display: none;
-			}
-
-			.search-overlay {
-				display: inline-flex;
-				flex: 1;
-				align-items: center;
-			}
+		// Only the chevron remains inside the border layer.
+		.border-container {
+			justify-content: flex-end;
 		}
 
 		.app-select-options {
@@ -33,18 +38,54 @@
 			z-index: 2;
 			top: calc(100% - field.$border-width);
 
-			overflow: hidden auto;
-
 			width: 100%;
-			max-height: 395px;
-			padding: var(--spacing-1) 0;
 			border: solid field.$border-width var(--color-contrast-mid);
 			border-radius: field.$border-radius;
 
 			background: var(--color-primary);
 
+			// The scroller owns the vertical padding so rows scroll through it
+			// instead of hitting an opaque strip; scroll-padding makes the
+			// mandatory snap rest the rows that padding below the edge, showing
+			// a sliver of the previous/next row through the gap. The height is
+			// that padding plus an exact multiple of the row height — measured
+			// from the first real option each time the dropdown opens (see
+			// SelectDropdownScroller; the one-line formula below is only the
+			// pre-measure fallback) — so the scroll can never rest with a row
+			// half-cut.
+			.options-scroller {
+				--option-height: calc(1lh + var(--spacing-1) * 2);
+
+				scroll-padding-block: var(--spacing-1);
+				scroll-snap-type: y mandatory;
+
+				position: relative;
+
+				overflow: hidden auto;
+				overscroll-behavior: contain;
+
+				max-height: calc(
+					var(--max-visible-options, 9) * var(--option-height) + var(--spacing-1) * 2
+				);
+				padding: var(--spacing-1) 0;
+
+				// Rows paint edge to edge, so the scroller clips them with its
+				// own rounded corners — the inner radius, so the frame's border
+				// stays untouched and visible in front of the highlight.
+				border-radius: calc(field.$border-radius - field.$border-width);
+			}
+
 			.option {
+				scroll-snap-align: start;
+
+				overflow: hidden;
+				align-content: center;
+
+				min-height: var(--option-height);
 				padding: var(--spacing-1) var(--spacing-3);
+
+				text-overflow: ellipsis;
+				white-space: nowrap;
 
 				&.highlighted {
 					background-color: var(--color-primary-mid);
@@ -59,13 +100,6 @@
 			.no-matches {
 				padding: var(--spacing-1) var(--spacing-3);
 				color: var(--color-contrast-mid);
-			}
-		}
-
-		&:not(.filled),
-		&.searching {
-			select {
-				color: transparent;
 			}
 		}
 
