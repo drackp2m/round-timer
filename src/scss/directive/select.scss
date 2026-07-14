@@ -4,39 +4,28 @@
 	.app-select {
 		@include field.shell('.search-input');
 
-		cursor: pointer;
-
 		// The native select keeps carrying the form value, but the combobox
 		// search input owns focus, keyboard and text rendering (see
-		// SelectShellComponent): the select is just an invisible, inert tag.
+		// SelectShellComponent): the select is just an invisible, inert tag
+		// anchored over the field. It must stay bounded: even at opacity 0
+		// its intrinsic width (the longest option) creates scroll overflow,
+		// and being absolute it escapes the label's clip.
 		select {
 			pointer-events: none;
+
 			position: absolute;
+			top: 0;
+			left: 0;
+
+			max-width: 100%;
+			max-height: 100%;
+
 			opacity: 0;
 		}
 
 		.search-input {
-			cursor: text;
-
 			// Room for the chevron, which sits at the end of the border layer.
 			padding-right: calc(#{field.$horizontal-padding} + 24px);
-
-			// Same trick as the themed input: the placeholder hides via color
-			// (never via opacity or display) so it can fade in and out.
-			&::placeholder {
-				color: transparent;
-				transition: color field.$transition-duration ease-in-out;
-			}
-		}
-
-		// While open the field is always in search mode (the search starts
-		// empty), so the placeholder invites typing even when an option is
-		// already selected.
-		&.focused,
-		&.open {
-			.search-input::placeholder {
-				color: var(--color-contrast-mid);
-			}
 		}
 
 		// Only the chevron remains inside the border layer.

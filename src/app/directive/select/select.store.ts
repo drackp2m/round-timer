@@ -18,6 +18,7 @@ interface SelectStoreProps {
 	focused: boolean;
 	filled: boolean;
 	disabled: boolean;
+	searchableOverride: boolean | null;
 }
 
 const initialState: SelectStoreProps = {
@@ -29,7 +30,10 @@ const initialState: SelectStoreProps = {
 	focused: false,
 	filled: false,
 	disabled: false,
+	searchableOverride: null,
 };
+
+const searchableOptionsThreshold = 12;
 
 /**
  * Single source of truth for one select's reactive UI state: the option
@@ -46,6 +50,28 @@ export class SelectStore extends signalStore({ protectedState: false }, withStat
 			.filter((option) => '' === search || option.label.toLowerCase().includes(search))
 			.map((option, index) => ({ ...option, highlighted: index === highlightedIndex }));
 	});
+
+	/**
+	 * Whether the field offers text search: forced by the consumer through
+	 * the `searchable` attribute when present, otherwise enabled
+	 * automatically for long option lists (the empty placeholder option
+	 * doesn't count).
+	 */
+	readonly searchable = computed<boolean>(() => {
+		const override = this.searchableOverride();
+
+		if (null !== override) {
+			return override;
+		}
+
+		const realOptions = this.options().filter((option) => '' !== option.value);
+
+		return searchableOptionsThreshold < realOptions.length;
+	});
+
+	setSearchableOverride(searchableOverride: boolean | null): void {
+		patchState(this, { searchableOverride });
+	}
 
 	setOptionsFromSelect(selectElement: HTMLSelectElement): void {
 		const options: SelectOptionViewModel[] = Array.from(selectElement.options).map((option) => ({

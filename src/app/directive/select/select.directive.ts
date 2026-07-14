@@ -8,6 +8,7 @@ import {
 	OnDestroy,
 	TemplateRef,
 	ViewContainerRef,
+	booleanAttribute,
 	effect,
 	inject,
 	input,
@@ -34,6 +35,12 @@ let nextSelectId = 0;
 export class SelectDirective implements AfterViewInit, OnDestroy {
 	readonly label = input.required<string>();
 	readonly placeholder = input('Choose an option');
+	/**
+	 * Whether the field offers text search: bare attribute forces it on,
+	 * `[searchable]="false"` forces it off; without it, long option lists
+	 * decide automatically (see SelectStore).
+	 */
+	readonly searchable = input<boolean | null, unknown>(null, { transform: booleanAttribute });
 	readonly optionTemplate = input<TemplateRef<{ $implicit: SelectOptionViewModel }>>();
 
 	private readonly elementRef = inject<ElementRef<HTMLSelectElement>>(ElementRef);
@@ -63,6 +70,7 @@ export class SelectDirective implements AfterViewInit, OnDestroy {
 			this.shellRef?.setInput('label', this.label());
 			this.shellRef?.setInput('placeholder', this.placeholder());
 			this.shellRef?.setInput('optionTemplate', this.optionTemplate());
+			this.store.setSearchableOverride(this.searchable());
 		});
 	}
 

@@ -196,7 +196,7 @@ export class SelectInteractionHandler {
 		const isAltGr = event.ctrlKey && event.altKey;
 		const isShortcut = (event.ctrlKey || event.metaKey) && !isAltGr;
 
-		if (this.store.isOpen() || 1 !== event.key.length || isShortcut) {
+		if (!this.store.searchable() || this.store.isOpen() || 1 !== event.key.length || isShortcut) {
 			return;
 		}
 

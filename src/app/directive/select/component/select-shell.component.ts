@@ -54,9 +54,11 @@ export class SelectShellComponent {
 	 * The field's single visible text: the live search while open (it always
 	 * starts empty — the search is cleared on close), the selected option's
 	 * text once closed, or nothing at all so the placeholder shows through.
+	 * Non-searchable fields keep showing the selected text while open, since
+	 * there is no search to make room for.
 	 */
 	protected readonly displayText = computed<string>(() => {
-		if (this.store.isOpen()) {
+		if (this.store.isOpen() && this.store.searchable()) {
 			return this.store.searchText();
 		}
 
@@ -284,12 +286,14 @@ export class SelectShellComponent {
 	}
 
 	/**
-	 * Coarse-pointer devices always open upwards: focusing the search input
-	 * pops the virtual keyboard and the browser auto-scrolls the field into
-	 * view, which would fight a downward dropdown.
+	 * Coarse-pointer devices always open upwards while the field is
+	 * searchable: focusing the editable input pops the virtual keyboard and
+	 * the browser auto-scrolls the field into view, which would fight a
+	 * downward dropdown. A read-only combobox never summons the keyboard,
+	 * so it positions freely.
 	 */
 	private isPositionedTop(): boolean {
-		if (this.coarsePointer) {
+		if (this.coarsePointer && this.store.searchable()) {
 			return true;
 		}
 

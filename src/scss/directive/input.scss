@@ -3,20 +3,6 @@
 @layer component {
 	.app-input {
 		@include field.shell(input);
-
-		// The placeholder fades via color (never via opacity), so the caret
-		// stays crisp the moment the field gains focus and rises into place.
-		input::placeholder {
-			color: transparent;
-			transition: color field.$transition-duration ease-in-out;
-		}
-
-		&.focused,
-		&.filled {
-			input::placeholder {
-				color: var(--color-contrast-mid);
-			}
-		}
 	}
 
 	.app-radio {

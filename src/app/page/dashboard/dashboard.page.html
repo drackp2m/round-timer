@@ -55,7 +55,7 @@
 
 	<button appThemed (click)="changeValue()">Change value</button>
 
-	<select appThemed label="Day of the week">
+	<select appThemed label="Day of the week" searchable>
 		<option value="">Choose an option</option>
 		@for (weekday of weekdays; track weekday) {
 			<option [value]="weekday" [selected]="weekday === currentWeekday">
