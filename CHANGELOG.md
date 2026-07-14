@@ -1,3 +1,28 @@
+# v1.6.0 (2026-07-14)
+
+## What's Changed
+
+### ✨ Features
+
+- select show search when it has more than twelve items ([ec392c3](https://github.com/drackp2m/round-timer/commit/ec392c39f33d9f1ebd8bac6923d29f0b827fe4c5)) by Marc Jovaní González
+- select with search now scroll between write, move with arrows, and more ([2ee5dd2](https://github.com/drackp2m/round-timer/commit/2ee5dd2e5f1d669764ad64380abb064a1bbb3166)) by Marc Jovaní González
+
+### ♻️ Code Refactoring
+
+- remove fake placeholder on custom input ([a3a39a2](https://github.com/drackp2m/round-timer/commit/a3a39a2c08e39977e46ac82a628fd5a2f0f62d11)) by Marc Jovaní González
+- select custom witn native input for seaching ([59df92b](https://github.com/drackp2m/round-timer/commit/59df92bcca92abd3417c07a9cb8b7ca29a0be5f7)) by Marc Jovaní González
+
+### 🐛 Bug Fixes
+
+- calculate size of elements on select and recalculate size of placeholder ([39a8d25](https://github.com/drackp2m/round-timer/commit/39a8d2596d494d23e66bfbe8ebc4c883423f0953)) by Marc Jovaní González
+- when use arrows after search on select, now can select item whit spacebar ([e73fb1a](https://github.com/drackp2m/round-timer/commit/e73fb1a20efee2e0a4d9cad3b61afdb43e34ab4a)) by Marc Jovaní González
+
+### 💻 Continuous Integration
+
+- add --max-warnings flag to lint script ([63e5194](https://github.com/drackp2m/round-timer/commit/63e5194db68ccc9d6369b0a3126f0e67bbcde8a0)) by Marc Jovaní González
+
+**Full Changelog**: https://github.com/drackp2m/round-timer/compare/v1.5.2...v1.6.0
+
 # v1.5.2 (2026-07-13)
 
 ## What's Changed
