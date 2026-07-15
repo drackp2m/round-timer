@@ -1,0 +1,17 @@
+.header {
+	padding-top: calc(var(--spacing-2) + env(safe-area-inset-top, 0));
+	border-bottom: solid 1.5px var(--color-primary);
+
+	.logo {
+		height: 24px;
+		color: var(--color-primary);
+	}
+
+	[appRouterLink]:not(.logo) {
+		color: var(--color-primary-mid);
+
+		&.active {
+			color: var(--color-primary);
+		}
+	}
+}

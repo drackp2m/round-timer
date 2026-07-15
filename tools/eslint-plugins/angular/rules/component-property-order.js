@@ -1,30 +1,54 @@
-const ORDER = [
-	'standalone',
+const { getComponentMetadataKeys } = require('../lib/component-metadata-keys.js');
+
+const DEFAULT_ORDER = [
 	'selector',
+	'inputs',
+	'outputs',
+	'providers',
+	'exportAs',
+	'queries',
+	'host',
+	'jit',
+	'standalone',
+	'hostDirectives',
+	'changeDetection',
+	'viewProviders',
 	'templateUrl',
-	'styleUrl',
-	'imports',
 	'template',
+	'styleUrl',
+	'styleUrls',
 	'styles',
+	'animations',
+	'encapsulation',
+	'preserveWhitespaces',
+	'imports',
+	'schemas',
 ];
-
-function orderIndex(name) {
-	const index = ORDER.indexOf(name);
-
-	return -1 === index ? ORDER.length : index;
-}
-
-function sortProps(props) {
-	return [...props].sort((a, b) => orderIndex(a.key.name) - orderIndex(b.key.name));
-}
 
 module.exports = {
 	meta: {
 		type: 'layout',
 		fixable: 'code',
-		schema: [],
+		schema: [
+			{
+				type: 'array',
+				items: { enum: getComponentMetadataKeys() },
+				uniqueItems: true,
+			},
+		],
 	},
 	create(context) {
+		const order = context.options[0] ?? DEFAULT_ORDER;
+
+		const orderIndex = (name) => {
+			const index = order.indexOf(name);
+
+			return -1 === index ? order.length : index;
+		};
+
+		const sortProps = (props) =>
+			[...props].sort((a, b) => orderIndex(a.key.name) - orderIndex(b.key.name));
+
 		return {
 			Decorator(node) {
 				if ('Component' !== node.expression.callee?.name) {

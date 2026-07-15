@@ -15,7 +15,7 @@ import {
 	viewChild,
 } from '@angular/core';
 
-import { SvgComponent } from '@app/component/svg.component';
+import { SvgComponent } from '@app/component/svg/svg.component';
 import { SelectDropdownScroller } from '@app/directive/select/component/select-dropdown-scroller';
 import { SelectShellGestures } from '@app/directive/select/component/select-shell-gestures';
 import { SelectShellLayout } from '@app/directive/select/component/select-shell-layout';

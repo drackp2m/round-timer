@@ -22,3 +22,18 @@
 		}
 	}
 }
+
+@layer utility {
+	.app-button:not(:disabled) {
+		&:hover,
+		&:focus {
+			&:not(.icon) {
+				background-color: color-mix(in oklab, var(--surface-color, transparent), rgb(0 0 0) 8%);
+			}
+
+			&.icon {
+				color: color-mix(in oklab, var(--surface-color, transparent), rgb(0 0 0) 8%) !important;
+			}
+		}
+	}
+}

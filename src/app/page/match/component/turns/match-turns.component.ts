@@ -1,6 +1,6 @@
 import { Component, ElementRef, computed, effect, inject, input, viewChild } from '@angular/core';
 
-import { SvgComponent } from '@app/component/svg.component';
+import { SvgComponent } from '@app/component/svg/svg.component';
 import { MatchTurn } from '@app/definition/page/match/match-turn.interface';
 import { DurationPartsPipe } from '@app/pipe/duration-parts.pipe';
 import { PlayerStore } from '@app/store/player.store';

@@ -22,9 +22,18 @@
 			color-#{$name}: (color: var(--color-#{$name})),
 			color-#{$name}-light: (color: var(--color-#{$name}-light)),
 			color-#{$name}-dark: (color: var(--color-#{$name}-dark)),
-			surface-#{$name}: (background-color: var(--color-#{$name})),
-			surface-#{$name}-light: (background-color: var(--color-#{$name}-light)),
-			surface-#{$name}-dark: (background-color: var(--color-#{$name}-dark))
+			surface-#{$name}: (
+					--surface-color: var(--color-#{$name}),
+					background-color: var(--color-#{$name})
+				),
+			surface-#{$name}-light: (
+					--surface-color: var(--color-#{$name}-light),
+					background-color: var(--color-#{$name}-light)
+				),
+			surface-#{$name}-dark: (
+					--surface-color: var(--color-#{$name}-dark),
+					background-color: var(--color-#{$name}-dark)
+				)
 		);
 	}
 
