@@ -1,41 +1,19 @@
-@use 'sass:meta';
 @use 'sass:map';
 
-@use '../abstract/variable' as var;
+@use '../abstract/function' as func;
 @use '../abstract/mixin' as mix;
+@use '../abstract/variable' as var;
+
+$rules: ();
+
+@each $suffix in ('', '-light', '-dark') {
+	$rules: map.merge($rules, func.utility-rules(var.$color, 'color', color, '--color', $suffix));
+	$rules: map.merge(
+		$rules,
+		func.utility-rules(var.$color, 'surface', background-color, '--color', $suffix)
+	);
+}
 
 @layer utility {
-	@function get-list($items, $rules-getter: get-rules) {
-		$rules: ();
-
-		@each $name in map.keys($items) {
-			$rules-list: meta.call(meta.get-function($rules-getter), $name);
-
-			$rules: map.merge($rules, $rules-list);
-		}
-
-		@return $rules;
-	}
-
-	@function get-rules($name) {
-		@return (
-			color-#{$name}: (color: var(--color-#{$name})),
-			color-#{$name}-light: (color: var(--color-#{$name}-light)),
-			color-#{$name}-dark: (color: var(--color-#{$name}-dark)),
-			surface-#{$name}: (
-					--surface-color: var(--color-#{$name}),
-					background-color: var(--color-#{$name})
-				),
-			surface-#{$name}-light: (
-					--surface-color: var(--color-#{$name}-light),
-					background-color: var(--color-#{$name}-light)
-				),
-			surface-#{$name}-dark: (
-					--surface-color: var(--color-#{$name}-dark),
-					background-color: var(--color-#{$name}-dark)
-				)
-		);
-	}
-
-	@include mix.generate-responsive(get-list(var.$color));
+	@include mix.generate-responsive($rules);
 }
