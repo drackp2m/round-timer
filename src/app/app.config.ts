@@ -30,7 +30,6 @@ export const appConfig: ApplicationConfig = {
 		{ provide: TitleStrategy, useClass: TemplatePageTitleStrategy },
 		provideServiceWorker('ngsw-worker.js', {
 			enabled: !isDevMode(),
-			scope: '/',
 			registrationStrategy: 'registerWhenStable:2000',
 		}),
 	],

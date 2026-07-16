@@ -62,7 +62,6 @@
 				position: relative;
 
 				overflow: hidden auto;
-				overscroll-behavior: contain;
 
 				max-height: calc(
 					var(--max-visible-options, 9) * var(--option-height) + var(--spacing-1) * 2
