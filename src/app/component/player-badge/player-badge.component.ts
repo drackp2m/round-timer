@@ -8,7 +8,7 @@ import {
 	signal,
 } from '@angular/core';
 
-import { SvgComponent } from '@app/component/svg.component';
+import { SvgComponent } from '@app/component/svg/svg.component';
 import { PlayerColor } from '@app/definition/model/player/player-color.enum';
 import { PlayerIcon } from '@app/definition/model/player/player-icon.enum';
 import { Player } from '@app/model/player.model';

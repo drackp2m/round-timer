@@ -16,6 +16,7 @@ import { Generate } from '@app/util/generate';
 
 @Component({
 	templateUrl: './dashboard.page.html',
+	styleUrl: './dashboard.page.scss',
 	imports: [RouterLinkDirective, ButtonDirective, SelectDirective, InputDirective, TitleCasePipe],
 })
 export class DashboardPage {

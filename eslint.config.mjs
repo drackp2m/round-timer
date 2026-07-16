@@ -167,8 +167,15 @@ export default typescriptEslint.config(
 				'warn',
 				{ suffixes: ['Layout', 'Page', 'Modal', 'Component'] },
 			],
-			'angular-custom/component-property-order': 'warn',
 			'angular-custom/no-page-selector': 'warn',
+			'angular-custom/component-property-order': [
+				'warn',
+				['selector', 'templateUrl', 'styleUrl', 'imports'],
+			],
+			'angular-custom/no-forbidden-component-property': [
+				'warn',
+				['animations', 'template', 'styles'],
+			],
 
 			// TypeScript
 			'@typescript-eslint/no-extraneous-class': 'off',

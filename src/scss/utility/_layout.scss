@@ -1,124 +1,102 @@
 @use 'sass:map';
-@use 'sass:meta';
 
-@use '../abstract/variable' as var;
+@use '../abstract/function' as func;
 @use '../abstract/mixin' as mix;
+@use '../abstract/variable' as var;
+
+$rules: (
+	flex-col: (
+		display: flex,
+		flex-direction: column,
+	),
+	flex-row: (
+		display: flex,
+		flex-direction: row,
+	),
+	flex-wrap: (
+		flex-wrap: wrap,
+	),
+	align-start: (
+		align-items: flex-start,
+	),
+	align-self-start: (
+		align-self: flex-start,
+	),
+	align-center: (
+		align-items: center,
+	),
+	align-self-center: (
+		align-self: center,
+	),
+	align-end: (
+		align-items: flex-end,
+	),
+	align-self-end: (
+		align-self: flex-end,
+	),
+	align-base: (
+		align-items: baseline,
+	),
+	align-self-base: (
+		align-self: baseline,
+	),
+	justify-start: (
+		justify-content: flex-start,
+	),
+	justify-self-start: (
+		justify-self: start,
+	),
+	justify-center: (
+		justify-content: center,
+	),
+	justify-self-center: (
+		justify-self: center,
+	),
+	justify-end: (
+		justify-content: flex-end,
+	),
+	justify-self-end: (
+		justify-self: end,
+	),
+	justify-self-base: (
+		justify-self: baseline,
+	),
+	justify-between: (
+		justify-content: space-between,
+	),
+	justify-around: (
+		justify-content: space-around,
+	),
+	justify-evenly: (
+		justify-content: space-evenly,
+	),
+);
+
+$gap-rules: (
+	gap: grid-gap,
+	gapx: grid-column-gap,
+	gapy: grid-row-gap,
+);
+
+@function get-list() {
+	$list: ();
+
+	@each $rule, $property in $gap-rules {
+		$list: map.merge($list, func.utility-rules(var.$spacing, $rule, $property, '--spacing'));
+	}
+
+	@return $list;
+}
 
 @layer utility {
-	$rules: (
-		flex-col: (
-			display: flex,
-			flex-direction: column,
-		),
-		flex-row: (
-			display: flex,
-			flex-direction: row,
-		),
-		flex-wrap: (
-			flex-wrap: wrap,
-		),
-		align-start: (
-			align-items: flex-start,
-		),
-		align-self-start: (
-			align-self: flex-start,
-		),
-		align-center: (
-			align-items: center,
-		),
-		align-self-center: (
-			align-self: center,
-		),
-		align-end: (
-			align-items: flex-end,
-		),
-		align-self-end: (
-			align-self: flex-end,
-		),
-		align-base: (
-			align-items: baseline,
-		),
-		align-self-base: (
-			align-self: baseline,
-		),
-		justify-start: (
-			justify-content: flex-start,
-		),
-		justify-self-start: (
-			justify-self: flex-start,
-		),
-		justify-center: (
-			justify-content: center,
-		),
-		justify-self-center: (
-			justify-self: center,
-		),
-		justify-end: (
-			justify-content: flex-end,
-		),
-		justify-self-end: (
-			justify-self: flex-end,
-		),
-		justify-base: (
-			justify-content: baseline,
-		),
-		justify-self-base: (
-			justify-self: baseline,
-		),
-		justify-between: (
-			justify-content: space-between,
-		),
-		justify--self-between: (
-			justify-self: space-between,
-		),
-		justify-around: (
-			justify-content: space-around,
-		),
-		justify-self-around: (
-			justify-self-content: space-around,
-		),
-		justify-evenly: (
-			justify-content: space-evenly,
-		),
-		justify-self-evenly: (
-			justify-self: space-evenly,
-		),
-	);
-
-	$gap-rules: (
-		gap: grid-gap,
-		gapx: grid-column-gap,
-		gapy: grid-row-gap,
-	);
-
-	@function get-list() {
-		$list: ();
-
-		@each $rule, $property in $gap-rules {
-			$list: map.merge($list, get-rules($rule, $property));
-		}
-
-		@return $list;
-	}
-
-	@function get-rules($rule, $property) {
-		$rules: ();
-
-		@each $spacing in map.keys(var.$spacing) {
-			$rules: map.merge($rules, (#{$rule}-#{$spacing}: (#{$property}: var(--spacing-#{$spacing}))));
-		}
-
-		@return $rules;
-	}
-
 	:root {
 		--layout-padding: var(--spacing-4);
 
-		@include mix.sm {
+		@include mix.media($from: sm) {
 			--layout-padding: var(--spacing-8);
 		}
 
-		@include mix.lg {
+		@include mix.media($from: lg) {
 			--layout-padding: var(--spacing-16);
 		}
 	}

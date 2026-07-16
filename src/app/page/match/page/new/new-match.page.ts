@@ -2,7 +2,7 @@ import { Component, computed, effect, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { SvgComponent } from '@app/component/svg.component';
+import { SvgComponent } from '@app/component/svg/svg.component';
 import { ButtonDirective } from '@app/directive/button.directive';
 import { InputDirective } from '@app/directive/input.directive';
 import { RadioCheckboxDirective } from '@app/directive/radio-checkbox/radio-checkbox.directive';

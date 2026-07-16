@@ -1,13 +1,12 @@
 @use '../abstract/mixin' as mix;
-@use '../abstract/variable' as var;
+
+$rules: (
+	hide: (
+		display: none,
+	),
+);
 
 @layer utility {
-	$rules: (
-		hide: (
-			display: none,
-		),
-	);
-
 	@include mix.generate-responsive($rules);
 	@include mix.generate-except-responsive($rules);
 }

@@ -9,7 +9,7 @@ import {
 	input,
 } from '@angular/core';
 
-import { SvgComponent } from '@app/component/svg.component';
+import { SvgComponent } from '@app/component/svg/svg.component';
 
 type ButtonDirectiveType = 'button' | 'menu' | 'reset' | 'submit';
 type ButtonDirectiveColor = 'primary' | 'primary-mid' | 'contrast' | 'contrast-mid' | 'accent';

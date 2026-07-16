@@ -4,7 +4,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { PlayerBadgeComponent } from '@app/component/player-badge/player-badge.component';
-import { SvgComponent } from '@app/component/svg.component';
+import { SvgComponent } from '@app/component/svg/svg.component';
 import { PlayerColor, PlayerColorKey } from '@app/definition/model/player/player-color.enum';
 import { PlayerIcon, PlayerIconKey } from '@app/definition/model/player/player-icon.enum';
 import { ButtonDirective } from '@app/directive/button.directive';

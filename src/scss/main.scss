@@ -77,12 +77,4 @@
 			padding-bottom: calc(var(--spacing-4) + env(safe-area-inset-bottom, 0));
 		}
 	}
-
-	button,
-	.btn,
-	a {
-		&:hover {
-			opacity: var.$hover-opacity;
-		}
-	}
 }

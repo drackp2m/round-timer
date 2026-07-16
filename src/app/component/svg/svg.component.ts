@@ -4,33 +4,8 @@ import { Check } from '@app/util/check';
 
 @Component({
 	selector: 'app-svg',
-	template: `<div
-		[attr.class]="class()"
-		[style.mask-image]="icon()"
-		[style.aspect-ratio]="aspectRatio()"
-		[style.width]="aspectRatioValue() >= 1 ? '100%' : 'auto'"
-		[style.height]="aspectRatioValue() <= 1 ? '100%' : 'auto'"
-	></div>`,
-	styles: [
-		`
-			:host {
-				display: flex;
-				justify-content: center;
-				align-items: center;
-
-				div {
-					background-color: currentColor;
-					mask-repeat: no-repeat;
-					mask-position: center;
-					mask-size: contain;
-
-					&.flip {
-						transform: scaleX(-1);
-					}
-				}
-			}
-		`,
-	],
+	templateUrl: './svg.component.html',
+	styleUrl: './svg.component.scss',
 	host: {
 		'[style.height]': 'size()',
 		'[style.aspect-ratio]': 'squared() ? "1 / 1" : aspectRatio()',

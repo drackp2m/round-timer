@@ -70,10 +70,15 @@ export class SelectDirective implements AfterViewInit, OnDestroy {
 
 	constructor() {
 		effect(() => {
-			this.shellRef?.setInput('label', this.label());
-			this.shellRef?.setInput('placeholder', this.placeholder());
-			this.shellRef?.setInput('maxVisibleOptions', this.maxVisibleOptions());
-			this.shellRef?.setInput('optionTemplate', this.optionTemplate());
+			const label = this.label();
+			const placeholder = this.placeholder();
+			const maxVisibleOptions = this.maxVisibleOptions();
+			const optionTemplate = this.optionTemplate();
+
+			this.shellRef?.setInput('label', label);
+			this.shellRef?.setInput('placeholder', placeholder);
+			this.shellRef?.setInput('maxVisibleOptions', maxVisibleOptions);
+			this.shellRef?.setInput('optionTemplate', optionTemplate);
 			this.store.setSearchableOverride(this.searchable());
 		});
 	}

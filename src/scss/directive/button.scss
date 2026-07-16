@@ -22,3 +22,12 @@
 		}
 	}
 }
+
+@layer utility {
+	.app-button:not(:disabled) {
+		&:hover,
+		&:focus {
+			filter: brightness(0.65);
+		}
+	}
+}
