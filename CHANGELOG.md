@@ -1,3 +1,18 @@
+# v1.7.0 (2026-07-16)
+
+## What's Changed
+
+### ✨ Features
+
+- create service for app update, improve service worker ([2b132ef](https://github.com/drackp2m/round-timer/commit/2b132ef2148f9213e32aea9a551ec3e2e5d203bf)) by Marc Jovaní González
+
+### 🐛 Bug Fixes
+
+- clean typography inconsistencies ([8fa2989](https://github.com/drackp2m/round-timer/commit/8fa29894ad78be3eada37a15d796c2e2e7133cfa)) by Marc Jovaní González
+- solve errors on service workder ([dc00db4](https://github.com/drackp2m/round-timer/commit/dc00db4419b4605c6621caea7d88ee9bf58e626b)) by Marc Jovaní González
+
+**Full Changelog**: https://github.com/drackp2m/round-timer/compare/v1.6.1...v1.7.0
+
 # v1.6.1 (2026-07-16)
 
 ## What's Changed
