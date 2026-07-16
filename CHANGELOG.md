@@ -1,3 +1,18 @@
+# v1.6.1 (2026-07-16)
+
+## What's Changed
+
+### ♻️ Code Refactoring
+
+- add new eslint custom plugin, extract html and scss from all components ([cc266d0](https://github.com/drackp2m/round-timer/commit/cc266d006b70cd80a99e1eac8f54eb6bccd9161b)) by Marc Jovaní González
+- improve scss mixins and functions ([6667f4f](https://github.com/drackp2m/round-timer/commit/6667f4f4fefdc7678905056b5e81c62a429a2def)) by Marc Jovaní González
+
+### 🐛 Bug Fixes
+
+- always call signal on effects to ensure reactivity ([811f239](https://github.com/drackp2m/round-timer/commit/811f239d4d03d2f4735086a352dcd3be72102f38)) by Marc Jovaní González
+
+**Full Changelog**: https://github.com/drackp2m/round-timer/compare/v1.6.0...v1.6.1
+
 # v1.6.0 (2026-07-14)
 
 ## What's Changed
