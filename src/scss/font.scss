@@ -1,10 +1,21 @@
 @font-face {
 	font-family: Recursive;
+	font-weight: 300 1000;
 	font-style: normal;
 
 	font-display: swap;
 
 	src: url('/font/recursive/latin_basic.woff2') format('woff2-variations');
+}
+
+@font-face {
+	font-family: Test;
+	font-weight: 100;
+	font-style: normal;
+
+	font-display: swap;
+
+	src: url('/font/Zycon.woff2') format('woff2');
 }
 
 @font-face {

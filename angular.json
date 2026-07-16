@@ -31,6 +31,7 @@
 							}
 						],
 						"styles": ["src/styles.scss"],
+						"serviceWorker": "src/ngsw-config.json",
 						"define": {
 							"APP_DEBUG": "false"
 						}

@@ -1,0 +1,28 @@
+#notification-outlet {
+	pointer-events: none;
+
+	position: absolute;
+	z-index: 20;
+	right: 0;
+	bottom: calc(env(safe-area-inset-bottom, 0px) + var(--spacing-2));
+	left: 0;
+
+	padding: 0 var(--spacing-2);
+
+	.notification {
+		pointer-events: auto;
+		animation: notification-enter var(--transition-duration) var(--transition-easing);
+	}
+}
+
+@keyframes notification-enter {
+	from {
+		transform: translateY(100%);
+		opacity: 0;
+	}
+
+	to {
+		transform: translateY(0);
+		opacity: 1;
+	}
+}

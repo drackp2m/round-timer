@@ -1,31 +1,47 @@
 {
 	"name": "Round Timer",
 	"short_name": "Round Timer",
+	"description": "Track and time the rounds of your board game matches.",
+	"id": "/round-timer/",
 	"display": "standalone",
 	"orientation": "portrait-primary",
 	"scope": "/round-timer/",
 	"start_url": "/round-timer/",
+	"theme_color": "#252422",
+	"background_color": "#252422",
 	"launch_handler": {
 		"client_mode": "focus-existing"
 	},
 	"icons": [
 		{
-			"src": "/icon-dark.svg",
+			"src": "icon-dark.svg",
 			"type": "image/svg+xml",
 			"sizes": "any",
-			"purpose": "maskable any"
+			"purpose": "any"
 		},
 		{
-			"src": "/icon-dark-512.png",
+			"src": "icon-dark-512.png",
 			"type": "image/png",
 			"sizes": "512x512",
-			"purpose": "maskable any"
+			"purpose": "any"
 		},
 		{
-			"src": "/icon-dark-1024.png",
+			"src": "icon-dark-1024.png",
 			"type": "image/png",
 			"sizes": "1024x1024",
-			"purpose": "maskable any"
+			"purpose": "any"
+		},
+		{
+			"src": "icon-dark-512.png",
+			"type": "image/png",
+			"sizes": "512x512",
+			"purpose": "maskable"
+		},
+		{
+			"src": "icon-dark-1024.png",
+			"type": "image/png",
+			"sizes": "1024x1024",
+			"purpose": "maskable"
 		}
 	]
 }
