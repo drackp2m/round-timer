@@ -13,13 +13,10 @@ export type SettingProps = ModelConstructorOmit<Setting>;
 const payloadByType: { [K in SettingTypeKey]: () => SettingPayload[K] } = {
 	THEME: () => faker.helpers.arrayElement(['light', 'dark', 'system'] as const),
 	PAUSE_AFTER_NEXT_TURN: () => faker.datatype.boolean(),
+	LAST_SEEN_VERSION: () => '1.2.3',
 };
 
 class SettingFactory extends Factory<Setting, SettingProps> {
-	/**
-	 * Coherent `type`/`payload` pair. Prefer this over `makeOne({ type })`,
-	 * which would keep a payload generated for a different type.
-	 */
 	makeOfType<K extends SettingTypeKey>(type: K, payload?: SettingPayload[K]): Setting<K> {
 		return this.makeOne({ type, payload: payload ?? payloadByType[type]() }) as Setting<K>;
 	}

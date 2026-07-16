@@ -8,6 +8,7 @@ import { MatchRepository } from '@app/repository/match.repository';
 import { PlayerRepository } from '@app/repository/player.repository';
 import { SettingRepository } from '@app/repository/setting.repository';
 import { ThemeService } from '@app/service/theme.service';
+import { UpdateService } from '@app/service/update.service';
 import { TemplatePageTitleStrategy } from '@app/strategy/template-file-title.strategy';
 
 export const appConfig: ApplicationConfig = {
@@ -18,6 +19,7 @@ export const appConfig: ApplicationConfig = {
 		SettingRepository,
 		provideAppInitializer(() => {
 			const _themeService = inject(ThemeService);
+			const _updateService = inject(UpdateService);
 		}),
 		provideRouter(
 			APP_ROUTES,

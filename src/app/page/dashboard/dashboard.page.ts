@@ -12,6 +12,7 @@ import { Player } from '@app/model/player.model';
 import { GameRepository } from '@app/repository/game.repository';
 import { MatchRepository } from '@app/repository/match.repository';
 import { PlayerRepository } from '@app/repository/player.repository';
+import { NotificationService } from '@app/service/notification.service';
 import { Generate } from '@app/util/generate';
 
 @Component({
@@ -23,6 +24,7 @@ export class DashboardPage {
 	private readonly gameRepository = inject(GameRepository);
 	private readonly playerRepository = inject(PlayerRepository);
 	private readonly matchRepository = inject(MatchRepository);
+	private readonly notificationService = inject(NotificationService);
 	readonly weekdays = [
 		'monday',
 		'tuesday',
@@ -73,6 +75,18 @@ export class DashboardPage {
 		await Promise.all(
 			players.map((player) => this.playerRepository.insert('player', player.toObject())),
 		);
+	}
+
+	showTestNotification(): void {
+		this.notificationService.notify('Version 1.7.0 is available', {
+			timeout: null,
+			action: {
+				label: 'Update',
+				callback: () => {
+					this.notificationService.notify('App updated to v1.7.0');
+				},
+			},
+		});
 	}
 
 	changeValue(): void {
