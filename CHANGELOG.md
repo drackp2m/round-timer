@@ -1,3 +1,13 @@
+# v1.7.1 (2026-07-17)
+
+## What's Changed
+
+### 🐛 Bug Fixes
+
+- nice notifications ([6ab8061](https://github.com/drackp2m/round-timer/commit/6ab80612cd6afa8affb88bb4225fea7d0a2b5b8f)) by Marc Jovaní González
+
+**Full Changelog**: https://github.com/drackp2m/round-timer/compare/v1.7.0...v1.7.1
+
 # v1.7.0 (2026-07-16)
 
 ## What's Changed
