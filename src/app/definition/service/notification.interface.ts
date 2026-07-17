@@ -6,5 +6,7 @@ export interface NotificationAction {
 export interface AppNotification {
 	uuid: string;
 	message: string;
+	duration: number | null;
+	leaving: boolean;
 	action?: NotificationAction;
 }

@@ -23,26 +23,28 @@ export class NotificationService {
 	readonly notifications = this.notificationList.asReadonly();
 
 	notify(message: string, options: NotifyOptions = {}): string {
-		const notification: AppNotification =
-			undefined === options.action
-				? { uuid: crypto.randomUUID(), message }
-				: { uuid: crypto.randomUUID(), message, action: options.action };
-
-		this.notificationList.update((notifications) => [...notifications, notification]);
-
-		const timeout =
+		const duration =
 			undefined === options.timeout ? this.getReadingDuration(message) : options.timeout;
 
-		if (null !== timeout) {
-			setTimeout(() => {
-				this.dismiss(notification.uuid);
-			}, timeout);
-		}
+		const notification: AppNotification =
+			undefined === options.action
+				? { uuid: crypto.randomUUID(), message, duration, leaving: false }
+				: { uuid: crypto.randomUUID(), message, duration, leaving: false, action: options.action };
+
+		this.notificationList.update((notifications) => [...notifications, notification]);
 
 		return notification.uuid;
 	}
 
 	dismiss(uuid: string): void {
+		this.notificationList.update((notifications) =>
+			notifications.map((notification) =>
+				uuid === notification.uuid ? { ...notification, leaving: true } : notification,
+			),
+		);
+	}
+
+	remove(uuid: string): void {
 		this.notificationList.update((notifications) =>
 			notifications.filter((notification) => uuid !== notification.uuid),
 		);

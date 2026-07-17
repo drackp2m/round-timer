@@ -29,14 +29,7 @@
 
 	<input appThemed type="text" label="Label" value="42" placeholder="Placeholder" />
 
-	<input
-		appThemed
-		type="text"
-		value="42"
-		[label]="someOptions()[4]?.label || ''"
-		placeholder="Placeholder"
-		disabled
-	/>
+	<input appThemed type="text" value="42" label="Disabled" placeholder="Placeholder" disabled />
 
 	<select appThemed label="Number">
 		<option value="">Choose an option</option>
@@ -45,7 +38,12 @@
 		<option value="three">three</option>
 	</select>
 
-	<select appThemed [label]="someOptions()[4]?.label || ''" #inputThemed>
+	<select
+		appThemed
+		[label]="someOptions()[4]?.label || ''"
+		#inputThemed
+		(change)="onInputThemedChange(inputThemed.value)"
+	>
 		@for (options of someOptions(); track options.value) {
 			<option [value]="options.value">
 				{{ options.label }}
@@ -62,20 +60,6 @@
 				{{ weekday | titlecase }}
 			</option>
 		}
-	</select>
-
-	<select>
-		<option value="" selected>Select a number</option>
-		<option value="one">one</option>
-		<option value="two">two</option>
-		<option value="three">three</option>
-	</select>
-
-	<select>
-		<option value="" selected>Select a number</option>
-		<option value="one">one</option>
-		<option value="two">two</option>
-		<option value="three">three</option>
 	</select>
 
 	<img src="https://picsum.photos/800/600.webp?random=2" alt="photo" />

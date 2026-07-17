@@ -1,5 +1,5 @@
 import { TitleCasePipe } from '@angular/common';
-import { Component, ElementRef, inject, signal, viewChild } from '@angular/core';
+import { Component, ElementRef, effect, inject, signal, viewChild } from '@angular/core';
 
 import { PlayerColor, PlayerColorKey } from '@app/definition/model/player/player-color.enum';
 import { PlayerIcon, PlayerIconKey } from '@app/definition/model/player/player-icon.enum';
@@ -49,6 +49,20 @@ export class DashboardPage {
 		{ value: 'five', label: 'Five' },
 	]);
 
+	readonly inputThemedValue = signal('');
+
+	constructor() {
+		effect(() => {
+			if ('five' === this.inputThemedValue()) {
+				this.changeValue();
+			}
+		});
+	}
+
+	onInputThemedChange(value: string): void {
+		this.inputThemedValue.set(value);
+	}
+
 	async createInitialData(): Promise<void> {
 		const game = new Game({
 			name: 'Dune',
@@ -94,8 +108,9 @@ export class DashboardPage {
 
 		if (undefined !== element) {
 			element.value = 'three';
-			element.disabled = true;
 		}
+
+		this.inputThemedValue.set('three');
 
 		this.someOptions.set([
 			{ value: 'one', label: 'Uno' },
