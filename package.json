@@ -7,6 +7,7 @@
 	"scripts": {
 		"ng": "ng",
 		"start": "ng serve",
+		"start:pwa": "ng build --base-href /round-timer/ && rm -rf dist/pwa && mkdir -p dist/pwa && cp -r dist/round-timer/browser dist/pwa/round-timer && npx http-server dist/pwa -p 4200 -c-1 --ssl --cert .cert/cert.pem --key .cert/key.pem",
 		"build": "ng build",
 		"lint": "node tools/scripts/lint/lint.mjs --max-warnings 0",
 		"lint:fix": "node tools/scripts/lint/lint.mjs --fix --max-warnings 0 --verbose",

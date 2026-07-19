@@ -7,7 +7,11 @@
 			(animationend)="onWrapperAnimationEnd(notification, $event)"
 		>
 			<div class="slot">
-				<div class="notification flex-row align-center gap-4 p-4 br-2 surface-contrast shadow-md">
+				<div
+					class="notification flex-row align-center gap-4 p-4 br-2 surface-contrast shadow-md"
+					[class.paused]="isPaused(notification)"
+					(pointerdown)="onNotificationPointerDown(notification, $event)"
+				>
 					<p class="flex-grow fs-sm color-primary">{{ notification.message }}</p>
 
 					@if (notification.action; as action) {
