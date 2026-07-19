@@ -10,8 +10,8 @@ interface NotifyOptions {
 	timeout?: number | null;
 }
 
-const READING_BASE_DURATION = 1500;
-const READING_DURATION_PER_WORD = 300;
+const READING_BASE_DURATION = 1200;
+const READING_DURATION_PER_WORD = 600;
 const MIN_READING_DURATION = 4000;
 
 @Injectable({

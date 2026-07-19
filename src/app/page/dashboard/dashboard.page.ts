@@ -56,6 +56,14 @@ export class DashboardPage {
 			if ('five' === this.inputThemedValue()) {
 				this.changeValue();
 			}
+
+			if ('two' === this.inputThemedValue()) {
+				this.notificationService.notify('Short text');
+				this.notificationService.notify(
+					`lorem ipsum dolor sit amet, consectetur adipiscing elit.
+					Sed etiam nec nisi ut risus facilisis fauc`,
+				);
+			}
 		});
 	}
 
