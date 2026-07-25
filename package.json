@@ -3,7 +3,7 @@
 	"version": "1.7.1",
 	"author": "Marc Jovaní González",
 	"private": true,
-	"packageManager": "pnpm@11.10.0",
+	"packageManager": "pnpm@11.17.0",
 	"scripts": {
 		"ng": "ng",
 		"start": "ng serve",
@@ -17,7 +17,6 @@
 		"update:deps": "sh tools/scripts/update-deps.sh",
 		"git:sync": "sh tools/scripts/sync-git-main.sh",
 		"pnpm:match": "node tools/scripts/match-pnpm-version.mjs",
-		"pnpm:match:fix": "node tools/scripts/match-pnpm-version.mjs --fix",
 		"prepare": "husky"
 	},
 	"dependencies": {
