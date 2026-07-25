@@ -84,7 +84,7 @@ function cacheLine(progress) {
 
 function buildSummary(metrics) {
 	const header = [
-		'# PNPM Install Report',
+		'# pnpm Install Report',
 		'',
 		`_pnpm ${metrics.pnpmVersion ?? 'unknown'} · Node ${process.versions.node}_`,
 		'',
