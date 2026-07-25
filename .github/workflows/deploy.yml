@@ -134,7 +134,13 @@ jobs:
           GIT_AUTHOR_EMAIL: '187212958+romantic-release-bot@users.noreply.github.com'
           GIT_COMMITTER_NAME: 'romantic-release-bot'
           GIT_COMMITTER_EMAIL: '187212958+romantic-release-bot@users.noreply.github.com'
-        run: pnpm exec semantic-release --verbose
+        run: |
+          set -o pipefail
+          pnpm exec semantic-release --verbose 2>&1 | tee /tmp/semantic-release.log
+
+      - name: Release summary
+        if: always()
+        run: node tools/scripts/release/summary.mjs /tmp/semantic-release.log
 
   build:
     runs-on: ubuntu-24.04
@@ -167,7 +173,13 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build application
-        run: pnpm run build --base-href ${{ steps.pages.outputs.base_url }}/
+        run: |
+          set -o pipefail
+          pnpm run build --base-href ${{ steps.pages.outputs.base_url }}/ 2>&1 | tee /tmp/build.log
+
+      - name: Build summary
+        if: always()
+        run: node tools/scripts/build/summary.mjs /tmp/build.log
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v4
