@@ -1,3 +1,4 @@
+@use 'sass:map';
 @use './function' as func;
 
 $base-spacing: 0.25rem !default;
@@ -72,6 +73,22 @@ $dark-color: (
 	contrast: rgb(255 252 242),
 	contrast-mid: rgb(204 197 185),
 	accent: rgb(235 94 40),
+) !default;
+
+$color-hover: (
+	primary: color-mix(in oklab, #{map.get($color, primary)} 96%, rgb(0 0 0)),
+	primary-mid: color-mix(in oklab, #{map.get($color, primary-mid)} 90%, rgb(255 255 255)),
+	contrast: color-mix(in oklab, #{map.get($color, contrast)} 95%, rgb(255 255 255)),
+	contrast-mid: color-mix(in oklab, #{map.get($color, contrast-mid)} 95%, rgb(0 0 0)),
+	accent: color-mix(in oklab, #{map.get($color, accent)} 96%, rgb(0 0 0)),
+) !default;
+
+$dark-color-hover: (
+	primary: color-mix(in oklab, #{map.get($dark-color, primary)} 98%, rgb(255 255 255)),
+	primary-mid: color-mix(in oklab, #{map.get($dark-color, primary-mid)} 98%, rgb(255 255 255)),
+	contrast: color-mix(in oklab, #{map.get($dark-color, contrast)} 95%, rgb(0 0 0)),
+	contrast-mid: color-mix(in oklab, #{map.get($dark-color, contrast-mid)} 80%, rgb(255 255 255)),
+	accent: color-mix(in oklab, #{map.get($dark-color, accent)} 94%, rgb(255 255 255)),
 ) !default;
 
 $spacing: (

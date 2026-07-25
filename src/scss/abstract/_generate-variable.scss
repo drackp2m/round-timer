@@ -20,10 +20,15 @@
 
 		@each $name, $value in var.$color {
 			$dark-color: map.get(var.$dark-color, $name);
+			$hover-color: map.get(var.$color-hover, $name);
+			$dark-hover-color: map.get(var.$dark-color-hover, $name);
 
 			--color-#{$name}: #{$value};
 			--color-#{$name}-light: #{$value};
 			--color-#{$name}-dark: #{$dark-color};
+			--color-#{$name}-hover: #{$hover-color};
+			--color-#{$name}-light-hover: #{$hover-color};
+			--color-#{$name}-dark-hover: #{$dark-hover-color};
 		}
 
 		@each $name, $value in var.$font-size {
@@ -58,18 +63,21 @@
 	[data-theme='dark']:not(.force-light, .force-dark) {
 		@each $name, $value in var.$dark-color {
 			--color-#{$name}: #{$value};
+			--color-#{$name}-hover: #{map.get(var.$dark-color-hover, $name)};
 		}
 	}
 
 	.force-light {
 		@each $name, $value in var.$color {
 			--color-#{$name}: #{$value} !important;
+			--color-#{$name}-hover: #{map.get(var.$color-hover, $name)} !important;
 		}
 	}
 
 	.force-dark {
 		@each $name, $value in var.$dark-color {
 			--color-#{$name}: #{$value} !important;
+			--color-#{$name}-hover: #{map.get(var.$dark-color-hover, $name)} !important;
 		}
 	}
 }

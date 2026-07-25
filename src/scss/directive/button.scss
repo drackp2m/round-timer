@@ -9,6 +9,7 @@
 
 		&.icon {
 			padding: var(--spacing-1);
+			color: var(--foreground);
 		}
 
 		// &[class='surface-contrast'] {
@@ -24,10 +25,17 @@
 }
 
 @layer utility {
-	.app-button:not(:disabled) {
+	.app-button:not(:disabled, .icon) {
 		&:hover,
 		&:focus {
-			filter: brightness(0.65);
+			background-color: var(--surface-hover);
+		}
+	}
+
+	.app-button.icon:not(:disabled) {
+		&:hover,
+		&:focus {
+			color: var(--foreground-hover);
 		}
 	}
 }
