@@ -13,6 +13,7 @@
 // unfixable lint error, or an unformatted file in check mode) so CI and git
 // hooks can block.
 
+import { writeLintSummary } from '../lint/github-summary.mjs';
 import { c, plural, printSection, printUncovered } from '../lint/lint-report.mjs';
 import {
 	ESLINT_EXT,
@@ -85,26 +86,31 @@ if (null !== maxWarnings.limit) {
 }
 
 segments.push(hasFiles ? plural(argFiles.length, 'file') : 'whole repo');
-console.log(
-	`${c.bold}Linting...${c.reset} ` +
-		`${c.dim}(ESLint → Stylelint → Prettier · ${segments.join(' · ')})${c.reset}`,
-);
+
+const runDescription = `ESLint → Stylelint → Prettier · ${segments.join(' · ')}`;
+
+console.log(`${c.bold}Linting...${c.reset} ${c.dim}(${runDescription})${c.reset}`);
 
 let errors = 0;
 let warnings = 0;
+const summaryRows = [];
 
 for (const [name, run] of jobs) {
 	const result = await run();
 	printSection(name, result);
-	errors += result.remaining.filter((problem) => 'error' === problem.severity).length;
-	warnings += result.remaining.filter((problem) => 'warning' === problem.severity).length;
+	const jobErrors = result.remaining.filter((problem) => 'error' === problem.severity).length;
+	const jobWarnings = result.remaining.filter((problem) => 'warning' === problem.severity).length;
+	errors += jobErrors;
+	warnings += jobWarnings;
+	summaryRows.push({ name, errors: jobErrors, warnings: jobWarnings, skipped: result.skipped });
 }
 
 const tooManyWarnings = null !== maxWarnings.limit && warnings > maxWarnings.limit;
 
 if (tooManyWarnings) {
+	const verb = 1 === warnings ? 'exceeds' : 'exceed';
 	console.log(
-		`\n${c.yellow}⚠ ${plural(warnings, 'warning')} exceed the --max-warnings ${maxWarnings.limit} limit.${c.reset}`,
+		`\n${c.yellow}⚠ ${plural(warnings, 'warning')} ${verb} the --max-warnings ${maxWarnings.limit} limit.${c.reset}`,
 	);
 }
 
@@ -112,6 +118,14 @@ if (tooManyWarnings) {
 if (hasFiles) {
 	printUncovered(await findUncovered(argFiles));
 }
+
+writeLintSummary({
+	rows: summaryRows,
+	errors,
+	warnings,
+	maxWarnings: maxWarnings.limit,
+	details: runDescription,
+});
 
 // Non-zero exit on any error (unfixable lint error, or an unformatted file in
 // check mode) so CI and pre-commit hooks block; warnings only block when
