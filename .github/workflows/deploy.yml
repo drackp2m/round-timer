@@ -33,7 +33,13 @@ jobs:
           cache: 'pnpm'
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: |
+          set -o pipefail
+          pnpm install --frozen-lockfile 2>&1 | tee /tmp/pnpm-install.log
+
+      - name: Install summary
+        if: always()
+        run: node tools/scripts/install/summary.mjs /tmp/pnpm-install.log
 
   lint:
     runs-on: ubuntu-24.04
