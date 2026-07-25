@@ -1,10 +1,10 @@
 #notification-outlet {
 	pointer-events: none;
 
-	position: absolute;
+	position: fixed;
 	z-index: 20;
 	right: 0;
-	bottom: calc(env(safe-area-inset-bottom, 0px) + var(--spacing-2));
+	bottom: var(--safe-offset-bottom);
 	left: 0;
 
 	padding: 0 var(--spacing-2);
@@ -38,9 +38,15 @@
 		margin-top: var(--spacing-2);
 		animation: notification-enter var(--transition-duration) var(--transition-easing);
 
-		&:hover,
-		&:active {
+		&:active,
+		&.paused {
 			--countdown-play-state: paused;
+		}
+
+		@media (hover: hover) {
+			&:hover {
+				--countdown-play-state: paused;
+			}
 		}
 	}
 

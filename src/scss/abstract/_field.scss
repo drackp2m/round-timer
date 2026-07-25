@@ -103,6 +103,7 @@ $clip-gap: 3px;
 		);
 
 		transition:
+			border-color $transition-duration ease-in-out,
 			clip-path $transition-duration ease-in-out,
 			box-shadow $transition-duration ease-in-out;
 	}

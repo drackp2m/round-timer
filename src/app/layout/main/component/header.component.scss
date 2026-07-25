@@ -1,5 +1,5 @@
 .header {
-	padding-top: calc(var(--spacing-2) + env(safe-area-inset-top, 0));
+	padding-top: var(--safe-padding-top);
 	border-bottom: solid 1.5px var(--color-primary);
 
 	.logo {
@@ -8,10 +8,12 @@
 	}
 
 	[appRouterLink]:not(.logo) {
-		color: var(--color-primary-mid);
+		--foreground: var(--color-primary-mid);
+		--foreground-hover: var(--color-primary-mid-hover);
 
 		&.active {
-			color: var(--color-primary);
+			--foreground: var(--color-primary);
+			--foreground-hover: var(--color-primary-hover);
 		}
 	}
 }

@@ -4,6 +4,12 @@
 
 @layer base {
 	:root {
+		--safe-area-top: env(safe-area-inset-top, 0px);
+		--safe-area-bottom: env(safe-area-inset-bottom, 0px);
+		--safe-padding-top: calc(var(--spacing-2) + var(--safe-area-top));
+		--safe-padding-bottom: calc(var(--spacing-4) + var(--safe-area-bottom));
+		--safe-offset-bottom: max(var(--safe-area-bottom), var(--spacing-2));
+
 		@each $size, $value in var.$spacing {
 			--spacing-#{$size}: #{$value};
 		}
@@ -14,10 +20,15 @@
 
 		@each $name, $value in var.$color {
 			$dark-color: map.get(var.$dark-color, $name);
+			$hover-color: map.get(var.$color-hover, $name);
+			$dark-hover-color: map.get(var.$dark-color-hover, $name);
 
 			--color-#{$name}: #{$value};
 			--color-#{$name}-light: #{$value};
 			--color-#{$name}-dark: #{$dark-color};
+			--color-#{$name}-hover: #{$hover-color};
+			--color-#{$name}-light-hover: #{$hover-color};
+			--color-#{$name}-dark-hover: #{$dark-hover-color};
 		}
 
 		@each $name, $value in var.$font-size {
@@ -52,18 +63,21 @@
 	[data-theme='dark']:not(.force-light, .force-dark) {
 		@each $name, $value in var.$dark-color {
 			--color-#{$name}: #{$value};
+			--color-#{$name}-hover: #{map.get(var.$dark-color-hover, $name)};
 		}
 	}
 
 	.force-light {
 		@each $name, $value in var.$color {
 			--color-#{$name}: #{$value} !important;
+			--color-#{$name}-hover: #{map.get(var.$color-hover, $name)} !important;
 		}
 	}
 
 	.force-dark {
 		@each $name, $value in var.$dark-color {
 			--color-#{$name}: #{$value} !important;
+			--color-#{$name}-hover: #{map.get(var.$dark-color-hover, $name)} !important;
 		}
 	}
 }

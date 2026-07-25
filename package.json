@@ -3,10 +3,12 @@
 	"version": "1.7.1",
 	"author": "Marc Jovaní González",
 	"private": true,
-	"packageManager": "pnpm@11.10.0",
+	"packageManager": "pnpm@11.17.0",
 	"scripts": {
 		"ng": "ng",
 		"start": "ng serve",
+		"start:safari": "sh tools/scripts/start-safari.sh",
+		"preview:pwa": "sh tools/scripts/preview-pwa.sh",
 		"build": "ng build",
 		"lint": "node tools/scripts/lint/lint.mjs --max-warnings 0",
 		"lint:fix": "node tools/scripts/lint/lint.mjs --fix --max-warnings 0 --verbose",
@@ -15,7 +17,6 @@
 		"update:deps": "sh tools/scripts/update-deps.sh",
 		"git:sync": "sh tools/scripts/sync-git-main.sh",
 		"pnpm:match": "node tools/scripts/match-pnpm-version.mjs",
-		"pnpm:match:fix": "node tools/scripts/match-pnpm-version.mjs --fix",
 		"prepare": "husky"
 	},
 	"dependencies": {
@@ -53,9 +54,11 @@
 		"eslint-plugin-sonarjs": "4.1.0",
 		"eslint-plugin-unused-imports": "4.4.1",
 		"globals": "17.7.0",
+		"http-server": "^14.1.1",
 		"husky": "9.1.7",
 		"jsdom": "29.1.1",
 		"lint-staged": "17.0.8",
+		"local-ssl-proxy": "^2.0.5",
 		"prettier": "3.9.4",
 		"semantic-release": "25.0.5",
 		"stylelint": "17.14.0",

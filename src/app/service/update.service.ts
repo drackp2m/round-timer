@@ -8,6 +8,7 @@ import { NotificationService } from '@app/service/notification.service';
 import { SettingStore } from '@app/store/setting.store';
 
 const UPDATE_CHECK_INTERVAL = 30 * 60 * 1000;
+const SILENT_SYNC_RELOAD_DELAY = 2500;
 
 @Injectable({
 	providedIn: 'root',
@@ -72,7 +73,30 @@ export class UpdateService {
 		this.swUpdate.versionUpdates
 			.pipe(filter((event): event is VersionReadyEvent => 'VERSION_READY' === event.type))
 			.subscribe((event) => {
-				this.notifyUpdateAvailable(this.extractVersion(event.latestVersion.appData));
+				const newVersion = this.extractVersion(event.latestVersion.appData);
+
+				if (version === newVersion) {
+					this.syncUpdateSilently();
+
+					return;
+				}
+
+				this.notifyUpdateAvailable(newVersion);
+			});
+	}
+
+	private syncUpdateSilently(): void {
+		this.notificationService.notify('Syncing app update, the page will reload shortly', {
+			timeout: null,
+		});
+
+		void this.swUpdate
+			.activateUpdate()
+			.catch(() => undefined)
+			.then(() => {
+				setTimeout(() => {
+					document.location.reload();
+				}, SILENT_SYNC_RELOAD_DELAY);
 			});
 	}
 

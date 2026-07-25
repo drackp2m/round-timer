@@ -78,7 +78,7 @@
 
 	#modal-outlet {
 		.modal > section {
-			padding-bottom: calc(var(--spacing-4) + env(safe-area-inset-bottom, 0));
+			padding-bottom: var(--safe-padding-bottom);
 		}
 	}
 }

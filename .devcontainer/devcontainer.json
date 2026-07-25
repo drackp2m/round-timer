@@ -10,8 +10,8 @@
 			"label": "Round Timer App",
 			"protocol": "https",
 			"onAutoForward": "notify",
-			"requireLocalPort": true
-		}
+			"requireLocalPort": true,
+		},
 	},
 	"overrideCommand": false,
 	"customizations": {
@@ -38,23 +38,25 @@
 				"prettier.prettierPath": "/usr/src/app/node_modules/prettier",
 				"editor.defaultFormatter": "esbenp.prettier-vscode",
 				"[html]": {
-					"editor.defaultFormatter": "dbaeumer.vscode-eslint"
+					"editor.defaultFormatter": "dbaeumer.vscode-eslint",
 				},
 				"[javascript]": {
-					"editor.defaultFormatter": "dbaeumer.vscode-eslint"
+					"editor.defaultFormatter": "dbaeumer.vscode-eslint",
 				},
 				"[typescript]": {
-					"editor.defaultFormatter": "dbaeumer.vscode-eslint"
+					"editor.defaultFormatter": "dbaeumer.vscode-eslint",
 				},
 				"[css]": {
-					"editor.defaultFormatter": "stylelint.vscode-stylelint"
+					"editor.defaultFormatter": "stylelint.vscode-stylelint",
 				},
 				"[scss]": {
-					"editor.defaultFormatter": "stylelint.vscode-stylelint"
+					"editor.defaultFormatter": "stylelint.vscode-stylelint",
 				},
 				"todo-tree.ripgrep.ripgrep": "/usr/bin/rg",
 				"todo-tree.regex.regexCaseSensitive": false,
 				"todo-tree.general.statusBar": "tags",
+				// "todo-tree.regex.enableMultiLine": true,
+				// "todo-tree.regex.regex": "(//|#|<!--|;|/\\*|^|^[ \\t]*(-|\\d+.))\\s*($TAGS)",
 				"todo-tree.general.tags": [" ToDo ", " FixMe "],
 				"todo-tree.highlights.customHighlight": {
 					" ToDo ": {
@@ -63,7 +65,7 @@
 						"type": "text",
 						"foreground": "#222",
 						"background": "#dddb42",
-						"opacity": 100
+						"opacity": 100,
 					},
 					" FixMe ": {
 						"icon": "tools",
@@ -71,9 +73,9 @@
 						"type": "text",
 						"foreground": "#eee",
 						"background": "#ff4242",
-						"opacity": 100
-					}
-				}
+						"opacity": 100,
+					},
+				},
 			},
 			"extensions": [
 				"Anthropic.claude-code",
@@ -91,8 +93,8 @@
 				"eamodio.gitlens",
 				"streetsidesoftware.code-spell-checker",
 				"tomoki1207.selectline-statusbar",
-				"firefox-devtools.vscode-firefox-debug"
-			]
-		}
-	}
+				"firefox-devtools.vscode-firefox-debug",
+			],
+		},
+	},
 }

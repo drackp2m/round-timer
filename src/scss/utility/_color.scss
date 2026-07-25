@@ -1,17 +1,32 @@
 @use 'sass:map';
 
-@use '../abstract/function' as func;
 @use '../abstract/mixin' as mix;
 @use '../abstract/variable' as var;
 
 $rules: ();
 
 @each $suffix in ('', '-light', '-dark') {
-	$rules: map.merge($rules, func.utility-rules(var.$color, 'color', color, '--color', $suffix));
-	$rules: map.merge(
-		$rules,
-		func.utility-rules(var.$color, 'surface', background-color, '--color', $suffix)
-	);
+	@each $name in map.keys(var.$color) {
+		$rules: map.set(
+			$rules,
+			'color-#{$name}#{$suffix}',
+			(
+				'--foreground': var(--color-#{$name}#{$suffix}),
+				'--foreground-hover': var(--color-#{$name}#{$suffix}-hover),
+				color: var(--foreground),
+			)
+		);
+
+		$rules: map.set(
+			$rules,
+			'surface-#{$name}#{$suffix}',
+			(
+				'--surface': var(--color-#{$name}#{$suffix}),
+				'--surface-hover': var(--color-#{$name}#{$suffix}-hover),
+				background-color: var(--surface),
+			)
+		);
+	}
 }
 
 @layer utility {
