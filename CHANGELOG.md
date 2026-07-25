@@ -1,3 +1,19 @@
+# v1.7.2 (2026-07-25)
+
+## What's Changed
+
+### 🐛 Bug Fixes
+
+- improve notifications effects ([70d4faf](https://github.com/drackp2m/round-timer/commit/70d4faf15d61e44015994553b63c061ad8e2c7cb)) by Marc Jovaní González
+- relatives urls on manifest, add fixme for app icons, update to pnpm 11.17.0 ([5fd0b3f](https://github.com/drackp2m/round-timer/commit/5fd0b3fab9c27b6d9ef25948f04ed65a61dde22d)) by Marc Jovaní González
+- update serveice, never ask for current version ([ad79c54](https://github.com/drackp2m/round-timer/commit/ad79c54bbefb88ac768c1d56a2b3474c0b71cc2f)) by Marc Jovaní González
+
+### 🎒 Chores
+
+- new scripts for development on safari ([407e3eb](https://github.com/drackp2m/round-timer/commit/407e3ebd0a3478596883e3f7462b1a01a9265ad3)) by Marc Jovaní González
+
+**Full Changelog**: https://github.com/drackp2m/round-timer/compare/v1.7.1...v1.7.2
+
 # v1.7.1 (2026-07-17)
 
 ## What's Changed
